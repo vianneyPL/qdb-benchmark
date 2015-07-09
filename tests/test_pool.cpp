@@ -3,7 +3,7 @@
 #include "test_pool.hpp"
 #include "blob_get.hpp"
 
-using namespace qdb::benchmark::tests;
+using namespace qdb::bench::tests;
 
 test_pool::test_pool()
 {

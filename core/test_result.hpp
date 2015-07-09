@@ -1,7 +1,7 @@
 #pragma once
 
 namespace qdb {
-namespace benchmark {
+namespace bench {
 namespace core {
 
 class test_result

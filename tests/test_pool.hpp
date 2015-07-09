@@ -6,7 +6,7 @@
 #include <memory>
 
 namespace qdb {
-namespace benchmark {
+namespace bench {
 namespace tests {
 
 class test_pool
@@ -19,7 +19,7 @@ public:
     iterator end() const;
 
 private:
-    typedef std::vector<const qdb::benchmark::core::test_class*> collection_type;
+    typedef std::vector<const qdb::bench::core::test_class*> collection_type;
 
     collection_type _tests;
 };
@@ -29,7 +29,7 @@ class test_pool::iterator
     friend class test_pool;
 
 public:
-    const qdb::benchmark::core::test_class& operator*() const { return **_it; }
+    const qdb::bench::core::test_class& operator*() const { return **_it; }
     iterator operator++() { return ++_it; }
     bool operator!=(const iterator& other) { return other._it != _it; }    
 

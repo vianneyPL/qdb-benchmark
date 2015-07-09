@@ -7,7 +7,8 @@ target_link_libraries(qdb-benchmark
     qdb-benchmark-tests
 )
 
-add_test(run-all-test qdb-benchmark)
+add_test(run-help qdb-benchmark --help)
+add_test(run-with-no-param qdb-benchmark)
 
 if(WIN32)
     add_custom_command(TARGET qdb-benchmark POST_BUILD

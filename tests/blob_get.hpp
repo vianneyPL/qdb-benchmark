@@ -5,7 +5,7 @@
 #include <qdb/client.h>
 
 namespace qdb {
-namespace benchmark {
+namespace bench {
 namespace tests {
 
 class blob_get : public test_instance_impl<blob_get>
@@ -13,7 +13,7 @@ class blob_get : public test_instance_impl<blob_get>
     qdb_handle_t _handle;
 
 public:
-    explicit blob_get(qdb::benchmark::core::test_config config)
+    explicit blob_get(qdb::bench::core::test_config config)
         : test_instance_impl(config)
     {
     }
@@ -41,7 +41,7 @@ public:
     }
 };
 
-const qdb::benchmark::core::test_info qdb::benchmark::tests::blob_get::_info = 
+const qdb::bench::core::test_info qdb::bench::tests::blob_get::_info = 
 {
     // "id":
     "blob_get",

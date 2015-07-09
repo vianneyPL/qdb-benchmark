@@ -3,7 +3,7 @@
 #include <string>
 
 namespace qdb {
-namespace benchmark {
+namespace bench {
 namespace core {
 
 struct test_config
