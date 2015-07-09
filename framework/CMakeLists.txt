@@ -1,6 +1,8 @@
 add_library(qdb-benchmark-framework
-    test.hpp
+    chronometer.hpp
     test_runner.cpp
+    test_runner.hpp
+    test_scheduler.hpp
 )
 
 target_include_directories(qdb-benchmark-framework

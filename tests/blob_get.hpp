@@ -1,53 +1,57 @@
 #pragma once
 
-#include "test.hpp"
-#include "size.hpp"
+#include "test_instance_impl.hpp"
 
-#include <string>
+#include <qdb/client.h>
 
 namespace qdb {
 namespace benchmark {
 namespace tests {
 
-class blob_get : public qdb::benchmark::framework::test
+class blob_get : public test_instance_impl<blob_get>
 {
+    qdb_handle_t _handle;
+
 public:
-    blob_get(qdb::benchmark::size size) : _size(size)
+    explicit blob_get(qdb::benchmark::core::test_config config)
+        : test_instance_impl(config)
     {
-
     }
 
-    std::string id() const override
+    void init() override
     {
-        return "blob_get_" + _size.short_string();
+        _handle = qdb_open_tcp();
+        qdb_connect(_handle, _config.cluster_uri.c_str());
+
+        std::vector<char> content(_config.content_size);
+        qdb_put(_handle, "alias", content.data(), content.size(), 0);
     }
 
-    std::string description() const override
-    {
-        return "Perform a qdb_get() on the same entry of size " + _size.long_string();
-    }
-
-    void init(qdb_handle_t h) const override
-    {
-        std::vector<char> content(_size.bytes());
-        qdb_put(h, "alias", content.data(), content.size(), 0);
-    }
-
-    void run(qdb_handle_t h) const override
+    void run() override
     {
         const char* content;
         std::size_t content_size;
-        qdb_get(h, "alias", &content, &content_size);        
-        qdb_free_buffer(h, content);
+        qdb_get(_handle, "alias", &content, &content_size);        
+        qdb_free_buffer(_handle, content);
     }
 
-    void cleanup(qdb_handle_t h) const override
+    void cleanup() override
     {        
-        qdb_remove(h, "alias");
+        qdb_remove(_handle, "alias");
     }
+};
 
-private:
-    qdb::benchmark::size _size;
+const qdb::benchmark::core::test_info qdb::benchmark::tests::blob_get::_info = 
+{
+    // "id":
+    "blob_get",
+
+    // "description":
+    "Repeated qdb_get() of the same entry.",
+
+    // "size_dependent":
+    true,
 };
 
 }}}
+
