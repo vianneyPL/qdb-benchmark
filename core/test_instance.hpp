@@ -6,7 +6,6 @@
 
 namespace qdb {
 namespace bench {
-namespace core {
 
 class test_instance
 {
@@ -20,4 +19,4 @@ public:
     virtual const test_result& result() const = 0;
 };
 
-}}}
+}}

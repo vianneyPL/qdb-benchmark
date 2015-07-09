@@ -8,7 +8,6 @@
 
 namespace qdb {
 namespace bench {
-namespace core {
 
 class test_class
 {
@@ -17,4 +16,4 @@ public:
     virtual const test_info& info() const = 0;
 };
 
-}}}
+}}

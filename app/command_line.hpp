@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 
 namespace qdb {
 namespace bench {
@@ -14,6 +15,7 @@ struct command_line_options
     bool help;
     bool version;
     std::string cluster_uri;
+    std::vector<int> threads;
 };
 
 class command_line_parser
@@ -31,6 +33,7 @@ public:
         _options.version = get_flag("-v", "--version", "Display program version and exists");
         _options.help = get_flag("-h", "--help",    "Display program help and exists");
         _options.cluster_uri = get_string("-c", "--cluster", "Set cluster URI", "qdb://127.0.0.1:2836");
+        _options.threads = get_integers("", "--threads", "Set number of threads", "1,2,4,8");
     }
 
     std::string help()
@@ -65,6 +68,27 @@ private:
             return default_value;
     }
 
+    std::vector<int> get_integers(
+        const std::string& short_syntax,
+        const std::string& long_syntax,
+        const std::string& description,
+        const std::string& default_value)
+    {
+        try {        
+            std::vector<int> values;        
+            std::string list = get_string(short_syntax, long_syntax, description, default_value);
+
+            for_each_token(list, [&](std::string x){ 
+                values.push_back(std::stoi(x));
+            });
+
+            return values;
+        }
+        catch (...) {
+            throw std::runtime_error("Command line argument " + long_syntax + " is invalid");
+        }
+    }
+
     const char** find(
         const std::string& short_syntax,
         const std::string& long_syntax,
@@ -84,6 +108,23 @@ private:
             [&](const char* arg) { 
                 return arg == short_syntax || arg == long_syntax;
             });
+    }
+
+    template<typename Function>
+    static void for_each_token(const std::string &input, Function fn) 
+    {
+        int start = 0;
+
+        for(;;)
+        {
+            int stop = input.find(',', start);
+            if (stop == std::string::npos) break;
+
+            fn(input.substr(start,stop));
+            start = stop + 1;
+        }
+
+        fn(input.substr(start));
     }
 };
 

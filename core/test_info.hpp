@@ -4,7 +4,6 @@
 
 namespace qdb {
 namespace bench {
-namespace core {
 
 struct test_info
 {
@@ -13,4 +12,4 @@ struct test_info
     bool size_dependent;
 };
 
-}}}
+}}
