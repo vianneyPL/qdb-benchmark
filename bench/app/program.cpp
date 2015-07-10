@@ -1,5 +1,5 @@
 #include <bench/app/program.hpp>
-#include <bench/framework/test_scheduler.hpp>
+#include <bench/framework/test_runner.hpp>
 
 #include <iostream>
 
@@ -50,18 +50,18 @@ void bench::app::program::prepare_schedule()
         for (int thread_count : _settings.thread_counts)
         {
             config.thread_count = thread_count;
-            if (test.info().size_dependent)
+            if (test->info().size_dependent)
             {
                 for (int content_size : _settings.content_sizes)
                 {
                     config.content_size = content_size;
-                    _schedule.emplace_back(test.instanciate(config)); 
+                    _schedule.emplace_back(test->instanciate(config)); 
                 }
             }
             else
             {
                 config.content_size = 0;
-                _schedule.emplace_back(test.instanciate(config)); 
+                _schedule.emplace_back(test->instanciate(config)); 
             }
         }
     }
@@ -72,18 +72,32 @@ void bench::app::program::print_schedule()
     std::cout << "Using the following settings:" << std::endl;
     std::cout << " - Cluster: " << _settings.cluster_uri << std::endl;
     std::cout << "The following test will be performed: " << std::endl; 
-    for (auto& test : _schedule)
+    for (unsigned i=0; i<_schedule.size(); i++)
     {
-        std::cout << " - " << test->info().id;
+        auto& test = _schedule[i];
+        std::cout << i << ". " << test->info().id;
         std::cout << ", threads=" << test->config().thread_count;
         if (test->info().size_dependent)
             std::cout << ", size=" << test->config().content_size;
         std::cout << std::endl;
     }
+    std::cout << std::endl;
 }
 
 void bench::app::program::run_tests()
-{
+{    
+    for (unsigned i=0; i<_schedule.size(); i++)
+    {
+        auto& test = _schedule[i];
+        std::cout << "Now running test " << i+1 << "/" << _schedule.size() << ":" << std::endl;
+        std::cout << " - test = " << test->info().id << " (" << test->info().description << ")" << std::endl;
+        std::cout << " - thread count = " << test->config().thread_count << std::endl;
+        if (test->info().size_dependent)
+            std::cout << " - content size = " << test->config().content_size << std::endl;
+
+        bench::framework::run_test(*test);
+        std::cout << "Done " << std::endl << std::endl;
+    }    
 }
 
 void bench::app::program::show_help()
@@ -94,7 +108,7 @@ void bench::app::program::show_help()
     std::cout << "Available tests:" << std::endl;
     for(auto& test : _test_pool)
     {
-        std::cout << " - " << test.info().id << ":" << std::endl;
-        std::cout << "   " << test.info().description << std::endl;
+        std::cout << " - " << test->info().id << ":" << std::endl;
+        std::cout << "   " << test->info().description << std::endl;
     }
 }

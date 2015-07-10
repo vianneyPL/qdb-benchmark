@@ -9,9 +9,10 @@ namespace bench {
 namespace tests {
 
 template<typename Derived> // CRTP
-class test_instance_impl : public bench::test_instance
+class test_instance : public bench::test_instance
 {
-    class test_class_impl : public bench::test_class
+public:
+    class test_class : public bench::test_class
     {
     public:
         std::unique_ptr<bench::test_instance> instanciate(bench::test_config config) const override
@@ -21,11 +22,10 @@ class test_instance_impl : public bench::test_instance
 
         const bench::test_info& info() const override
         {
-            return test_instance_impl::_info;
+            return test_instance::_info;
         }
     };
 
-public:
     const bench::test_config& config() const override
     {
         return _config;
@@ -36,11 +36,6 @@ public:
         return _info;
     }
 
-    const bench::test_result& result() const  override
-    {
-        return _result;
-    }
-
     static const bench::test_class* get_class()
     {
         static test_class_impl cls;
@@ -48,13 +43,12 @@ public:
     }
 
 protected:
-    explicit test_instance_impl(bench::test_config config)
+    explicit test_instance(bench::test_config config)
         : _config(config)
     {
     }
 
     const bench::test_config _config;
-    const bench::test_result _result;
     const static bench::test_info _info;
 };
 

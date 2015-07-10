@@ -7,13 +7,15 @@
 namespace bench {
 namespace tests {
 
-class blob_get : public test_instance_impl<blob_get>
+
+
+class blob_get : public test_instance<blob_get>
 {
     qdb_handle_t _handle;
 
 public:
     explicit blob_get(bench::test_config config)
-        : test_instance_impl(config)
+        : test_instance(config)
     {
     }
 

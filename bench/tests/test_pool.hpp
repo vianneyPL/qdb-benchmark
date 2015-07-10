@@ -10,35 +10,20 @@ namespace tests {
 
 class test_pool
 {
+    typedef std::vector<std::unique_ptr<test_class>> collection_type;
+
 public:
-    class iterator;
+    typedef collection_type::const_iterator iterator;
 
     test_pool();
-    iterator begin() const;
-    iterator end() const;
+    iterator begin() const { return _tests.begin(); }
+    iterator end() const { return _tests.end(); }
 
 private:
-    typedef std::vector<const bench::test_class*> collection_type;
+    template<typename TestClass>
+    void add();
 
     collection_type _tests;
-};
-
-class test_pool::iterator 
-{
-    friend class test_pool;
-
-public:
-    const bench::test_class& operator*() const { return **_it; }
-    iterator operator++() { return ++_it; }
-    bool operator!=(const iterator& other) { return other._it != _it; }    
-
-private:
-    iterator(test_pool::collection_type::const_iterator& it)
-        : _it(it)
-    {
-    }
-
-    test_pool::collection_type::const_iterator _it;
 };
 
 }}

@@ -8,13 +8,13 @@
 namespace bench {
 namespace tests {
 
-class int_add : public test_instance_impl<int_add>
+class int_add : public test_instance<int_add>
 {
     qdb_handle_t _handle;
 
 public:
     explicit int_add(bench::test_config config)
-        : test_instance_impl(config)
+        : test_instance(config)
     {
     }
 

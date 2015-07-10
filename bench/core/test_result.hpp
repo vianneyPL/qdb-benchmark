@@ -1,9 +1,17 @@
 #pragma once
 
+#include <vector>
+
 namespace bench {
 
-class test_result
+class time_series
 {
+
+};
+
+struct test_result
+{
+    std::vector<time_series> threads;
 };
 
 }

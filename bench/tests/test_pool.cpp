@@ -6,16 +6,12 @@ using namespace bench::tests;
 
 test_pool::test_pool()
 {
-    _tests.push_back(blob_get::get_class());
-    _tests.push_back(int_add::get_class());
+    add<blob_get>();
+    add<int_add>();
 }
 
-test_pool::iterator test_pool::begin() const
+template<typename Test>
+void test_pool::add()
 {
-    return _tests.begin();
-}
-
-test_pool::iterator test_pool::end() const
-{
-    return _tests.end();
+    _tests.emplace_back(std::make_unique<Test::test_class>());
 }
