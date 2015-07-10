@@ -6,34 +6,18 @@
 #include <iomanip>
 #include <vector>
 
-namespace qdb {
-namespace bench {
-namespace app {
+namespace utils {
 
-struct command_line_options
-{
-    bool help;
-    bool version;
-    std::string cluster_uri;
-    std::vector<int> threads;
-};
-
-class command_line_parser
+class command_line
 {
     std::ostringstream _help;
-    command_line_options _options;
     const char** _begin;
     const char** _end;
 
 public:
-    command_line_parser(int argc, const char** argv)
-     : _begin(argv), _end(argv+argc)
+    command_line(int argc, const char** argv)
+        : _begin(argv), _end(argv+argc)
     {
-        _help << "Command line options: " << std::endl;
-        _options.version = get_flag("-v", "--version", "Display program version and exists");
-        _options.help = get_flag("-h", "--help",    "Display program help and exists");
-        _options.cluster_uri = get_string("-c", "--cluster", "Set cluster URI", "qdb://127.0.0.1:2836");
-        _options.threads = get_integers("", "--threads", "Set number of threads", "1,2,4,8");
     }
 
     std::string help()
@@ -41,12 +25,6 @@ public:
         return _help.str();
     }
 
-    const command_line_options& options()
-    {
-        return _options;
-    }
-
-private:
     bool get_flag(
         const std::string& short_syntax,
         const std::string& long_syntax,
@@ -89,6 +67,7 @@ private:
         }
     }
 
+private:
     const char** find(
         const std::string& short_syntax,
         const std::string& long_syntax,
@@ -129,4 +108,4 @@ private:
 };
 
 
-}}}
+}

@@ -4,11 +4,11 @@
 
 int main(int argc, const char* argv[]) 
 {
-    qdb::bench::app::program program;
+    bench::app::program program(argc, argv);
 
     try
     {
-        program.run(argc, argv);
+        program.run();
         return EXIT_SUCCESS;
     }
     catch (std::exception &e)

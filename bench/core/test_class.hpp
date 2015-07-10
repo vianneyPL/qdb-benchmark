@@ -6,7 +6,6 @@
 #include "test_info.hpp"
 #include <bench/core/test_instance.hpp>
 
-namespace qdb {
 namespace bench {
 
 class test_class
@@ -16,4 +15,4 @@ public:
     virtual const test_info& info() const = 0;
 };
 
-}}
+}

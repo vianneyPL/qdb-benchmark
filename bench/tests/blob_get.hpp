@@ -4,7 +4,6 @@
 
 #include <qdb/client.h>
 
-namespace qdb {
 namespace bench {
 namespace tests {
 
@@ -13,7 +12,7 @@ class blob_get : public test_instance_impl<blob_get>
     qdb_handle_t _handle;
 
 public:
-    explicit blob_get(qdb::bench::test_config config)
+    explicit blob_get(bench::test_config config)
         : test_instance_impl(config)
     {
     }
@@ -27,7 +26,7 @@ public:
         qdb_put(_handle, "alias", content.data(), content.size(), 0);
     }
 
-    void run() override
+    void run() const override
     {
         const char* content;
         std::size_t content_size;
@@ -41,7 +40,7 @@ public:
     }
 };
 
-const qdb::bench::test_info qdb::bench::tests::blob_get::_info = 
+const bench::test_info bench::tests::blob_get::_info = 
 {
     // "id":
     "blob_get",
@@ -53,5 +52,4 @@ const qdb::bench::test_info qdb::bench::tests::blob_get::_info =
     true,
 };
 
-}}}
-
+}}

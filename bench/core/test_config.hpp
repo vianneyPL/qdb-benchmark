@@ -2,7 +2,6 @@
 
 #include <string>
 
-namespace qdb {
 namespace bench {
 
 struct test_config
@@ -12,4 +11,4 @@ struct test_config
     int thread_count;
 };
 
-}}
+}

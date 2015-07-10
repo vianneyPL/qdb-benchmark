@@ -2,7 +2,6 @@
 
 #include <string>
 
-namespace qdb {
 namespace bench {
 
 struct test_info
@@ -12,4 +11,4 @@ struct test_info
     bool size_dependent;
 };
 
-}}
+}

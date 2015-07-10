@@ -4,14 +4,13 @@
 #include "test_info.hpp"
 #include "test_result.hpp"
 
-namespace qdb {
 namespace bench {
 
 class test_instance
 {
 public:
     virtual void init() = 0;
-    virtual void run() = 0;
+    virtual void run() const = 0;
     virtual void cleanup() = 0;
 
     virtual const test_config& config() const = 0;
@@ -19,4 +18,4 @@ public:
     virtual const test_result& result() const = 0;
 };
 
-}}
+}

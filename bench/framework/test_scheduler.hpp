@@ -7,17 +7,12 @@
 #include <vector>
 #include <memory>
 
-namespace qdb {
 namespace bench {
 namespace framework {
 
 class test_scheduler
 {   
 public:
-    test_scheduler(const     test_scheduler&) =delete;
-
-    test_scheduler() {}
-
     void set_cluster(std::string cluster)
     {
         _cluster = cluster;
@@ -58,4 +53,4 @@ private:
     std::vector<const test_class*> _test_classes;
 };
 
-}}}
+}}
