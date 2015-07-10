@@ -1,6 +1,6 @@
 #pragma once
 
-#include "test_class.hpp"
+#include <bench/core/test_class.hpp>
 
 #include <vector>
 #include <memory>

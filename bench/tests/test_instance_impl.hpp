@@ -1,7 +1,7 @@
 #pragma once
 
-#include "test_class.hpp"
-#include "test_instance.hpp"
+#include <bench/core/test_class.hpp>
+#include <bench/core/test_instance.hpp>
 
 #include <memory>
 

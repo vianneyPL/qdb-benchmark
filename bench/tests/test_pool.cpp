@@ -1,5 +1,3 @@
-#pragma once
-
 #include "test_pool.hpp"
 #include "blob_get.hpp"
 

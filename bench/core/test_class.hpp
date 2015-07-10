@@ -4,7 +4,7 @@
 
 #include "test_config.hpp"
 #include "test_info.hpp"
-#include "test_instance.hpp"
+#include <bench/core/test_instance.hpp>
 
 namespace qdb {
 namespace bench {
