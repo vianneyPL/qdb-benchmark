@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/core/time_series.h>
+#include <bench/core/time_series.hpp>
 
 #include <chrono>
 
@@ -9,14 +9,11 @@ namespace framework {
 
 class time_sampler
 {
-    const std::chrono::duration _period;    
-    time_series _samples;
-    unsigned long _iterations;
-    std::chrono::time_point _now, _lastSave;
+    using clock = std::chrono::high_resolution_clock;
 
 public:
-    time_sampler()
-        : _iterations(0), _period(std::chrono::seconds(1))
+    time_sampler(time_series& results)
+        : _results(results), _iterations(0), _period(std::chrono::milliseconds(200))
     {        
     }
 
@@ -31,19 +28,24 @@ private:
     void updateState()
     {
         _iterations++;
-        _now = std::chrono::high_resolution_clock::now();
+        _now = clock::now();
     }
 
-    bool isTimeToSaveSnapshot() const
+    bool isTimeToSaveState() const
     {
         return _now - _lastSave >= _period;
     }
 
     void saveState()
     {
-        _samples.add(_now, _iterations);
+        _results.add(_now, _iterations);
         _lastSave = _now;
     }
+
+    const clock::duration _period;
+    time_series& _results;
+    unsigned long _iterations;
+    clock::time_point _now, _lastSave;
 };
 
 }}

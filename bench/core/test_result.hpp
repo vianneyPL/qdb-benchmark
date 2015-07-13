@@ -1,13 +1,10 @@
 #pragma once
 
+#include <bench/core/time_series.hpp>
+
 #include <vector>
 
 namespace bench {
-
-class time_series
-{
-
-};
 
 struct test_result
 {
