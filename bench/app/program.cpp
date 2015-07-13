@@ -96,7 +96,14 @@ void bench::app::program::run_tests()
             std::cout << " - content size = " << test->config().content_size << std::endl;
 
         bench::framework::run_test(*test);
-        std::cout << "Done " << std::endl << std::endl;
+
+        time_series total = time_series::sum(test->result.threads);
+        std::cout << "Done." << std::endl;
+
+        std::cout << " - Average speed = " << total.average() << " op/s" << std::endl;
+        if (test->info().size_dependent)
+            std::cout << " - Average thoughput = " << (total.average() * test->config().content_size / 1024.0 / 1024.0) << " MB/s";
+        std::cout << std::endl << std::endl;        
     }    
 }
 

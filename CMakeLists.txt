@@ -20,7 +20,7 @@ target_link_libraries(qdb-benchmark
 )
 
 add_test(run-help qdb-benchmark --help)
-add_test(run-with-no-param qdb-benchmark)
+add_test(run-with-no-param qdb-benchmark --threads 1)
 
 if(WIN32)
     add_custom_command(TARGET qdb-benchmark POST_BUILD

@@ -1,5 +1,5 @@
 add_library(qdb-bench-framework
-    time_sampler.hpp
+    chronometer.hpp
     test_runner.cpp
     test_runner.hpp
 )

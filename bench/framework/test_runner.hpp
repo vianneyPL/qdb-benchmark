@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bench/core/test_instance.hpp>
-#include <bench/framework/time_sampler.hpp>
+#include <bench/framework/chronometer.hpp>
 
 #include <future>
 #include <thread>
@@ -17,6 +17,7 @@ class test_runner
     test_instance& _test;
     const clock::duration _duration;
     volatile bool _is_running;
+    std::vector<std::future<time_series>> _futures;
 
 public:
     test_runner(test_instance& test)
@@ -30,41 +31,50 @@ public:
         _test.cleanup();
     }    
 
-    void run()
+    void run(/*std::function<void(int)> progress*/)
     {
-        std::vector<std::future<time_series>> results;
-
-        _is_running = true;
-
-        for (int i=0; i<_test.config().thread_count; i++)
-            results.emplace_back(std::async(&test_runner::run_async, this));
-
+        start_threads();
         wait_test_duration();
-
-        _is_running = false;
-
-        for (auto& result : results)
-        {
-            time_series results = result.get();
-            _test.result.threads.emplace_back(results);
-
-            std::cout << " - Average speed = " << results.average() << " it/s" << std::endl;
-        }
+        stop_threads();
+        collect_results();
     }
 
 private:
+    void start_threads()
+    {
+        _is_running = true;
+
+        for (int i=0; i<_test.config().thread_count; i++)
+            _futures.emplace_back(std::async(&test_runner::run_async, this));
+    }
+
+    void stop_threads()
+    {
+        _is_running = false;
+    }
+
+    void collect_results()
+    {
+        for (auto& result : _futures)
+        {
+            time_series _futures = result.get();
+            _test.result.threads.emplace_back(_futures);
+        }
+    }
+
     time_series run_async() const
     {
-        time_series results;
-        time_sampler sampler(results);
+        chronometer chrono;
 
+        chrono.start();
         while (_is_running)
         {
             _test.run();
-            sampler.sample();
+            chrono.step();
         }
+        chrono.stop();
 
-        return results;
+        return chrono.data();
     }
 
     void wait_test_duration() const 

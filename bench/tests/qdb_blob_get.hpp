@@ -16,7 +16,7 @@ public:
     void do_init() override
     {
         std::vector<char> content(_config.content_size);
-        qdb_put(_handle, "alias", content.data(), content.size(), 0);
+        qdb_call(qdb_put, "alias", content.data(), content.size(), 0);
     }
 
     void run() const override
@@ -24,6 +24,8 @@ public:
         const char* content;
         std::size_t content_size;
         qdb_call(qdb_get, "alias", &content, &content_size);
+        if (content_size != config().content_size)
+            throw std::exception();
         qdb_free_buffer(_handle, content);
     }
 

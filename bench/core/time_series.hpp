@@ -13,7 +13,7 @@ public:
 
     void add(clock::time_point time, unsigned long value)
     {
-        _samples.emplace(time, value);
+        _samples[time] += value;
     }
 
     iterator begin() const { return _samples.begin(); }
@@ -21,12 +21,39 @@ public:
 
     double average() const
     {
+        return total() / duration().count();
+    }
+
+    unsigned total() const
+    {
+        unsigned long n = 0;
+        for (auto sample : _samples)
+        {
+            n += sample.second;        
+        }
+        return n;
+    }
+
+    std::chrono::duration<double> duration() const
+    {
         auto first = _samples.begin(); 
         auto last = _samples.rbegin();
-        unsigned long iterations = last->second - first->second;
-        std::chrono::duration<double> elapsed = last->first - first->first;
+        return last->first - first->first;
+    }
 
-        return iterations / elapsed.count();
+    template<typename Collection>
+    static time_series sum(Collection sources)
+    {
+        time_series result;
+        for (const time_series& source : sources)
+        {
+            for (auto sample : source._samples)
+            {
+                result.add(sample.first, sample.second);
+            }     
+        }    
+
+        return result;    
     }
 
 private:
