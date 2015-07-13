@@ -1,13 +1,13 @@
 #include <bench/tests/test_pool.hpp>
-#include <bench/tests/blob_get.hpp>
-#include <bench/tests/int_add.hpp>
+#include <bench/tests/qdb_blob_get.hpp>
+#include <bench/tests/qdb_int_add.hpp>
 
 using namespace bench::tests;
 
 test_pool::test_pool()
 {
-    add<blob_get>();
-    add<int_add>();
+    add<qdb_blob_get>();
+    add<qdb_int_add>();
 }
 
 template<typename Test>

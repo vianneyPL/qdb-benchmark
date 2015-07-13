@@ -9,7 +9,7 @@ namespace bench {
 namespace tests {
 
 template<typename Derived> // CRTP
-class test_instance : public bench::test_instance
+class test_instance_impl : public bench::test_instance
 {
 public:
     class test_class : public bench::test_class
@@ -22,7 +22,7 @@ public:
 
         const bench::test_info& info() const override
         {
-            return test_instance::_info;
+            return test_instance_impl::_info;
         }
     };
 
@@ -43,7 +43,7 @@ public:
     }
 
 protected:
-    explicit test_instance(bench::test_config config)
+    explicit test_instance_impl(bench::test_config config)
         : _config(config)
     {
     }

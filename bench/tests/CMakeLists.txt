@@ -1,5 +1,4 @@
 add_library(qdb-bench-tests
-    blob_get.hpp
     test_pool.cpp
     test_pool.hpp
 )
