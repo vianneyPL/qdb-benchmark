@@ -17,7 +17,7 @@ public:
 
         json 
             << "{" 
-            << "\"id\":\"" << test.info().id << "\","
+            << "\"name\":\"" << test.info().id << "\","
             << "\"description\":\"" << test.info().description << "\","
             << "\"content_size\":\"" << test.config().content_size << "\","
             << "\"threads\":[";

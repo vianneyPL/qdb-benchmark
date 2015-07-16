@@ -7,16 +7,20 @@
     strock: black;
 }
 
-.chart rect {
+.grid-chart rect {
     fill: gray;
     rx: 5;
     ry: 5;
 }
 
-.chart rect:hover {
+.grid-chart rect:hover {
     fill: salmon;
 }
 
-.chart text {
+.grid-chart rect.selected {
+    fill: blue;
+}
+
+.grid-chart text {
     font-family: sans-serif;
 }

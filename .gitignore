@@ -3,3 +3,6 @@
 
 # quasardb binary files
 /qdb/
+
+# Useful during development
+/bench/report/html_template/results.jsonp
