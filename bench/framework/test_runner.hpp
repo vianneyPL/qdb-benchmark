@@ -1,24 +1,19 @@
 #pragma once
 
 #include <bench/core/test_instance.hpp>
-#include <bench/framework/chronometer.hpp>
+#include <bench/framework/test_thread.hpp>
 
-#include <future>
-#include <thread>
 #include <chrono>
 #include <iostream>
+#include <memory>
 
 namespace bench {
 namespace framework {
 
+using clock = std::chrono::high_resolution_clock;
+
 class test_runner
 {
-    using clock = std::chrono::steady_clock;
-    test_instance& _test;
-    const clock::duration _duration;
-    volatile bool _is_running;
-    std::vector<std::future<time_series>> _futures;
-
 public:
     test_runner(test_instance& test)
         : _test(test), _duration(std::chrono::seconds(2))
@@ -33,6 +28,7 @@ public:
 
     void run(/*std::function<void(int)> progress*/)
     {
+        create_threads();
         start_threads();
         wait_test_duration();
         stop_threads();
@@ -40,41 +36,45 @@ public:
     }
 
 private:
-    void start_threads()
+    void create_threads()
     {
-        _is_running = true;
-
         for (int i=0; i<_test.config().thread_count; i++)
-            _futures.emplace_back(std::async(&test_runner::run_async, this));
+            _threads.emplace_back(std::make_unique<test_thread>(_test));
+    }
+
+    void start_threads()
+    {      
+        _start_time = clock::now();
+        for (auto& thread : _threads)
+            thread->start();
     }
 
     void stop_threads()
     {
-        _is_running = false;
+        for (auto& thread : _threads)
+            thread->stop();
     }
 
     void collect_results()
     {
-        for (auto& result : _futures)
+        for (auto& thread : _threads)
         {
-            time_series _futures = result.get();
-            _test.result.threads.emplace_back(_futures);
-        }
-    }
+            thread->stop();
 
-    time_series run_async() const
+            test_result::thread_data result;
+
+            for (test_thread::sample_type sample : thread->result())
+            {
+                result.push_back({get_elapsed_time(sample.time), sample.iterations});
+            }
+
+            _test.result.threads.emplace_back(result);
+        }
+    }  
+
+    unsigned long get_elapsed_time(clock::time_point time) const
     {
-        chronometer chrono;
-
-        chrono.start();
-        while (_is_running)
-        {
-            _test.run();
-            chrono.step();
-        }
-        chrono.stop();
-
-        return chrono.data();
+        return static_cast<unsigned long>(std::chrono::duration_cast<std::chrono::milliseconds>(time - _start_time).count());
     }
 
     void wait_test_duration() const 
@@ -90,8 +90,13 @@ private:
 
     double progress(clock::time_point start_time) const
     {
-        return (clock::now() - start_time).count() * 100 / _duration.count();
+        return static_cast<double>((clock::now() - start_time).count() * 100 / _duration.count());
     }
+
+    test_instance& _test;
+    const clock::duration _duration;
+    std::vector<std::unique_ptr<test_thread>> _threads;   
+    clock::time_point _start_time;
 };
 
 void run_test(test_instance& test)

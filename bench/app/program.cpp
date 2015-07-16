@@ -1,5 +1,6 @@
 #include <bench/app/program.hpp>
 #include <bench/framework/test_runner.hpp>
+#include <bench/report/html.hpp>
 
 #include <iostream>
 
@@ -15,6 +16,7 @@ void bench::app::program::run()
             prepare_schedule();
             print_schedule();
             run_tests();
+            save_html_report();
             break;
 
         case mode::help:
@@ -97,14 +99,18 @@ void bench::app::program::run_tests()
 
         bench::framework::run_test(*test);
 
-        time_series total = time_series::sum(test->result.threads);
         std::cout << "Done." << std::endl;
-
-        std::cout << " - Average speed = " << total.average() << " op/s" << std::endl;
-        if (test->info().size_dependent)
-            std::cout << " - Average thoughput = " << (total.average() * test->config().content_size / 1024.0 / 1024.0) << " MB/s";
-        std::cout << std::endl << std::endl;        
     }    
+}
+
+void bench::app::program::save_html_report()
+{
+    bench::report::html report;
+    for (auto& test : _schedule)
+    {
+        report.add_test(*test);
+    }
+    report.save();
 }
 
 void bench::app::program::show_help()
