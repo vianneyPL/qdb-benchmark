@@ -1,0 +1,22 @@
+.axis path {
+    fill: none;
+    stroke: black;
+}
+
+.axis line {
+    strock: black;
+}
+
+.chart rect {
+    fill: gray;
+    rx: 5;
+    ry: 5;
+}
+
+.chart rect:hover {
+    fill: salmon;
+}
+
+.chart text {
+    font-family: sans-serif;
+}

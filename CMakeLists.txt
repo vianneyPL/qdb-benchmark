@@ -20,7 +20,7 @@ target_link_libraries(qdb-benchmark
 )
 
 add_test(run-help qdb-benchmark --help)
-add_test(run-with-no-param qdb-benchmark --threads 1)
+add_test(run-with-no-param qdb-benchmark)
 
 if(WIN32)
     add_custom_command(TARGET qdb-benchmark POST_BUILD
@@ -28,3 +28,8 @@ if(WIN32)
         ${QDB_API_SHARED_LIBRARY}
         $<TARGET_FILE_DIR:qdb-benchmark>)
 endif()
+
+add_custom_command(TARGET qdb-benchmark POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory 
+    ${CMAKE_SOURCE_DIR}/bench/report/html_template
+    $<TARGET_FILE_DIR:qdb-benchmark>/html_template)

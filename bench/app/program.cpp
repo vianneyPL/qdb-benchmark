@@ -1,6 +1,6 @@
 #include <bench/app/program.hpp>
 #include <bench/framework/test_runner.hpp>
-#include <bench/report/html.hpp>
+#include <bench/report/jsonp.hpp>
 
 #include <iostream>
 
@@ -16,7 +16,7 @@ void bench::app::program::run()
             prepare_schedule();
             print_schedule();
             run_tests();
-            save_html_report();
+            save_jsonp_report();
             break;
 
         case mode::help:
@@ -103,9 +103,9 @@ void bench::app::program::run_tests()
     }    
 }
 
-void bench::app::program::save_html_report()
+void bench::app::program::save_jsonp_report()
 {
-    bench::report::html report;
+    bench::report::jsonp report;
     for (auto& test : _schedule)
     {
         report.add_test(*test);

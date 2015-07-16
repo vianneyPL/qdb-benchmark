@@ -24,7 +24,7 @@ class program
     void prepare_schedule();
     void print_schedule();
     void run_tests();
-    void save_html_report();
+    void save_jsonp_report();
     void show_help();
 
     bench::app::mode _mode;

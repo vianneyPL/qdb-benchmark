@@ -2,13 +2,14 @@
 
 #include <bench/core/test_instance.hpp>
 
+#include <filesystem>
 #include <fstream>
 #include <sstream>
 
 namespace bench {
 namespace report {
 
-class html {
+class jsonp {
 public:
     void add_test(const test_instance& test)
     {
@@ -66,12 +67,6 @@ public:
     }
 
 private:
-    template<typename TimePoint>
-    unsigned long convert_time(TimePoint tp)
-    {
-        return 0;// tp.time_since_epoch() / std::chrono::milliseconds(1);
-    }
-
     std::vector<std::string> test_jsons;
 };
 
