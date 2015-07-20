@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bench/tests/qdb_test_base.hpp>
-#include <utils/create_random_vector.hpp>
+#include <utils/random.hpp>
 
 namespace bench {
 namespace tests {
@@ -14,33 +14,32 @@ public:
     {
     }
 
-    void do_init() override
+    void run() override
     {
+        std::string content = utils::create_random_string(_config.content_size);
+
+        qdb_call(qdb_update, _alias.c_str(), content.data(), content.size(), 0);
     }
 
-    void run() const override
-    {
-        std::vector<char> content = utils::create_random_vector(config().content_size);
-
-        qdb_call(qdb_update, "alias", content.data(), content.size(), 0);
-    }
-
-    void do_cleanup() override
+    ~qdb_blob_update() override
     {        
-        qdb_call(qdb_remove, "alias");
+        qdb_call(qdb_remove, _alias.c_str());
     }
-};
 
-const bench::test_info bench::tests::qdb_blob_update::_info = 
-{
-    // "id":
-    "qdb_blob_update",
+    static std::string id() 
+    {
+        return "qdb_blob_update";
+    }
 
-    // "description":
-    "Repeated qdb_update() of the same entry.",
+    static std::string description() 
+    {
+        return "Repeated qdb_update() of the same entry.";
+    }
 
-    // "size_dependent":
-    true,
+    static bool size_dependent() 
+    {
+        return true;
+    }
 };
 
 }}

@@ -17,9 +17,9 @@ public:
 
         json 
             << "{" 
-            << "\"name\":\"" << test.info().id << "\","
-            << "\"description\":\"" << test.info().description << "\","
-            << "\"content_size\":\"" << test.config().content_size << "\","
+            << "\"name\":\"" << test.test_class.id << "\","
+            << "\"description\":\"" << test.test_class.description << "\","
+            << "\"content_size\":\"" << test.config.content_size << "\","
             << "\"threads\":[";
 
         for (unsigned i=0; i<test.result.threads.size(); i++)

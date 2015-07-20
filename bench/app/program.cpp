@@ -47,23 +47,23 @@ void bench::app::program::prepare_schedule()
     test_config config;
     config.cluster_uri = _settings.cluster_uri;
 
-    for (auto& test : _test_pool)
+    for (auto& test_class : _test_pool)
     {
         for (int thread_count : _settings.thread_counts)
         {
             config.thread_count = thread_count;
-            if (test->info().size_dependent)
+            if (test_class->size_dependent)
             {
                 for (int content_size : _settings.content_sizes)
                 {
                     config.content_size = content_size;
-                    _schedule.emplace_back(test->instanciate(config)); 
+                    _schedule.emplace_back(create_test_instance(*test_class, config)); 
                 }
             }
             else
             {
                 config.content_size = 0;
-                _schedule.emplace_back(test->instanciate(config)); 
+                _schedule.emplace_back(create_test_instance(*test_class, config)); 
             }
         }
     }
@@ -77,10 +77,10 @@ void bench::app::program::print_schedule()
     for (unsigned i=0; i<_schedule.size(); i++)
     {
         auto& test = _schedule[i];
-        std::cout << i << ". " << test->info().id;
-        std::cout << ", threads=" << test->config().thread_count;
-        if (test->info().size_dependent)
-            std::cout << ", size=" << test->config().content_size;
+        std::cout << i << ". " << test.test_class.id;
+        std::cout << ", threads=" << test.config.thread_count;
+        if (test.test_class.size_dependent)
+            std::cout << ", size=" << test.config.content_size;
         std::cout << std::endl;
     }
     std::cout << std::endl;
@@ -92,12 +92,12 @@ void bench::app::program::run_tests()
     {
         auto& test = _schedule[i];
         std::cout << "Now running test " << i+1 << "/" << _schedule.size() << ":" << std::endl;
-        std::cout << " - test = " << test->info().id << " (" << test->info().description << ")" << std::endl;
-        std::cout << " - thread count = " << test->config().thread_count << std::endl;
-        if (test->info().size_dependent)
-            std::cout << " - content size = " << test->config().content_size << std::endl;
+        std::cout << " - test = " << test.test_class.id << " (" << test.test_class.description << ")" << std::endl;
+        std::cout << " - thread count = " << test.config.thread_count << std::endl;
+        if (test.test_class.size_dependent)
+            std::cout << " - content size = " << test.config.content_size << std::endl;
 
-        bench::framework::run_test(*test);
+        bench::framework::run_test(test);
 
         std::cout << "Done." << std::endl;
     }    
@@ -108,7 +108,7 @@ void bench::app::program::save_jsonp_report()
     bench::report::jsonp report;
     for (auto& test : _schedule)
     {
-        report.add_test(*test);
+        report.add_test(test);
     }
     report.save();
 }
@@ -119,9 +119,9 @@ void bench::app::program::show_help()
     std::cout << _cmd_line.help();
 
     std::cout << "Available tests:" << std::endl;
-    for(auto& test : _test_pool)
+    for(auto& test_class : _test_pool)
     {
-        std::cout << " - " << test->info().id << ":" << std::endl;
-        std::cout << "   " << test->info().description << std::endl;
+        std::cout << " - " << test_class->id << ":" << std::endl;
+        std::cout << "   " << test_class->description << std::endl;
     }
 }

@@ -2,6 +2,7 @@
 
 #include <bench/app/settings.hpp>
 #include <bench/tests/test_pool.hpp>
+#include <bench/core/test_instance.hpp>
 #include <utils/command_line.hpp>
 
 namespace bench {
@@ -31,7 +32,7 @@ class program
     bench::app::settings _settings;
     bench::tests::test_pool _test_pool;
     utils::command_line _cmd_line;
-    std::vector<std::unique_ptr<test_instance>> _schedule;
+    std::vector<test_instance> _schedule;
 };
 
 }}

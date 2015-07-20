@@ -1,42 +1,39 @@
 #pragma once
 
-#include <bench/tests/test_instance_impl.hpp>
+#include <bench/tests/test_template.hpp>
+#include <utils/random.hpp>
 
 #include <qdb/client.h>
 
+#include <chrono>
+#include <iostream>
 #include <vector>
+#include <sstream>
 
 namespace bench {
 namespace tests {
 
 template<typename Derived>
-class qdb_test_base : public test_instance_impl<Derived>
+class qdb_test_base : public test_template<Derived>
 {
 public:
-    void init() override final
+    qdb_test_base(test_config config)
+        : _config(config)
     {
+        _alias = create_unique_alias();
         _handle = qdb_open_tcp();
         qdb_call(qdb_connect, _config.cluster_uri.c_str());
-        do_init();
     }
 
-    void cleanup() override final
+    ~qdb_test_base() override
     {
-        do_cleanup();
         qdb_call(qdb_close);
     }
 
-    virtual void do_init() = 0;
-    virtual void do_cleanup() = 0;
-
 protected:    
+    std::string _alias;
     qdb_handle_t _handle;
-    std::vector<char> _content;
-
-    explicit qdb_test_base(bench::test_config config)
-        : test_instance_impl(config), _content(_config.content_size)
-    {
-    }
+    test_config _config;
 
     template<typename Function, typename... Args>
     qdb_error_t qdb_call(Function function, Args... args) const
@@ -52,6 +49,20 @@ private:
         if (!err) return;
 
         throw std::runtime_error(qdb_error(err));
+    }
+
+    static std::string create_unique_alias()
+    {
+        static int alias_counter;
+        std::ostringstream s;
+
+        s << "benchmarks-";
+        s << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        s << "-" << alias_counter;
+
+        alias_counter++;
+
+        return s.str();
     }
 };
 

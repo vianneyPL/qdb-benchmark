@@ -18,13 +18,11 @@ public:
     test_runner(test_instance& test)
         : _test(test), _duration(std::chrono::seconds(2))
     {
-        _test.init();
     }
 
     ~test_runner()
     {
-        _test.cleanup();
-    }    
+    }
 
     void run(/*std::function<void(int)> progress*/)
     {
@@ -38,7 +36,7 @@ public:
 private:
     void create_threads()
     {
-        for (int i=0; i<_test.config().thread_count; i++)
+        for (int i=0; i<_test.config.thread_count; i++)
             _threads.emplace_back(std::make_unique<test_thread>(_test));
     }
 

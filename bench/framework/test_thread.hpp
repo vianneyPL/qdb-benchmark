@@ -2,8 +2,9 @@
 
 #include <bench/core/test_instance.hpp>
 
-#include <thread>
 #include <chrono>
+#include <exception>
+#include <thread>
 
 namespace bench {
 namespace framework {
@@ -21,7 +22,7 @@ public:
     typedef std::vector<sample_type> resut_type;
 
     explicit test_thread(const test_instance& test)
-        : _test(test), _is_running(false), _thread(&test_thread::run, this), _iterations(0)
+        : _eptr(nullptr), _test_runner(create_test_runner(test)), _is_running(false), _thread(&test_thread::run, this), _iterations(0)
     {
     }
 
@@ -38,26 +39,34 @@ public:
     const resut_type& result()
     { 
         _thread.join();
+        if (_eptr) std::rethrow_exception(_eptr);
         return _result;
     }
 
 private:
     void run()
     {
-        wait_to_start();
-        save_sample();
-        
-        while (_is_running)
+        try 
         {
-            run_single_iteration();
-
-            if (is_time_to_save_sample())
+            wait_to_start();
+            save_sample();
+            
+            while (_is_running)
             {
-                save_sample();
-            }
-        }
+                run_single_iteration();
 
-        save_sample();
+                if (is_time_to_save_sample())
+                {
+                    save_sample();
+                }
+            }
+
+            save_sample();
+        }
+        catch(...) 
+        {
+            _eptr = std::current_exception();
+        }
     }
 
     void wait_to_start() const
@@ -67,7 +76,8 @@ private:
 
     void run_single_iteration()
     {
-        _test.run();
+
+        _test_runner->run();
         _iterations++;
     }
 
@@ -82,12 +92,13 @@ private:
          _next_sample_time = clock::now() + _sampling_period;
     }
 
-    const test_instance& _test;
     const clock::duration _sampling_period = std::chrono::milliseconds(100);
     volatile bool _is_running;
-    std::thread _thread;
+    std::exception_ptr _eptr;
     resut_type _result;
     clock::time_point _next_sample_time;
     unsigned long _iterations;
+    std::unique_ptr<test_runner> _test_runner;
+    std::thread _thread;
 };
 }}

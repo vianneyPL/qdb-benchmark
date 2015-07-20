@@ -1,7 +1,6 @@
 #pragma once
 
-#include <bench/core/test_config.hpp>
-#include <bench/core/test_info.hpp>
+#include <bench/core/test_class.hpp>
 #include <bench/core/test_result.hpp>
 
 namespace bench {
@@ -9,14 +8,24 @@ namespace bench {
 class test_instance
 {
 public:
+    test_instance(const test_class& cls, test_config cfg) 
+     : test_class(cls), config(cfg)
+    {
+    }
+
+    const test_class& test_class;
+    test_config config;
     test_result result;
-
-    virtual void init() = 0;
-    virtual void run() const = 0;
-    virtual void cleanup() = 0;
-
-    virtual const test_config& config() const = 0;
-    virtual const test_info& info() const = 0;    
 };
+
+inline test_instance create_test_instance(const test_class& cls, test_config cfg)
+{
+    return test_instance(cls, cfg);
+}
+
+inline std::unique_ptr<test_runner> create_test_runner(const test_instance& instance)
+{
+    return instance.test_class.create_runner(instance.config);
+}
 
 }
