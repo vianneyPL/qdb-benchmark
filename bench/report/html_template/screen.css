@@ -1,3 +1,13 @@
+body {
+    font-family: sans-serif;
+}
+
+h1 {
+    color: #429fd8;
+    background: #0a1b25;
+    padding: 10px;
+}
+
 .axis path {
     fill: none;
     stroke: black;
@@ -7,20 +17,23 @@
     strock: black;
 }
 
-.grid-chart rect {
-    fill: gray;
-    rx: 5;
-    ry: 5;
+.grid-chart .point {
+    fill: #14749b;
 }
 
-.grid-chart rect:hover {
-    fill: salmon;
+.grid-chart .point:hover {
+    fill: #429fd8;
 }
 
-.grid-chart rect.selected {
-    fill: blue;
+.grid-chart .point.selected {
+    fill: #0b334c;
 }
 
 .grid-chart text {
     font-family: sans-serif;
+}
+
+path.thread-speed {
+    stroke-width: 1px;
+    stroke: #14749b;
 }

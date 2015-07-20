@@ -2,8 +2,8 @@ if (!d3.chart) d3.chart = {};
 
 d3.chart.speedGridChart = function() {
 
-    var width = 500;
-    var height = 500;
+    var width = 600;
+    var height = 600;
     var padding = 30; 
     var dispatch = d3.dispatch(chart, "select");
     var data;
@@ -37,9 +37,9 @@ d3.chart.speedGridChart = function() {
 
         var sizeScale = d3.scale.ordinal().domain(sizeValues).rangePoints([d/2+padding,width-d/2-padding]);
         var threadsScale = d3.scale.ordinal().domain(threadsValues).rangePoints([d/2+padding,height-d/2-padding]);
-        var speedScale = d3.scale.linear().domain(speedExtent).range([5,d]);
+        var speedScale = d3.scale.linear().domain(speedExtent).range([10,d]);
 
-        var svg = div.append("svg");
+        var svg = container.append("svg");
 
         svg.attr({
             width: width,
@@ -48,18 +48,20 @@ d3.chart.speedGridChart = function() {
 
         var chart = svg.append("g").classed("grid-chart", true).attr("transform", "translate("+padding+")");
 
-        chart.selectAll("rect")
+        var dotType = "circle";
+
+        chart.selectAll(dotType)
             .data(points)
             .enter()
-            .append("rect")
+            .append(dotType)
+            .classed("point", true)
             .attr({
-                x: function(d) { return sizeScale(d.size)-speedScale(d.speed)/2 },
-                y: function(d) { return threadsScale(d.threads)-speedScale(d.speed)/2 },
-                width: function(d) { return speedScale(d.speed) },
-                height: function(d) { return speedScale(d.speed) },
+                cx: function(d) { return sizeScale(d.size) },
+                cy: function(d) { return threadsScale(d.threads) },
+                r: function(d) { return speedScale(d.speed)/2 }
             })
             .on("click", function(d) {
-                chart.selectAll("rect").classed("selected", false);
+                chart.selectAll(dotType).classed("selected", false);
                 d3.select(this).classed("selected", true);
                 dispatch.select(d.id);
             });
@@ -83,6 +85,7 @@ d3.chart.speedGridChart = function() {
                 x: function(d) { return sizeScale(d.size) },
                 y: function(d) { return threadsScale(d.threads) },
                 "text-anchor": "middle",
+                "dominant-baseline": "central",
                 "pointer-events": "none"
             })
             .text(function(d){

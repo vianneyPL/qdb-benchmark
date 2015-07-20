@@ -19,12 +19,17 @@ for (var key in test_per_class)
         div.append("h1").text(test_per_class[key][0].name);
         div.append("p").text(test_per_class[key][0].description);
 
-        var chart = d3.chart.speedGridChart();
-        chart.data(test_per_class[key]);        
+        var gridChart = d3.chart.speedGridChart();
+        gridChart.data(test_per_class[key]);        
 
-        chart(div);
-        chart.on("select", function(id){
-            console.log("test "+id);
-        })
+        gridChart(div);
+
+        gridChart.on("select", function(id){
+            console.log("test "+id);            
+        });
+
+        var detailChart = d3.chart.threadSpeedChart();
+        detailChart.data(results[34]);
+        detailChart(div);
     }
 }
