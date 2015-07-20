@@ -24,12 +24,14 @@ for (var key in test_per_class)
 
         gridChart(div);
 
-        gridChart.on("select", function(id){
-            console.log("test "+id);            
-        });
-
         var detailChart = d3.chart.threadSpeedChart();
         detailChart.data(results[34]);
         detailChart(div);
+
+        gridChart.on("select", function(id){
+            console.log("test "+id);   
+            detailChart.data(results[id]);  
+            detailChart.update();      
+        });
     }
 }

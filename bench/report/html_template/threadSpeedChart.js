@@ -7,7 +7,7 @@ d3.chart.threadSpeedChart = function() {
     var leftPadding = 100; 
     var padding = 30; 
     var data;
-
+    var svg;
 
     function speedText(x)
     {
@@ -22,12 +22,22 @@ d3.chart.threadSpeedChart = function() {
 
     function chart(container) {
 
-        var svg = container.append("svg")
+        svg = container.append("svg")
             .classed("thread-chart", true)
             .attr({
                 width: width,
                 height: height
-            })
+            });
+
+        svg.append("g").classed("graph", true).attr("transform", "translate("+leftPadding+")");
+        svg.append("g").classed("axis", true).classed("x-axis", true).attr("transform", "translate("+leftPadding+","+(height-padding)+")");
+        svg.append("g").classed("axis", true).classed("y-axis", true).attr("transform", "translate("+leftPadding+")");
+
+        update();
+    }
+
+    chart.update = update;
+    function update() {      
 
         var threads = [];
 
@@ -49,7 +59,7 @@ d3.chart.threadSpeedChart = function() {
             threads.push(points);
         });
 
-        console.log(threads);
+        console.log("threads.lenth", threads.length);
 
         var timeMax = d3.max(threads, function(points) {
             return points[points.length-1].time;
@@ -78,24 +88,29 @@ d3.chart.threadSpeedChart = function() {
             .y(function(d) { return speedScale(d.speed); })
             .interpolate("linear");
 
-        var graph = svg.append("g").attr("transform", "translate("+leftPadding+")");
+        var paths = svg.select(".graph")
+            .selectAll("path")
+            .classed("thread-speed", true)
+            .data(threads)
+            .attr("d", function(d) { return lineFunc(d); })
 
-        for (var j = 0; j < threads.length; j++) {
-            
-            graph.append("path")
-                .classed("thread-speed", true)
-                .attr("d", lineFunc(threads[j]))
-                .attr("fill", "none");
-        }     
+        paths.enter()
+            .append("path")
+            .classed("thread-speed", true)
+            .attr("d", function(d) { return lineFunc(d); })
+            .attr("fill", "none");
+
+
+        paths.exit().remove();
 
         var timeAxis = d3.svg.axis().scale(timeScale).orient("bottom")
           .tickFormat(function(d) { return (d / 1000.0).toFixed(1) + "s"; }) ;
 
-        graph.append("g").classed("axis", true).attr("transform", "translate(0,"+(height-padding)+")").call(timeAxis);
+        svg.selectAll(".x-axis").call(timeAxis);
 
         var speedAxis = d3.svg.axis().scale(speedScale).orient("left")
             .tickFormat(function(d) { return speedText(d); })
-        graph.append("g").classed("axis", true).call(speedAxis); 
+        svg.selectAll(".y-axis").call(speedAxis); 
 
     }
 

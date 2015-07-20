@@ -37,3 +37,8 @@ path.thread-speed {
     stroke-width: 1px;
     stroke: #14749b;
 }
+
+path.thread-speed:hover {
+    stroke-width: 3px;
+    stroke: #429fd8;
+}
