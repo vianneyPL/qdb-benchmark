@@ -23,7 +23,7 @@ d3.chart.speedGridChart = function() {
                 id: test.id,
                 threads: test.threads.length,
                 size: test.content_size,
-                speed: test.content_size*iterations/time
+                speed: test.content_size*iterations*1000.0/time
             });
         });
 

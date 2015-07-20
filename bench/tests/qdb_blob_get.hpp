@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bench/tests/qdb_test_base.hpp>
+#include <utils/create_random_vector.hpp>
 
 namespace bench {
 namespace tests {
@@ -15,7 +16,7 @@ public:
 
     void do_init() override
     {
-        std::vector<char> content(_config.content_size);
+        std::vector<char> content = utils::create_random_vector(config().content_size);
         qdb_call(qdb_put, "alias", content.data(), content.size(), 0);
     }
 

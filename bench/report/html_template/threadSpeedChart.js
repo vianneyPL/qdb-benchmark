@@ -52,7 +52,7 @@ d3.chart.threadSpeedChart = function() {
                 var iterations = thread.iterations[i] - thread.iterations[i-1];
                 points.push({
                     time: thread.times[i],
-                    speed: data.content_size*iterations/elapsed
+                    speed: data.content_size*iterations*1000.0/elapsed
                 });
             }
 

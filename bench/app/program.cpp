@@ -33,8 +33,8 @@ void bench::app::program::parse_command_line()
     bool version            = _cmd_line.get_flag    ("-v", "--version", "Display program version and exists");
     bool help               = _cmd_line.get_flag    ("-h", "--help",    "Display program help and exists");
     _settings.cluster_uri   = _cmd_line.get_string  ("-c", "--cluster", "Set cluster URI", "qdb://127.0.0.1:2836");
-    _settings.thread_counts = _cmd_line.get_integers("",   "--threads", "Set number of threads", "1,4,16");
-    _settings.content_sizes = _cmd_line.get_integers("",   "--sizes",   "Set contents sizes", "1,1000,1000000");
+    _settings.thread_counts = _cmd_line.get_integers("",   "--threads", "Set number of threads", "1,2,4,8,16,32");
+    _settings.content_sizes = _cmd_line.get_integers("",   "--sizes",   "Set contents sizes", "1,10,100,1000,10000,10000,1000000,10000000");
 
     _mode = 
         version ? mode::version :
