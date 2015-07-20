@@ -30,7 +30,7 @@ public:
         const std::string& long_syntax,
         const std::string& description)
     {
-        return find(short_syntax, long_syntax, description) != _end;
+        return find(short_syntax, long_syntax, description, "") != _end;
     }  
 
     std::string get_string(
@@ -38,12 +38,33 @@ public:
         const std::string& long_syntax,
         const std::string& description,
         const std::string& default_value)
-    {
-        auto it = find(short_syntax, long_syntax, description + " (default is " + default_value + ")");
+    {        
+        auto it = find(short_syntax, long_syntax, description, default_value);
         if (it != _end && ++it != _end)
             return *it;
         else
             return default_value;
+    }
+
+    std::vector<std::string> get_strings(
+        const std::string& short_syntax,
+        const std::string& long_syntax,
+        const std::string& description,
+        const std::string& default_value="")
+    {
+        try {        
+            std::vector<std::string> values;        
+            std::string list = get_string(short_syntax, long_syntax, description, default_value);
+
+            for_each_token(list, [&](std::string x){ 
+                values.push_back(x);
+            });
+
+            return values;
+        }
+        catch (...) {
+            throw std::runtime_error("Command line argument " + long_syntax + " is invalid");
+        }
     }
 
     std::vector<int> get_integers(
@@ -71,7 +92,8 @@ private:
     const char** find(
         const std::string& short_syntax,
         const std::string& long_syntax,
-        const std::string& description)
+        const std::string& description,
+        const std::string& default_value)
     {
         _help
             << "  "
@@ -80,8 +102,12 @@ private:
             << short_syntax
             << std::setw(16)
             << long_syntax 
-            << description 
-            << std::endl;
+            << description;
+
+        if (default_value.size()>0)
+            _help << " (default: " << default_value << ")";
+
+        _help << std::endl;
 
         return std::find_if(_begin, _end, 
             [&](const char* arg) { 
@@ -92,6 +118,8 @@ private:
     template<typename Function>
     static void for_each_token(const std::string &input, Function fn) 
     {
+        if (input.empty()) return;
+
         int start = 0;
 
         for(;;)

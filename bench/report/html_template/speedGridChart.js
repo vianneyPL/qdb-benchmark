@@ -39,18 +39,18 @@ d3.chart.speedGridChart = function() {
         var threadsScale = d3.scale.ordinal().domain(threadsValues).rangePoints([d/2+padding,height-d/2-padding]);
         var speedScale = d3.scale.linear().domain(speedExtent).range([10,d]);
 
-        var svg = container.append("svg");
+        var svg = container.append("svg")
+            .classed("grid-chart", true)
+            .attr({
+                width: width,
+                height: height
+            });
 
-        svg.attr({
-            width: width,
-            height: height
-        })
-
-        var chart = svg.append("g").classed("grid-chart", true).attr("transform", "translate("+padding+")");
+        var graph = svg.append("g").classed("graph", true).attr("transform", "translate("+padding+")");
 
         var dotType = "circle";
 
-        chart.selectAll(dotType)
+        graph.selectAll(dotType)
             .data(points)
             .enter()
             .append(dotType)
@@ -61,7 +61,7 @@ d3.chart.speedGridChart = function() {
                 r: function(d) { return speedScale(d.speed)/2 }
             })
             .on("click", function(d) {
-                chart.selectAll(dotType).classed("selected", false);
+                graph.selectAll(dotType).classed("selected", false);
                 d3.select(this).classed("selected", true);
                 dispatch.select(d.id);
             });
@@ -77,7 +77,7 @@ d3.chart.speedGridChart = function() {
             if (x < 1024) return x.toFixed(0) + "GB/s";
         }
 
-        chart.selectAll("text")
+        graph.selectAll("text")
             .data(points.slice(points.length-1))
             .enter()
             .append("text")
@@ -94,10 +94,10 @@ d3.chart.speedGridChart = function() {
             
 
         var sizeAxis = d3.svg.axis().scale(sizeScale).orient("bottom");
-        chart.append("g").classed("axis", true).attr("transform", "translate(0,"+(height-padding)+")").call(sizeAxis);
+        svg.append("g").classed("axis", true).attr("transform", "translate("+padding+","+(height-padding)+")").call(sizeAxis);
 
         var threadsAxis = d3.svg.axis().scale(threadsScale).orient("left");
-        chart.append("g").classed("axis", true).call(threadsAxis);
+        svg.append("g").classed("axis", true).attr("transform", "translate("+padding+",0)").call(threadsAxis);
     }
 
     chart.data = function(value) {

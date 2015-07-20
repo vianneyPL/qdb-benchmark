@@ -27,6 +27,7 @@ class program
     void run_tests();
     void save_jsonp_report();
     void show_help();
+    bool should_run_test(std::string) const;
 
     bench::app::mode _mode;
     bench::app::settings _settings;

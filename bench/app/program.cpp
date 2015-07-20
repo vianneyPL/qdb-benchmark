@@ -2,6 +2,7 @@
 #include <bench/framework/test_runner.hpp>
 #include <bench/report/jsonp.hpp>
 
+#include <algorithm>
 #include <iostream>
 
 void bench::app::program::run() 
@@ -35,11 +36,19 @@ void bench::app::program::parse_command_line()
     _settings.cluster_uri   = _cmd_line.get_string  ("-c", "--cluster", "Set cluster URI", "qdb://127.0.0.1:2836");
     _settings.thread_counts = _cmd_line.get_integers("",   "--threads", "Set number of threads", "1,2,4,8,16,32");
     _settings.content_sizes = _cmd_line.get_integers("",   "--sizes",   "Set contents sizes", "1,10,100,1000,10000,10000,1000000,10000000");
+    _settings.tests         = _cmd_line.get_strings ("",   "--tests",   "Select the tests to run (default=all)");
 
     _mode = 
         version ? mode::version :
         help ? mode::help :
         mode::normal;
+}
+
+bool bench::app::program::should_run_test(std::string id) const
+{
+    if (_settings.tests.empty()) return true;
+
+    return std::find(_settings.tests.begin(), _settings.tests.end(), id) != _settings.tests.end();
 }
 
 void bench::app::program::prepare_schedule()
@@ -49,6 +58,9 @@ void bench::app::program::prepare_schedule()
 
     for (auto& test_class : _test_pool)
     {
+        if(!should_run_test(test_class->id))
+            continue;
+
         for (int thread_count : _settings.thread_counts)
         {
             config.thread_count = thread_count;
@@ -99,7 +111,8 @@ void bench::app::program::run_tests()
 
         bench::framework::run_test(test);
 
-        std::cout << "Done." << std::endl;
+        std::cout << "Done." << std::endl << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }    
 }
 
