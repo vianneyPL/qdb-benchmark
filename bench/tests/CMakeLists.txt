@@ -8,5 +8,10 @@ target_link_libraries(qdb-bench-tests
 )
 
 target_include_directories(qdb-bench-tests
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+    PRIVATE 
+    ${QDB_API_INCLUDE_DIR}
+)
+
+target_link_libraries(qdb-bench-tests
+    ${QDB_API}
 )

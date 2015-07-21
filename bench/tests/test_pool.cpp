@@ -6,16 +6,14 @@
 
 using namespace bench::tests;
 
-test_pool::test_pool()
-{
-    add<qdb_blob_get>();
-    add<qdb_blob_update>();
-    add<qdb_queue_push_back>();
-    // add<qdb_int_add>();
+test_pool::test_pool() {
+  add<qdb_blob_get>();
+  add<qdb_blob_update>();
+  add<qdb_queue_push_back>();
+  // add<qdb_int_add>();
 }
 
-template<typename Test>
-void test_pool::add()
-{
-    _tests.emplace_back(std::make_unique<Test::test_class>());
+template <typename Test>
+void test_pool::add() {
+  _tests.emplace_back(std::make_unique<typename Test::test_class>());
 }

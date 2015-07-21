@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 3.2)
 project(qdb-benchmark)
 enable_testing()
+include(qdb_api.cmake)
 
-set(QDB_API_IMPORT_LIBRARY ${CMAKE_SOURCE_DIR}/qdb/lib/${CMAKE_IMPORT_LIBRARY_PREFIX}qdb_api${CMAKE_IMPORT_LIBRARY_SUFFIX})
-set(QDB_API_SHARED_LIBRARY ${CMAKE_SOURCE_DIR}/qdb/bin/${CMAKE_SHARED_LIBRARY_PREFIX}qdb_api${CMAKE_SHARED_LIBRARY_SUFFIX})
-set(QDBD_EXECUTABLE        ${CMAKE_SOURCE_DIR}/qdb/bin/qdbd${CMAKE_EXECUTABLE_SUFFIX})
+set(CMAKE_CXX_STANDARD 14)
 
 include_directories(${CMAKE_SOURCE_DIR})
 add_subdirectory(bench/app)
@@ -25,11 +24,6 @@ add_test(run-with-no-param qdb-benchmark)
 if(WIN32)
     add_custom_command(TARGET qdb-benchmark POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different 
-        ${QDB_API_SHARED_LIBRARY}
+        ${QDB_API_DLL}
         $<TARGET_FILE_DIR:qdb-benchmark>)
 endif()
-
-add_custom_command(TARGET qdb-benchmark POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory 
-    ${CMAKE_SOURCE_DIR}/bench/report/html_template
-    $<TARGET_FILE_DIR:qdb-benchmark>/html_template)

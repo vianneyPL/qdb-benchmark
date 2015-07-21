@@ -1,0 +1,33 @@
+# http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
+BasedOnStyle: LLVM
+
+AccessModifierOffset: -4
+AlignEscapedNewlinesLeft: false
+AllowShortBlocksOnASingleLine: false
+# AllowShortBlocksOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Empty
+# AllowShortIfStatementsOnASingleLine: true
+# AllowShortLoopsOnASingleLine: true
+AlwaysBreakTemplateDeclarations: true
+
+BinPackArguments: true
+BinPackParameters: false
+
+BreakBeforeBraces: Allman
+
+BreakBeforeBinaryOperators: NonAssignment
+
+ColumnLimit: 120
+IndentWidth: 4
+# KeepEmptyLinesAtTheStartOfBlocks: true
+
+NamespaceIndentation: None
+
+PointerAlignment: Middle
+# SpaceBeforeOperators: true
+SpacesInAngles: false
+
+TabWidth: 4
+UseTab: Never
