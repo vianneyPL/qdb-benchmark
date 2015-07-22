@@ -6,26 +6,10 @@
 #include <algorithm>
 #include <iostream>
 
-void bench::app::program::run(int argc, const char ** argv)
-{
-    parse_command_line(argc, argv);
-    prepare_schedule();
-    run_scheduled_tests();
-    save_jsonp_report();
-}
-
 void bench::app::program::parse_command_line(int argc, const char ** argv)
 {
     command_line parser(_test_pool, _settings);
     parser.parse(argc, argv);
-}
-
-bool bench::app::program::should_run_test(std::string id) const
-{
-    if (_settings.tests.empty())
-        return true;
-
-    return std::find(_settings.tests.begin(), _settings.tests.end(), id) != _settings.tests.end();
 }
 
 void bench::app::program::prepare_schedule()
@@ -34,11 +18,8 @@ void bench::app::program::prepare_schedule()
     config.cluster_uri = _settings.cluster_uri;
     config.duration = _settings.duration;
 
-    for (auto & test_class : _test_pool)
+    for (auto & test_class : _settings.tests)
     {
-        if (!should_run_test(test_class->id))
-            continue;
-
         for (int thread_count : _settings.thread_counts)
         {
             config.thread_count = thread_count;

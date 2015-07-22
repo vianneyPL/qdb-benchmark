@@ -16,14 +16,19 @@ public:
     {
     }
 
-    void run(int argc, const char ** argv);
+    void run(int argc, const char ** argv)
+    {
+        parse_command_line(argc, argv);
+        prepare_schedule();
+        run_scheduled_tests();
+        save_jsonp_report();
+    }
 
 private:
     void parse_command_line(int argc, const char ** argv);
     void prepare_schedule();
     void run_scheduled_tests();
     void save_jsonp_report();
-    bool should_run_test(std::string) const;
 
     settings _settings;
     log::logger & _logger;

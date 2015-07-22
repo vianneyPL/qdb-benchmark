@@ -22,6 +22,17 @@ static size_t parse_size(const std::string & s)
     }
 }
 
+static const bench::test_class * get_test_by_id(const bench::test_collection & tests,
+                                                const std::string & id)
+{
+    for (auto test : tests)
+    {
+        if (test->id == id)
+            return test;
+    }
+    throw std::runtime_error("Invalid test id: " + id);
+}
+
 void bench::app::command_line::parse(int argc, const char ** argv)
 {
     utils::command_line parser(argc, argv);
@@ -40,7 +51,14 @@ void bench::app::command_line::parse(int argc, const char ** argv)
         parser.get_integers("", "--threads", "Set number of threads", "1,2,4,8,16,32");
     _settings.content_sizes = parser.get_values<std::size_t>(
         "", "--sizes", "Set contents sizes", "1,10,100,1K,10K,100K,1M,10M", parse_size);
-    _settings.tests = parser.get_strings("", "--tests", "Select the tests to run (default=all)");
+    _settings.tests = parser.get_values<const test_class *>(
+        "", "--tests", "Select the tests to run (default=all)", "", [this](const std::string & id)
+        {
+            return get_test_by_id(_test_pool, id);
+        });
+
+    if (_settings.tests.empty())
+        _settings.tests = _test_pool; // all test by default
 
     if (help)
     {
