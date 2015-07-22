@@ -1,6 +1,11 @@
 add_library(qdb-bench-tests
-    test_pool.cpp
-    test_pool.hpp
+	qdb/blob_get.hpp
+	qdb/blob_update.hpp
+	qdb/queue_push_back.hpp
+	qdb/test_base.hpp
+    all_tests.cpp
+    all_tests.hpp
+	test_template.hpp
 )
 
 target_link_libraries(qdb-bench-tests

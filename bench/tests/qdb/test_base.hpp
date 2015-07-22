@@ -10,32 +10,34 @@
 #include <vector>
 #include <sstream>
 
-namespace bench {
-namespace tests {
-
-template<typename Derived>
-class qdb_test_base : public test_template<Derived>
+namespace bench
+{
+namespace tests
+{
+namespace qdb
+{
+template <typename Derived>
+class test_base : public test_template<Derived>
 {
 public:
-    qdb_test_base(test_config config)
-        : _config(config)
+    test_base(test_config config) : _config(config)
     {
         _alias = create_unique_alias();
         _handle = qdb_open_tcp();
         qdb_call(qdb_connect, _config.cluster_uri.c_str());
     }
 
-    ~qdb_test_base() override
+    ~test_base() override
     {
         qdb_call(qdb_close);
     }
 
-protected:    
+protected:
     std::string _alias;
     qdb_handle_t _handle;
     test_config _config;
 
-    template<typename Function, typename... Args>
+    template <typename Function, typename... Args>
     qdb_error_t qdb_call(Function function, Args... args) const
     {
         qdb_error_t error = function(_handle, args...);
@@ -46,7 +48,8 @@ protected:
 private:
     void throw_if_error(qdb_error_t err) const
     {
-        if (!err) return;
+        if (!err)
+            return;
 
         throw std::runtime_error(qdb_error(err));
     }
@@ -57,7 +60,8 @@ private:
         std::ostringstream s;
 
         s << "benchmarks-";
-        s << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        s << std::chrono::duration_cast<std::chrono::seconds>(
+                 std::chrono::steady_clock::now().time_since_epoch()).count();
         s << "-" << alias_counter;
 
         alias_counter++;
@@ -65,5 +69,6 @@ private:
         return s.str();
     }
 };
-
-}}
+}
+}
+}

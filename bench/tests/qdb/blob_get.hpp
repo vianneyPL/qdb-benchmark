@@ -1,16 +1,18 @@
 #pragma once
 
-#include <bench/tests/qdb_test_base.hpp>
+#include <bench/tests/qdb/test_base.hpp>
 #include <utils/random.hpp>
 
-namespace bench {
-namespace tests {
-
-class qdb_blob_get : public qdb_test_base<qdb_blob_get>
+namespace bench
+{
+namespace tests
+{
+namespace qdb
+{
+class blob_get : public test_base<blob_get>
 {
 public:
-    qdb_blob_get(bench::test_config config)
-       : qdb_test_base(config)
+    blob_get(bench::test_config config) : test_base(config)
     {
         std::vector<char> content = utils::create_random_vector(config.content_size);
         qdb_call(qdb_put, _alias.c_str(), content.data(), content.size(), 0);
@@ -18,7 +20,7 @@ public:
 
     void run() override
     {
-        const char* content;
+        const char * content;
         std::size_t content_size;
         qdb_call(qdb_get, _alias.c_str(), &content, &content_size);
         if (content_size != _config.content_size)
@@ -26,8 +28,8 @@ public:
         qdb_free_buffer(_handle, content);
     }
 
-    ~qdb_blob_get() override
-    {        
+    ~blob_get() override
+    {
         qdb_call(qdb_remove, _alias.c_str());
     }
 
@@ -46,5 +48,6 @@ public:
         return true;
     }
 };
-
-}}
+}
+}
+}

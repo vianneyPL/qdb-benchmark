@@ -18,8 +18,8 @@ public:
         std::ostringstream json;
 
         json << "{"
-             << "\"name\":\"" << test.test_class.id << "\","
-             << "\"description\":\"" << test.test_class.description << "\","
+             << "\"name\":\"" << test.tclass.id << "\","
+             << "\"description\":\"" << test.tclass.description << "\","
              << "\"content_size\":\"" << test.config.content_size << "\","
              << "\"threads\":[";
 

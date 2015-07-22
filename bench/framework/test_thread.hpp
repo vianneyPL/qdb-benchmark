@@ -6,51 +6,58 @@
 #include <exception>
 #include <thread>
 
-namespace bench {
-namespace framework {
+namespace bench
+{
+namespace framework
+{
 
 using clock = std::chrono::high_resolution_clock;
 
-class test_thread {
+class test_thread
+{
 
 public:
-    struct sample_type {
+    struct sample_type
+    {
         clock::time_point time;
         unsigned long iterations;
-    }; 
+    };
 
     typedef std::vector<sample_type> resut_type;
 
-    explicit test_thread(const test_instance& test)
-        : _eptr(nullptr), _test_runner(create_test_runner(test)), _is_running(false), _thread(&test_thread::run, this), _iterations(0)
+    explicit test_thread(const test_instance & test)
+        : _is_running(false), _eptr(nullptr), _iterations(0),
+          _test_runner(create_test_runner(test)),
+          _thread(&test_thread::run, this)
     {
     }
 
     void start()
-    {        
+    {
         _is_running = true;
     }
 
     void stop()
     {
-        _is_running = false;       
+        _is_running = false;
     }
 
-    const resut_type& result()
-    { 
+    const resut_type & result()
+    {
         _thread.join();
-        if (_eptr) std::rethrow_exception(_eptr);
+        if (_eptr)
+            std::rethrow_exception(_eptr);
         return _result;
     }
 
 private:
     void run()
     {
-        try 
+        try
         {
             wait_to_start();
             save_sample();
-            
+
             while (_is_running)
             {
                 run_single_iteration();
@@ -63,7 +70,7 @@ private:
 
             save_sample();
         }
-        catch(...) 
+        catch (...)
         {
             _eptr = std::current_exception();
         }
@@ -71,7 +78,8 @@ private:
 
     void wait_to_start() const
     {
-        while(!_is_running);
+        while (!_is_running)
+            ;
     }
 
     void run_single_iteration()
@@ -88,8 +96,8 @@ private:
 
     void save_sample()
     {
-         _result.push_back({clock::now(), _iterations});
-         _next_sample_time = clock::now() + _sampling_period;
+        _result.push_back({clock::now(), _iterations});
+        _next_sample_time = clock::now() + _sampling_period;
     }
 
     const clock::duration _sampling_period = std::chrono::milliseconds(100);
@@ -101,4 +109,5 @@ private:
     std::unique_ptr<test_runner> _test_runner;
     std::thread _thread;
 };
-}}
+}
+}

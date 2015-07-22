@@ -1,42 +1,23 @@
 #include <bench/app/program.hpp>
+#include <bench/app/command_line.hpp>
 #include <bench/framework/test_runner.hpp>
 #include <bench/report/jsonp.hpp>
 
 #include <algorithm>
 #include <iostream>
 
-void bench::app::program::run()
+void bench::app::program::run(int argc, const char ** argv)
 {
-    parse_command_line();
-
-    std::cout << "quasardb cluster benchmarking tool" << std::endl;
-
-    switch (_mode)
-    {
-    case mode::normal:
-        prepare_schedule();
-        print_schedule();
-        run_tests();
-        save_jsonp_report();
-        break;
-
-    case mode::help: show_help(); break;
-
-    case mode::version: break;
-    }
+    parse_command_line(argc, argv);
+    prepare_schedule();
+    run_scheduled_tests();
+    save_jsonp_report();
 }
 
-void bench::app::program::parse_command_line()
+void bench::app::program::parse_command_line(int argc, const char ** argv)
 {
-    bool version = _cmd_line.get_flag("-v", "--version", "Display program version and exists");
-    bool help = _cmd_line.get_flag("-h", "--help", "Display program help and exists");
-    _settings.cluster_uri = _cmd_line.get_string("-c", "--cluster", "Set cluster URI", "qdb://127.0.0.1:2836");
-    _settings.thread_counts = _cmd_line.get_integers("", "--threads", "Set number of threads", "1,2,4,8,16,32");
-    _settings.content_sizes =
-        _cmd_line.get_integers("", "--sizes", "Set contents sizes", "1,10,100,1000,10000,100000,1000000,10000000");
-    _settings.tests = _cmd_line.get_strings("", "--tests", "Select the tests to run (default=all)");
-
-    _mode = version ? mode::version : help ? mode::help : mode::normal;
+    command_line parser(_test_pool, _settings);
+    parser.parse(argc, argv);
 }
 
 bool bench::app::program::should_run_test(std::string id) const
@@ -51,6 +32,7 @@ void bench::app::program::prepare_schedule()
 {
     test_config config;
     config.cluster_uri = _settings.cluster_uri;
+    config.duration = _settings.duration;
 
     for (auto & test_class : _test_pool)
     {
@@ -75,41 +57,21 @@ void bench::app::program::prepare_schedule()
             }
         }
     }
+
+    _logger.schedule(_schedule);
 }
 
-void bench::app::program::print_schedule()
-{
-    std::cout << "Using the following settings:" << std::endl;
-    std::cout << " - Cluster: " << _settings.cluster_uri << std::endl;
-    std::cout << "The following test will be performed: " << std::endl;
-    for (unsigned i = 0; i < _schedule.size(); i++)
-    {
-        auto & test = _schedule[i];
-        std::cout << i << ". " << test.test_class.id;
-        std::cout << ", threads=" << test.config.thread_count;
-        if (test.test_class.size_dependent)
-            std::cout << ", size=" << test.config.content_size;
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}
-
-void bench::app::program::run_tests()
+void bench::app::program::run_scheduled_tests()
 {
     for (unsigned i = 0; i < _schedule.size(); i++)
     {
-        auto & test = _schedule[i];
-        std::cout << "Now running test " << i + 1 << "/" << _schedule.size() << ":" << std::endl;
-        std::cout << " - test = " << test.test_class.id << " (" << test.test_class.description << ")" << std::endl;
-        std::cout << " - thread count = " << test.config.thread_count << std::endl;
-        if (test.test_class.size_dependent)
-            std::cout << " - content size = " << test.config.content_size << std::endl;
+        auto & test_instance = _schedule[i];
 
-        bench::framework::run_test(test);
+        _logger.test_started(i + 1, _schedule.size(), test_instance);
+        bench::framework::run_test(test_instance);
+        _logger.test_finished(i + 1, _schedule.size(), test_instance);
 
-        std::cout << "Done." << std::endl
-                  << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(_settings.pause);
     }
 }
 
@@ -121,17 +83,4 @@ void bench::app::program::save_jsonp_report()
         report.add_test(test);
     }
     report.save();
-}
-
-void bench::app::program::show_help()
-{
-    std::cout << "Available command line options:" << std::endl;
-    std::cout << _cmd_line.help();
-
-    std::cout << "Available tests:" << std::endl;
-    for (auto & test_class : _test_pool)
-    {
-        std::cout << " - " << test_class->id << ":" << std::endl;
-        std::cout << "   " << test_class->description << std::endl;
-    }
 }

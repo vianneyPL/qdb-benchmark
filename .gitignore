@@ -5,4 +5,4 @@
 /qdb/
 
 # Useful during development
-/bench/report/html_template/results.jsonp
+/html_report/results.jsonp

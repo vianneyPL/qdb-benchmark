@@ -3,19 +3,33 @@ project(qdb-benchmark)
 enable_testing()
 include(qdb_api.cmake)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
+
+if(NOT MSVC)
+    add_compile_options(-Wall -pedantic)
+endif()
 
 include_directories(${CMAKE_SOURCE_DIR})
 add_subdirectory(bench/app)
+add_subdirectory(bench/core)
 add_subdirectory(bench/framework)
+add_subdirectory(bench/log)
 add_subdirectory(bench/tests)
 
 add_executable(qdb-benchmark
     main.cpp
 )
 
+target_compile_definitions(qdb-benchmark
+	PRIVATE
+	-D_CRT_SECURE_NO_WARNINGS # disable VS warning on getenv()
+)
+
 target_link_libraries(qdb-benchmark
     qdb-bench-app
+    qdb-bench-core
+    qdb-bench-log
+    qdb-bench-tests
 )
 
 add_test(run-help qdb-benchmark --help)

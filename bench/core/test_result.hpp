@@ -2,8 +2,8 @@
 
 #include <vector>
 
-namespace bench {
-
+namespace bench
+{
 struct test_result
 {
     struct thread_data_point
@@ -16,5 +16,4 @@ struct test_result
 
     std::vector<thread_data> threads;
 };
-
 }

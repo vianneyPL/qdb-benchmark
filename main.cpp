@@ -1,19 +1,33 @@
 #include <bench/app/program.hpp>
+#include <bench/log/console_logger.hpp>
+#include <bench/log/teamcity_logger.hpp>
+#include <bench/tests/all_tests.hpp>
 
+#include <cstdlib>
 #include <iostream>
 
-int main(int argc, const char* argv[]) 
+static bench::log::logger & get_logger()
 {
-    bench::app::program program(argc, argv);
+    if (std::getenv("TEAMCITY_VERSION"))
+        return *new bench::log::teamcity_logger();
+    else
+        return *new bench::log::console_logger();
+}
+
+int main(int argc, const char * argv[])
+{
+    bench::log::logger & logger = get_logger();
+    bench::test_collection test_pool = bench::tests::get_all_tests();
+    bench::app::program program(logger, test_pool);
 
     try
     {
-        program.run();
+        program.run(argc, argv);
         return EXIT_SUCCESS;
     }
-    catch (std::exception &e)
+    catch (std::exception & e)
     {
-        std::cerr << "ERROR: " << e.what() << std::endl;
+        logger.fatal_error(e.what());
         return EXIT_FAILURE;
     }
 }
