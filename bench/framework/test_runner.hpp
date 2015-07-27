@@ -64,8 +64,7 @@ private:
 
             for (test_thread::sample_type sample : thread->result())
             {
-                result.push_back(
-                    {get_elapsed_time(sample.time), sample.iterations});
+                result.push_back({get_elapsed_time(sample.time), sample.iterations});
             }
 
             _test.result.threads.emplace_back(result);
@@ -75,8 +74,7 @@ private:
     unsigned long get_elapsed_time(clock::time_point time) const
     {
         return static_cast<unsigned long>(
-            std::chrono::duration_cast<std::chrono::milliseconds>(
-                time - _start_time).count());
+            std::chrono::duration_cast<std::chrono::milliseconds>(time - _start_time).count());
     }
 
     void wait_test_duration() const

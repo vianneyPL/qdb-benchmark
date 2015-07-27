@@ -10,33 +10,34 @@ namespace tests
 {
 namespace qdb
 {
-class int_add : public test_base<int_add>
+class int_update : public test_base<int_update>
 {
+    int _value;
+
 public:
-    explicit int_add(bench::test_config config) : test_base(config)
+    explicit int_update(bench::test_config config) : test_base(config)
     {
         qdb_call(qdb_int_put, _alias.c_str(), 0, 0);
     }
 
     void run() override
     {
-        qdb_int total;
-        qdb_call(qdb_int_add, _alias.c_str(), 1, &total);
+        qdb_call(qdb_int_update, _alias.c_str(), ++_value, 0);
     }
 
-    ~int_add() override
+    ~int_update() override
     {
         qdb_call(qdb_remove, _alias.c_str());
     }
 
     static std::string id()
     {
-        return "qdb_int_add";
+        return "qdb_int_update";
     }
 
     static std::string description()
     {
-        return "Repeated qdb_int_add() of the same entry.";
+        return "Repeated qdb_int_update() of the same entry.";
     }
 
     static bool size_dependent()

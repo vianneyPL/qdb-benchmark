@@ -20,7 +20,7 @@ public:
         json << "{"
              << "\"name\":\"" << test.tclass.id << "\","
              << "\"description\":\"" << test.tclass.description << "\","
-             << "\"content_size\":\"" << test.config.content_size << "\","
+             << "\"content_size\":" << test.config.content_size << ","
              << "\"threads\":[";
 
         for (unsigned i = 0; i < test.result.threads.size(); i++)

@@ -52,6 +52,7 @@ void bench::app::program::run_scheduled_tests()
         bench::framework::run_test(test_instance);
         _logger.test_finished(i + 1, _schedule.size(), test_instance);
 
+        _logger.pause(_settings.pause);
         std::this_thread::sleep_for(_settings.pause);
     }
 }

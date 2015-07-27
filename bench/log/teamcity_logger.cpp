@@ -40,6 +40,11 @@ void bench::log::teamcity_logger::fatal_error(const std::string & message)
     std::cout << "##teamcity[buildProblem description='" << message << "']" << std::endl;
 }
 
+void bench::log::teamcity_logger::pause(std::chrono::duration<int> duration)
+{
+
+}
+
 void bench::log::teamcity_logger::schedule(const std::vector<test_instance> & tests)
 {
 }

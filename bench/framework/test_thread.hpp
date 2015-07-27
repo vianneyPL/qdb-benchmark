@@ -27,8 +27,7 @@ public:
 
     explicit test_thread(const test_instance & test)
         : _is_running(false), _eptr(nullptr), _iterations(0),
-          _test_runner(create_test_runner(test)),
-          _thread(&test_thread::run, this)
+          _test_runner(create_test_runner(test)), _thread(&test_thread::run, this)
     {
     }
 
@@ -56,7 +55,6 @@ private:
         try
         {
             wait_to_start();
-            save_sample();
 
             while (_is_running)
             {
@@ -67,8 +65,6 @@ private:
                     save_sample();
                 }
             }
-
-            save_sample();
         }
         catch (...)
         {

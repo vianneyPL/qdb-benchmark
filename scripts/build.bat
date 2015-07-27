@@ -1,4 +1,5 @@
 @setlocal
+@cd ..
 @mkdir build
 cd build        || @exit /b 1 
 cmake ..        || @exit /b 1

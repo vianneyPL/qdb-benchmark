@@ -6,3 +6,6 @@
 
 # Useful during development
 /html_report/results.jsonp
+
+# OS X
+.DS_Store

@@ -53,6 +53,7 @@ d3.chart.threadSpeedChart = function() {
     function update() {      
 
         var threads = [];
+        var timeMax = 0;
 
         data.threads.forEach(function(thread){
 
@@ -67,16 +68,15 @@ d3.chart.threadSpeedChart = function() {
                     time: thread.times[i],
                     speed: iterations*1000.0/elapsed
                 });
+                if (timeMax<thread.times[i])
+                    timeMax = thread.times[i];
             }
-
+            
             threads.push(points);
         });
 
         console.log("threads.lenth", threads.length);
 
-        var timeMax = d3.max(threads, function(points) {
-            return points[points.length-1].time;
-        });
         var timeScale = d3.scale.linear()
             .domain([0, timeMax])
             .range([0, width-leftPadding-rightPadding]);
