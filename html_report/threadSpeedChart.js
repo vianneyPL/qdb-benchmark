@@ -53,27 +53,28 @@ d3.chart.threadSpeedChart = function() {
     function update() {      
 
         var threads = [];
-        var timeMax = 0;
+        var timeMax = data.threads[data.threads.length-1][0];
 
-        data.threads.forEach(function(thread){
+        for (var i=1; i<data.threads.length; i++)
+        {
+            var currentSample = data.threads[i];
+            var previousSample = data.threads[i-1];
 
-            var points = [];
+            var elapsed = currentSample[0] - previousSample[0];
+            if (elapsed<1) continue;
 
-            for (var i=1; i<thread.times.length; i++)
+            for (var j=0;j<currentSample.length-1;j++)
             {
-                var elapsed = thread.times[i] - thread.times[i-1];
-                if (elapsed<1) continue;
-                var iterations = thread.iterations[i] - thread.iterations[i-1];
-                points.push({
-                    time: thread.times[i],
+                if (threads[j] == undefined) threads[j] = [];
+
+                var iterations = currentSample[j+1] - previousSample[j+1];
+
+                threads[j].push({
+                    time: currentSample[0],
                     speed: iterations*1000.0/elapsed
                 });
-                if (timeMax<thread.times[i])
-                    timeMax = thread.times[i];
             }
-            
-            threads.push(points);
-        });
+        }
 
         console.log("threads.lenth", threads.length);
 

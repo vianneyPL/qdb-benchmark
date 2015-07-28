@@ -3,17 +3,17 @@
 #include <memory>
 
 #include <bench/core/test_config.hpp>
-#include <bench/core/test_runner.hpp>
+#include <bench/core/test_code.hpp>
 
-namespace bench {
-
+namespace bench
+{
 class test_class
 {
 public:
-    std::string id;
+    std::string name;
     std::string description;
     bool size_dependent;
 
-    virtual std::unique_ptr<test_runner> create_runner(test_config) const = 0;
+    virtual std::unique_ptr<test_code> create_code(test_config) const = 0;
 };
 }

@@ -22,15 +22,15 @@ public:
     {
         std::string content = utils::create_random_string(_config.content_size);
 
-        qdb_call(::qdb_queue_push_back, _alias.c_str(), content.data(), content.size());
+        _qdb.call(::qdb_queue_push_back, _alias.c_str(), content.data(), content.size());
     }
 
     ~queue_push_back() override
     {
-        qdb_call(qdb_remove, _alias.c_str());
+        _qdb.call(qdb_remove, _alias.c_str());
     }
 
-    static std::string id()
+    static std::string name()
     {
         return "qdb_queue_push_back";
     }

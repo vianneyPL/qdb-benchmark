@@ -29,7 +29,7 @@ static std::string make_thread_string(int thread_count)
 static std::string make_test_name(const bench::test_instance & test)
 {
     std::string s;
-    s = test.tclass.id + "." + make_thread_string(test.config.thread_count);
+    s = test.tclass.name + "." + make_thread_string(test.config.thread_count);
     if (test.tclass.size_dependent)
         s += "." + make_size_string(test.config.content_size);
     return s;
@@ -42,7 +42,6 @@ void bench::log::teamcity_logger::fatal_error(const std::string & message)
 
 void bench::log::teamcity_logger::pause(std::chrono::duration<int> duration)
 {
-
 }
 
 void bench::log::teamcity_logger::schedule(const std::vector<test_instance> & tests)

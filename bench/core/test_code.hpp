@@ -2,10 +2,10 @@
 
 namespace bench
 {
-class test_runner
+class test_code
 {
 public:
     virtual void run() = 0;
-    virtual ~test_runner(){};
+    virtual ~test_code(){};
 };
 }

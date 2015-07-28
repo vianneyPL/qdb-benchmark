@@ -20,15 +20,15 @@ public:
     {
         std::string content = utils::create_random_string(_config.content_size);
 
-        qdb_call(qdb_update, _alias.c_str(), content.data(), content.size(), 0);
+        _qdb.call(qdb_update, _alias.c_str(), content.data(), content.size(), 0);
     }
 
     ~blob_update() override
     {
-        qdb_call(qdb_remove, _alias.c_str());
+        _qdb.call(qdb_remove, _alias.c_str());
     }
 
-    static std::string id()
+    static std::string name()
     {
         return "qdb_blob_update";
     }

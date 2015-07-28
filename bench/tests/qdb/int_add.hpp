@@ -15,21 +15,21 @@ class int_add : public test_base<int_add>
 public:
     explicit int_add(bench::test_config config) : test_base(config)
     {
-        qdb_call(qdb_int_put, _alias.c_str(), 0, 0);
+        _qdb.call(qdb_int_put, _alias.c_str(), 0, 0);
     }
 
     void run() override
     {
-        qdb_int total;
-        qdb_call(qdb_int_add, _alias.c_str(), 1, &total);
+        qdb_int_t total;
+        _qdb.call(qdb_int_add, _alias.c_str(), 1, &total);
     }
 
     ~int_add() override
     {
-        qdb_call(qdb_remove, _alias.c_str());
+        _qdb.call(qdb_remove, _alias.c_str());
     }
 
-    static std::string id()
+    static std::string name()
     {
         return "qdb_int_add";
     }

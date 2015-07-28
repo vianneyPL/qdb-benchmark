@@ -12,16 +12,12 @@ d3.chart.speedBarChart = function() {
         var points = [];
         data.forEach(function(test){
 
-            var iterations = d3.sum(test.threads, function(thread) {
-                return thread.iterations[thread.iterations.length-1];
-            });
-            var time = d3.max(test.threads, function(thread) {
-                return thread.times[thread.times.length-1];
-            });
+            var time = test.threads[test.threads.length-1][0];
+            var iterations = d3.sum(test.threads[test.threads.length-1].slice(1));
 
             points.push({
                 id: test.id,
-                threads: test.threads.length,
+                threads: test.threads[0].length-1,
                 speed: iterations*1000.0/time
             });
         });

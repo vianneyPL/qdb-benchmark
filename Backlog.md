@@ -18,9 +18,13 @@ Benchmark tools - Backlog
 - [X] Generate summary report for TeamCity
 - [X] Generate plots for each threads
 - [X] Generate summary plots
-- [ ] Download node infos like memory consumption
+- [X] Download node infos like memory consumption
 - [ ] Show estimated run time at start
 - [ ] Show actual run time at the end
+- [ ] Plot total speed
+- [ ] Plot memory consumption
+- [ ] Plot entry count
+- [ ] Report memory usage (min/max/average) to teamcity
 
 # Implementation details
 
@@ -37,6 +41,9 @@ For a minimum duplication in test code, the framework must handle:
 - [X] Test instances contains the result of each thread
 - [X] Test class contains the description of the test
 - [X] Some test are not size-dependent, like "int add"
+- [X] Extract a generic time series class
+- [X] Get rid of the overloaded term "test_runner"
+- [X] Have a single time reference for the whole app (common between all tests and probes)
 
 # Tests
 

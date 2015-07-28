@@ -1,19 +1,17 @@
 #include <bench/core/computations.hpp>
 
 #include <algorithm>
+#include <numeric>
 
-double bench::compute_average_speed(const bench::test_instance & result)
+double bench::compute_average_speed(const bench::test_instance & test)
 {
-    unsigned long iterations = 0;
-    unsigned long duration = 0;
+    const sample<unsigned long> & last_sample = test.result.back();
+    unsigned long iterations =
+        std::accumulate(last_sample.values.begin(), last_sample.values.end(), 0);
+    clock::time_point stop_time = last_sample.time;
 
-    for (auto & thread : result.result.threads)
-    {
-        iterations += thread.back().iterations;
-        duration = std::max(duration, thread.back().time);
-    }
-
-    return iterations * 1000.0 / duration;
+    clock::duration duration = stop_time - test.start_time;
+    return (double)iterations / std::chrono::duration_cast<std::chrono::seconds>(duration).count();
 }
 
 double bench::compute_average_throughput(const bench::test_instance & test)

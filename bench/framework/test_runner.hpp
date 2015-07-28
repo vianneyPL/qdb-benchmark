@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bench/core/clock.hpp>
 #include <bench/core/test_instance.hpp>
 #include <bench/framework/test_thread.hpp>
 #include <utils/memory.hpp>
@@ -11,9 +12,6 @@ namespace bench
 {
 namespace framework
 {
-
-using clock = std::chrono::high_resolution_clock;
-
 class test_runner
 {
 public:
@@ -29,9 +27,8 @@ public:
     {
         create_threads();
         start_threads();
-        wait_test_duration();
+        collect_samples();
         stop_threads();
-        collect_results();
     }
 
 private:
@@ -43,7 +40,7 @@ private:
 
     void start_threads()
     {
-        _start_time = clock::now();
+        _test.start_time = clock::now();
         for (auto & thread : _threads)
             thread->start();
     }
@@ -54,32 +51,30 @@ private:
             thread->stop();
     }
 
-    void collect_results()
+    void sample_now()
     {
+        sample<unsigned long> sample;
+        sample.time = clock::now();
         for (auto & thread : _threads)
         {
-            thread->stop();
-
-            test_result::thread_data result;
-
-            for (test_thread::sample_type sample : thread->result())
-            {
-                result.push_back({get_elapsed_time(sample.time), sample.iterations});
-            }
-
-            _test.result.threads.emplace_back(result);
+            sample.values.push_back(thread->iterations());
         }
+
+        _test.result.emplace_back(sample);
     }
 
-    unsigned long get_elapsed_time(clock::time_point time) const
+    void collect_samples()
     {
-        return static_cast<unsigned long>(
-            std::chrono::duration_cast<std::chrono::milliseconds>(time - _start_time).count());
-    }
+        const clock::duration sampling_period = std::chrono::milliseconds(100);
+        clock::time_point stop_time = clock::now() + _test.config.duration;
 
-    void wait_test_duration() const
-    {
-        std::this_thread::sleep_for(_test.config.duration);
+        sample_now();
+
+        while (clock::now() < stop_time)
+        {
+            std::this_thread::sleep_for(sampling_period);
+            sample_now();
+        }
     }
 
     test_instance & _test;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bench/core/test_class.hpp>
-#include <bench/core/test_runner.hpp>
+#include <bench/core/test_code.hpp>
 #include <utils/memory.hpp>
 
 namespace bench
@@ -9,7 +9,7 @@ namespace bench
 namespace tests
 {
 template <typename Derived> // CRTP
-class test_template : public bench::test_runner
+class test_template : public bench::test_code
 {
 public:
     class test_class : public bench::test_class
@@ -17,22 +17,16 @@ public:
     public:
         test_class()
         {
-            id = Derived::id();
+            name = Derived::name();
             description = Derived::description();
             size_dependent = Derived::size_dependent();
         }
 
-        std::unique_ptr<bench::test_runner> create_runner(bench::test_config config) const override
+        std::unique_ptr<bench::test_code> create_code(bench::test_config config) const override
         {
             return utils::make_unique<Derived>(config);
         }
     };
-
-    static const bench::test_class * get_class()
-    {
-        static test_class cls;
-        return &cls;
-    }
 };
 }
 }

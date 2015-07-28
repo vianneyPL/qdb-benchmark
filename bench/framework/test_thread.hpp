@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bench/core/clock.hpp>
 #include <bench/core/test_instance.hpp>
 
 #include <chrono>
@@ -10,24 +11,14 @@ namespace bench
 {
 namespace framework
 {
-
-using clock = std::chrono::high_resolution_clock;
-
 class test_thread
 {
+    using result_type = std::vector<unsigned long>;
 
 public:
-    struct sample_type
-    {
-        clock::time_point time;
-        unsigned long iterations;
-    };
-
-    typedef std::vector<sample_type> resut_type;
-
     explicit test_thread(const test_instance & test)
-        : _is_running(false), _eptr(nullptr), _iterations(0),
-          _test_runner(create_test_runner(test)), _thread(&test_thread::run, this)
+        : _is_running(false), _iterations(0), _eptr(nullptr), _test_code(create_test_code(test)),
+          _thread(&test_thread::run, this)
     {
     }
 
@@ -39,32 +30,24 @@ public:
     void stop()
     {
         _is_running = false;
-    }
-
-    const resut_type & result()
-    {
         _thread.join();
         if (_eptr)
             std::rethrow_exception(_eptr);
-        return _result;
+    }
+
+    unsigned long iterations()
+    {
+        return _iterations;
     }
 
 private:
     void run()
     {
+        wait_to_start();
         try
         {
-            wait_to_start();
-
             while (_is_running)
-            {
                 run_single_iteration();
-
-                if (is_time_to_save_sample())
-                {
-                    save_sample();
-                }
-            }
         }
         catch (...)
         {
@@ -80,29 +63,14 @@ private:
 
     void run_single_iteration()
     {
-
-        _test_runner->run();
+        _test_code->run();
         _iterations++;
     }
 
-    bool is_time_to_save_sample() const
-    {
-        return clock::now() >= _next_sample_time;
-    }
-
-    void save_sample()
-    {
-        _result.push_back({clock::now(), _iterations});
-        _next_sample_time = clock::now() + _sampling_period;
-    }
-
-    const clock::duration _sampling_period = std::chrono::milliseconds(100);
     volatile bool _is_running;
+    volatile unsigned long _iterations;
     std::exception_ptr _eptr;
-    resut_type _result;
-    clock::time_point _next_sample_time;
-    unsigned long _iterations;
-    std::unique_ptr<test_runner> _test_runner;
+    std::unique_ptr<test_code> _test_code;
     std::thread _thread;
 };
 }
