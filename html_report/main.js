@@ -17,11 +17,14 @@ function add_charts_for_test_class(test)
     div.append("h1").text(test[0].name);
     div.append("p").text(test[0].description);
 
+    var summaryDiv = div.append("div").classed("summary", true);
+    var detailDiv = div.append("div").classed("detail", true);
+
     if (test[0].content_size > 0)
     {
-        var gridChart = d3.chart.speedGridChart();
+        var gridChart = d3.chart.bubbleChart();
         gridChart.data(test);     
-        gridChart(div);
+        gridChart(summaryDiv);
         gridChart.on("select", function(id){
             console.log("test "+id);   
             detailChart.data(results[id]);  
@@ -30,9 +33,9 @@ function add_charts_for_test_class(test)
     }
     else
     {
-        var barChart = d3.chart.speedBarChart();
+        var barChart = d3.chart.horizontalBarChart();
         barChart.data(test);     
-        barChart(div);
+        barChart(summaryDiv);
         barChart.on("select", function(id){
             console.log("test "+id);   
             detailChart.data(results[id]);  
@@ -40,9 +43,9 @@ function add_charts_for_test_class(test)
         });
     }
 
-    var detailChart = d3.chart.threadSpeedChart();
+    var detailChart = d3.chart.lineChart();
     detailChart.data(test[0]);
-    detailChart(div);
+    detailChart(detailDiv);
 }
 
 for (var key in test_per_class)

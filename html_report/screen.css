@@ -17,24 +17,34 @@ h1 {
     strock: black;
 }
 
-.grid-chart .point {
+.bubble-chart .bubble,
+.bar-chart .bar {
     fill: #14749b;
 }
 
-.grid-chart .point:hover {
+.bubble-chart .bubble:hover,
+.bar-chart .bar:hover  {
     fill: #429fd8;
 }
 
-.grid-chart .point.selected {
+.bubble-chart .bubble.selected,
+.bar-chart .bar.selected {
     fill: #0b334c;
 }
 
-.grid-chart text {
+.bubble-chart text,
+.bar-chart .graph text {
     font-family: sans-serif;
 }
 
-.grid-chart .graph text {
+.bubble-chart .graph text,
+.bar-chart .graph text {
     fill: white;
+}
+
+.bar-chart .bar {
+    rx: 5px;
+    ry: 5px;
 }
 
 path.thread-speed {
@@ -45,4 +55,41 @@ path.thread-speed {
 path.thread-speed:hover {
     stroke-width: 3px;
     stroke: #429fd8;
+}
+
+div.summary {
+    width: 600px;
+    display: inline-block;
+}
+
+div.summary > svg {
+    width: 100%;
+    height: 600px;
+}
+
+div.detail {
+    width: 600px;
+    display: inline-block;
+}
+
+div.detail > svg {
+    width: 100%;
+    height: 600px;
+}
+
+div.header {
+    margin-left: 200px;
+    border: 1px solid gray;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.header > button {
+    width: 10px;
+}
+
+.header > span {
+    width: 180px;
+    display: inline-block;
+    text-align: center;
 }
