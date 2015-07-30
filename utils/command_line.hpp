@@ -126,8 +126,7 @@ private:
         _help << "  " << std::left << std::setw(3) << short_syntax
               << std::setw(16) << long_syntax << description;
 
-        if (default_value.size() > 0)
-            _help << " (default: " << default_value << ")";
+        if (default_value.size() > 0) _help << " (default: " << default_value << ")";
 
         _help << std::endl;
 
@@ -141,14 +140,13 @@ private:
     template <typename Function>
     static void for_each_token(const std::string & input, Function fn)
     {
-        if (input.empty())
-            return;
+        if (input.empty()) return;
 
-        int start = 0;
+        size_t start = 0;
 
         for (;;)
         {
-            int stop = input.find(',', start);
+            const size_t stop = input.find(',', start);
 
             std::string token = input.substr(start, stop - start);
             try
@@ -163,7 +161,7 @@ private:
             if (stop == std::string::npos)
                 break;
 
-            start = stop + 1;
+            start = stop + 1u;
         }
     }
 };

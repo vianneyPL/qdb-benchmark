@@ -3,6 +3,8 @@
 #include <bench/tests/qdb/test_base.hpp>
 #include <utils/random.hpp>
 
+#include <qdb/blob.h>
+
 namespace bench
 {
 namespace tests

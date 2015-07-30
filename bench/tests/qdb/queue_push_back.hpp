@@ -14,9 +14,7 @@ namespace qdb
 class queue_push_back : public test_base<queue_push_back>
 {
 public:
-    explicit queue_push_back(bench::test_config config) : test_base(config)
-    {
-    }
+    explicit queue_push_back(bench::test_config config) : test_base(config) {}
 
     void run() override
     {

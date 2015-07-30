@@ -21,12 +21,12 @@ void bench::app::program::prepare_schedule()
 
     for (auto & test_class : _settings.tests)
     {
-        for (int thread_count : _settings.thread_counts)
+        for (auto thread_count : _settings.thread_counts)
         {
             config.thread_count = thread_count;
             if (test_class->size_dependent)
             {
-                for (int content_size : _settings.content_sizes)
+                for (auto content_size : _settings.content_sizes)
                 {
                     config.content_size = content_size;
                     _schedule.emplace_back(create_test_instance(*test_class, config));
@@ -45,13 +45,13 @@ void bench::app::program::prepare_schedule()
 
 void bench::app::program::run_scheduled_tests()
 {
-    for (unsigned i = 0; i < _schedule.size(); i++)
+    for (auto i = 0u; i < _schedule.size(); i++)
     {
         auto & test_instance = _schedule[i];
 
-        _logger.test_started(i + 1, _schedule.size(), test_instance);
+        _logger.test_started(i + 1u, _schedule.size(), test_instance);
         bench::framework::run_test(test_instance);
-        _logger.test_finished(i + 1, _schedule.size(), test_instance);
+        _logger.test_finished(i + 1u, _schedule.size(), test_instance);
 
         _logger.pause(_settings.pause);
         std::this_thread::sleep_for(_settings.pause);

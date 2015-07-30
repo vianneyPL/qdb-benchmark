@@ -3,6 +3,8 @@
 #include <bench/tests/qdb/test_base.hpp>
 #include <utils/random.hpp>
 
+#include <qdb/blob.h>
+
 namespace bench
 {
 namespace tests
@@ -12,9 +14,7 @@ namespace qdb
 class blob_update : public test_base<blob_update>
 {
 public:
-    explicit blob_update(bench::test_config config) : test_base(config)
-    {
-    }
+    explicit blob_update(bench::test_config config) : test_base(config) {}
 
     void run() override
     {
