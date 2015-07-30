@@ -12,16 +12,13 @@ d3.chart.bubbleChart = function() {
 
     function chart(container) {
 
-        header = container.append("div").classed("header", true);
-        header.append("button").classed("left", true).on("click", function() {
-            selectedSerie+=testSeries.length-1;
-            update();
-        });
-        header.append("span");
-        header.append("button").classed("right", true).on("click", function() {
-            selectedSerie++;
-            update();
-        });
+        header = d3.chart
+            .chartSelector()
+            .on("select", function(inc) {
+                selectedSerie+=testSeries.length+inc;
+                update();
+            });
+        header(container);
 
         svg = container.append("svg")
             .classed("bubble-chart", true)
@@ -58,7 +55,7 @@ d3.chart.bubbleChart = function() {
         var threadsScale = d3.scale.ordinal().domain(threadsValues).rangePoints([d/2+padding,height-d/2-padding]);
         var speedScale = d3.scale.linear().domain(speedExtent).range([10,d]);
 
-        header.selectAll("span").text(serie.name);
+        header.text(serie.name);
 
         var circles = graph
             .selectAll("circle")

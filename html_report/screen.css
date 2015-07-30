@@ -77,15 +77,25 @@ div.detail > svg {
     height: 600px;
 }
 
-div.header {
-    margin-left: 200px;
-    border: 1px solid gray;
+.header {
+    margin-left: 170px;
     border-radius: 3px;
     display: inline-block;
+    background: #0b334c;
+    color: white;
 }
 
 .header > button {
-    width: 10px;
+    margin: 2px;
+    padding: 5px;
+    background-color:  #14749b;
+    border-radius: 2px;
+    border: none;
+    color: white;
+}
+
+.header > button:hover {
+    background-color:  #429fd8;
 }
 
 .header > span {

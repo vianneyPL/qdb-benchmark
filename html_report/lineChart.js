@@ -88,16 +88,13 @@ d3.chart.lineChart = function() {
 
     function chart(container) {
 
-        header = container.append("div").classed("header", true);
-        header.append("button").classed("left", true).on("click", function() {
-            selectedSerie+=series.length;
-            update();
-        });
-        header.append("span");
-        header.append("button").classed("right", true).on("click", function() {
-            selectedSerie++;
-            update();
-        });
+        header = d3.chart
+            .chartSelector()
+            .on("select", function(inc) {
+                selectedSerie+=series.length+inc;
+                update();
+            });
+        header(container);
 
         svg = container.append("svg")
             .classed("thread-chart", true)
@@ -117,7 +114,7 @@ d3.chart.lineChart = function() {
     function update() {      
 
         var serie = series[selectedSerie%series.length];
-        header.selectAll("span").text(serie.name);
+        header.text(serie.name);
 
         var lines = serie.lines(data);
         var timeMax = d3.max(lines[0], function(d){return d.time})

@@ -12,16 +12,13 @@ d3.chart.horizontalBarChart = function() {
 
     function chart(container) {
 
-        header = container.append("div").classed("header", true);
-        header.append("button").classed("left", true).on("click", function() {
-            selectedSerie+=testSeries.length-1;
-            update();
-        });
-        header.append("span");
-        header.append("button").classed("right", true).on("click", function() {
-            selectedSerie++;
-            update();
-        });
+        header = d3.chart
+            .chartSelector()
+            .on("select", function(inc) {
+                selectedSerie+=testSeries.length+inc;
+                update();
+            });
+        header(container);
 
         svg = container
             .append("svg")
@@ -50,7 +47,7 @@ d3.chart.horizontalBarChart = function() {
 
         var serie = testSeries[selectedSerie%testSeries.length];
 
-        header.selectAll("span").text(serie.name);
+        header.text(serie.name);
 
         var points = data.map(function(test){
             return {
