@@ -4,7 +4,7 @@ var unit = (function(){
         value = parseFloat(value);
         var mulipliers = ["", "k", "M", "G", "T", "P"];
         var m = 0;
-        while (value>=div && m<mulipliers.length-1) {
+        while ((value>=div || value<=-div) && m<mulipliers.length-1) {
             value/=div;
             m++;
         }
@@ -26,8 +26,16 @@ var unit = (function(){
             return formatValue(x, 1024, "B/s");
         },
 
+        kilobyte_per_second: function(x) {
+            return formatValue(x*1000, 1024, "B/s");
+        },
+
         hertz: function(x) {
             return formatValue(x, 1000, "Hz");
+        }, 
+
+        kilohertz: function(x) {
+            return formatValue(x*1000, 1000, "Hz");
         }, 
 
         millisecond: function(x) {

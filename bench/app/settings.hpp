@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/core/test_collection.hpp>
+#include <bench/core/test_class.hpp>
 
 #include <chrono>
 #include <string>
@@ -15,7 +15,7 @@ struct settings
     std::string cluster_uri;
     std::vector<int> thread_counts;
     std::vector<std::size_t> content_sizes;
-    test_collection tests;
+    test_class_collection tests;
     std::chrono::duration<int> pause;
     std::chrono::duration<int> duration;
 };

@@ -2,7 +2,6 @@ add_library(qdb-bench-core
 	computations.cpp
 	computations.hpp
     probe_class.hpp
-    probe_code.hpp
     probe_config.hpp
     probe_instance.hpp
     test_class.hpp

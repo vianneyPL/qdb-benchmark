@@ -4,9 +4,12 @@
 #include <bench/core/test_code.hpp>
 #include <bench/core/time_series.hpp>
 
+#include <map>
+#include <string>
+
 namespace bench
 {
-using test_result = time_series<unsigned long>;
+using test_result = std::map<std::string, time_series>;
 
 class test_instance
 {
@@ -18,8 +21,10 @@ public:
     const test_class & tclass;
     test_config config;
     test_result result;
-    clock::time_point start_time;
+    time_point start_time;
 };
+
+using test_instance_collection = std::vector<test_instance>;
 
 inline test_instance create_test_instance(const test_class & cls, test_config cfg)
 {

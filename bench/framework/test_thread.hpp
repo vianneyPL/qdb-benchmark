@@ -13,8 +13,6 @@ namespace framework
 {
 class test_thread
 {
-    using result_type = std::vector<unsigned long>;
-
 public:
     explicit test_thread(const test_instance & test)
         : _is_running(false), _iterations(0), _eptr(nullptr), _test_code(create_test_code(test)),
@@ -31,8 +29,7 @@ public:
     {
         _is_running = false;
         _thread.join();
-        if (_eptr)
-            std::rethrow_exception(_eptr);
+        if (_eptr) std::rethrow_exception(_eptr);
     }
 
     unsigned long iterations()
@@ -73,5 +70,7 @@ private:
     std::unique_ptr<test_code> _test_code;
     std::thread _thread;
 };
+
+using test_thread_collection = std::vector<std::unique_ptr<test_thread>>;
 }
 }

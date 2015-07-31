@@ -22,13 +22,12 @@ static size_t parse_size(const std::string & s)
     }
 }
 
-static const bench::test_class * get_test_by_name(const bench::test_collection & tests,
+static const bench::test_class * get_test_by_name(const bench::test_class_collection & tests,
                                                   const std::string & name)
 {
     for (auto test : tests)
     {
-        if (test->name == name)
-            return test;
+        if (test->name == name) return test;
     }
     throw std::runtime_error("Invalid test name: " + name);
 }
@@ -57,8 +56,7 @@ void bench::app::command_line::parse(int argc, const char ** argv)
             return get_test_by_name(_test_pool, name);
         });
 
-    if (_settings.tests.empty())
-        _settings.tests = _test_pool; // all test by default
+    if (_settings.tests.empty()) _settings.tests = _test_pool; // all test by default
 
     if (help)
     {

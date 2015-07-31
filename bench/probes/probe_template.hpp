@@ -1,6 +1,5 @@
 #pragma once
 
-#include <bench/core/probe_code.hpp>
 #include <bench/core/probe_class.hpp>
 #include <utils/memory.hpp>
 
@@ -9,7 +8,7 @@ namespace bench
 namespace probes
 {
 template <typename Derived> // CRTP
-class probe_template : public bench::probe_code
+class probe_template : public bench::probe_instance
 {
 public:
     class probe_class : public bench::probe_class
@@ -21,8 +20,8 @@ public:
             description = Derived::description();
         }
 
-        std::unique_ptr<bench::probe_code>
-        create_code(const bench::probe_config & config) const override
+        std::unique_ptr<bench::probe_instance>
+        create_instance(const bench::probe_config & config) const override
         {
             return utils::make_unique<Derived>(config);
         }

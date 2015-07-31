@@ -2,7 +2,10 @@
 
 #include <bench/core/clock.hpp>
 #include <bench/core/test_instance.hpp>
+#include <bench/core/probe_instance.hpp>
+#include <bench/core/probe_class.hpp>
 #include <bench/framework/test_thread.hpp>
+#include <bench/framework/test_iteration_probe.hpp>
 #include <utils/memory.hpp>
 
 #include <chrono>
@@ -15,7 +18,8 @@ namespace framework
 class test_runner
 {
 public:
-    test_runner(test_instance & test) : _test(test)
+    test_runner(test_instance & test, const probe_class_collection & probe_pool)
+        : _test(test), _probe_pool(probe_pool)
     {
     }
 
@@ -26,12 +30,26 @@ public:
     void run()
     {
         create_threads();
+        create_probes(); // requires threads
         start_threads();
         collect_samples();
         stop_threads();
+        save_result();
     }
 
 private:
+    void create_probes()
+    {
+        probe_config cfg;
+        cfg.node_uri = _test.config.cluster_uri; // :-(
+        for (auto probe_class : _probe_pool)
+        {
+            _probes.push_back(probe_class->create_instance(cfg));
+        }
+        //_probes.push_back(utils::make_unique<test_iteration_probe>(_threads));
+        _probes.push_back(std::unique_ptr<probe_instance>(new test_iteration_probe(_threads)));
+    }
+
     void create_threads()
     {
         for (int i = 0; i < _test.config.thread_count; i++)
@@ -53,20 +71,16 @@ private:
 
     void sample_now()
     {
-        sample<unsigned long> sample;
-        sample.time = clock::now();
-        for (auto & thread : _threads)
-        {
-            sample.values.push_back(thread->iterations());
-        }
+        time_point now = clock::now();
 
-        _test.result.emplace_back(sample);
+        for (auto & probe : _probes)
+            probe->take_sample(now);
     }
 
     void collect_samples()
     {
-        const clock::duration sampling_period = std::chrono::milliseconds(100);
-        clock::time_point stop_time = clock::now() + _test.config.duration;
+        const duration sampling_period = std::chrono::milliseconds(100);
+        time_point stop_time = clock::now() + _test.config.duration;
 
         sample_now();
 
@@ -77,14 +91,27 @@ private:
         }
     }
 
+    void save_result()
+    {
+        for (auto & probe : _probes)
+        {
+            for (auto & pair : probe->result)
+            {
+                _test.result[pair.first] = pair.second;
+            }
+        }
+    }
+
     test_instance & _test;
-    std::vector<std::unique_ptr<test_thread>> _threads;
-    clock::time_point _start_time;
+    test_thread_collection _threads;
+    probe_instance_collection _probes;
+    probe_class_collection _probe_pool;
+    time_point _start_time;
 };
 
-void run_test(test_instance & test)
+void run_test(test_instance & test, const probe_class_collection & probes)
 {
-    test_runner(test).run();
+    test_runner(test, probes).run();
 }
 }
 }

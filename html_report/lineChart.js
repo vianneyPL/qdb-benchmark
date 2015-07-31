@@ -1,60 +1,5 @@
 if (!d3.chart) d3.chart = {};
 
-
-function getTestFrequency(test) {
-    var lines = [];
-    var serie = test.threads;
-    for (var i=1; i<serie.length; i++)
-    {
-        var currentSample = serie[i];
-        var previousSample = serie[i-1];
-
-        var elapsed = currentSample[0] - previousSample[0];
-        if (elapsed<1) continue;
-
-        for (var j=0;j<currentSample.length-1;j++)
-        {
-            if (lines[j] == undefined) lines[j] = [];
-
-            var iterations = currentSample[j+1] - previousSample[j+1];
-
-            lines[j].push({
-                time: currentSample[0],
-                speed: iterations*1000.0/elapsed
-            });
-        }
-    }
-    return lines;
-}
-
-function getTestThroughput(test) {
-    var lines = getTestFrequency(test);
-    lines.forEach(function(points){
-        points.forEach(function(d){d.speed*=test.content_size})
-    });
-    return lines
-}
-
-function getTestMemory(test) {
-    var lines = [];
-    var serie = test.qdb_node_memory;
-    for (var i=0; i<serie.length; i++)
-    {
-        var currentSample = serie[i];
-
-        for (var j=0;j<currentSample.length-1;j++)
-        {
-            if (lines[j] == undefined) lines[j] = [];
-
-            lines[j].push({
-                time: currentSample[0],
-                speed: currentSample[j+1]
-            });
-        }
-    }
-    return lines;
-}
-
 d3.chart.lineChart = function() {
 
     var width = 600;
@@ -69,22 +14,7 @@ d3.chart.lineChart = function() {
     var headerWidth = 300;
     var selectedSerie = 0;
 
-    var series = [
-        {
-            "name": "Throughput",
-            "unit": unit.byte_per_second,
-            "lines": getTestThroughput
-        },
-        {
-            "name": "Frequency",
-            "unit": unit.hertz,
-            "lines": getTestFrequency
-        },
-        {
-            "name": "Memory usage",
-            "unit": unit.byte,
-            "lines": getTestMemory
-        }];
+    var series = lineSeries;
 
     function chart(container) {
 
@@ -97,7 +27,7 @@ d3.chart.lineChart = function() {
         header(container);
 
         svg = container.append("svg")
-            .classed("thread-chart", true)
+            .classed("line-chart", true)
             .attr({
                 "viewBox": "0 0 "+width+" "+height,
                 "preserveAspectRatio": "xMinYMin meet"
@@ -123,48 +53,63 @@ d3.chart.lineChart = function() {
             .domain([0, timeMax])
             .range([0, width-leftPadding-rightPadding]);
 
-        var speedMax = d3.max(lines, function(points) {
+        var valueMax = d3.max(lines, function(points) {
             return d3.max(points, function(d) {
-                return d.speed;
+                return d.value;
             });
         });
-        var speedMin = d3.min(lines, function(points) {
+        var valueMin = d3.min(lines, function(points) {
             return d3.min(points, function(d) {
-                return d.speed;
+                return d.value;
             });
         });
-        var speedScale = d3.scale.linear()
-            .domain([speedMin, speedMax])
+
+        if (valueMin == valueMax) {
+            valueMin *= 0.9;
+            valueMax *= 1.1;
+        }
+
+        var valueScale = d3.scale.linear()
+            .domain([valueMin, valueMax])
             .range([height-padding, 0]);
 
         var lineFunc = d3.svg.line()
             .x(function(d) { return timeScale(d.time); })
-            .y(function(d) { return speedScale(d.speed); })
+            .y(function(d) { return valueScale(d.value); })
             .interpolate("linear");
 
         var paths = svg.select(".graph")
             .selectAll("path")
-            .classed("thread-speed", true)
-            .data(lines)
+            .classed("line", true)
+            .data(lines);
+
+        paths
+            .transition()
             .attr("d", function(d) { return lineFunc(d); })
 
-        paths.enter()
+        paths
+            .enter()
             .append("path")
-            .classed("thread-speed", true)
+            .classed("line", true)
+            .attr("opacity", 0)
             .attr("d", function(d) { return lineFunc(d); })
-            .attr("fill", "none");
+            .transition()
+            .attr("opacity", 1)
 
-
-        paths.exit().remove();
+        paths
+            .exit()
+            .transition()
+            .attr("opacity", 0)
+            .remove();
 
         var timeAxis = d3.svg.axis().scale(timeScale).orient("bottom")
           .tickFormat(function(d) { return unit.millisecond(d); }) ;
 
         svg.selectAll(".x-axis").call(timeAxis);
 
-        var speedAxis = d3.svg.axis().scale(speedScale).orient("left")
+        var valueAxis = d3.svg.axis().scale(valueScale).orient("left")
             .tickFormat(function(d) { return serie.unit(d); })
-        svg.selectAll(".left-axis").call(speedAxis); 
+        svg.selectAll(".left-axis").call(valueAxis); 
     }
 
     chart.data = function(value) {

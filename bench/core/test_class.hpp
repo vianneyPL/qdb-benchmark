@@ -1,9 +1,10 @@
 #pragma once
 
-#include <memory>
-
 #include <bench/core/test_config.hpp>
 #include <bench/core/test_code.hpp>
+
+#include <memory>
+#include <vector>
 
 namespace bench
 {
@@ -16,4 +17,6 @@ public:
 
     virtual std::unique_ptr<test_code> create_code(test_config) const = 0;
 };
+
+typedef std::vector<const test_class *> test_class_collection;
 }

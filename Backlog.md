@@ -22,9 +22,11 @@ Benchmark tools - Backlog
 - [ ] Show estimated run time at start
 - [ ] Show actual run time at the end
 - [ ] Plot total speed
-- [ ] Plot memory consumption
-- [ ] Plot entry count
+- [X] Plot memory consumption
+- [X] Plot entry count
 - [ ] Report memory usage (min/max/average) to teamcity
+- [ ] Report frequency to teamcity
+- [ ] Limit test by number of iterations
 
 # Implementation details
 
@@ -44,9 +46,12 @@ For a minimum duplication in test code, the framework must handle:
 - [X] Extract a generic time series class
 - [X] Get rid of the overloaded term "test_runner"
 - [X] Have a single time reference for the whole app (common between all tests and probes)
+- [X] A single probe can generate multiple series
+- [X] Do not create a thread for probes
 
 # Tests
 
+- [X] qdb_blob_get_noalloc
 - [ ] Repeated blob put
 - [X] Repeated blob get
 - [X] Repeated int add

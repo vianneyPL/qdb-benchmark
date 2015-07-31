@@ -1,7 +1,6 @@
 #include <bench/app/program.hpp>
 #include <bench/app/command_line.hpp>
 #include <bench/framework/test_runner.hpp>
-#include <bench/framework/probe_sampler.hpp>
 #include <bench/report/jsonp.hpp>
 
 #include <algorithm>
@@ -50,7 +49,7 @@ void bench::app::program::run_scheduled_tests()
         auto & test_instance = _schedule[i];
 
         _logger.test_started(i + 1u, _schedule.size(), test_instance);
-        bench::framework::run_test(test_instance);
+        bench::framework::run_test(test_instance, _probe_pool);
         _logger.test_finished(i + 1u, _schedule.size(), test_instance);
 
         _logger.pause(_settings.pause);
@@ -58,23 +57,7 @@ void bench::app::program::run_scheduled_tests()
     }
 }
 
-void bench::app::program::start_probe_thread()
-{
-    probe_config cfg;
-    cfg.node_uri = _settings.cluster_uri; // :-(
-    for (auto probe : _probe_pool)
-    {
-        _probes.emplace_back(create_probe_instance(*probe, cfg));
-    }
-    _probe_thread.start(_probes);
-}
-
-void bench::app::program::stop_probe_thread()
-{
-    _probe_thread.stop();
-}
-
 void bench::app::program::save_jsonp_report()
 {
-    bench::report::jsonp(_schedule, _probes).save();
+    bench::report::jsonp(_schedule).save();
 }

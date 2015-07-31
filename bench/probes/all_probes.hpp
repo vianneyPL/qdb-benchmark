@@ -8,6 +8,6 @@ namespace bench
 {
 namespace probes
 {
-probe_collection get_all_probes();
+probe_class_collection get_all_probes();
 }
 }

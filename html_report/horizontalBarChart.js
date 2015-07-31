@@ -5,10 +5,10 @@ d3.chart.horizontalBarChart = function() {
     var width = 600;
     var height = 600;
     var padding = 30; 
-    var dispatch = d3.dispatch(chart, "select");
+    var dispatch = d3.dispatch("select");
     var data;
     var svg, graph, header;
-    var selectedSerie = 1;
+    var selectedSerie = 0;
 
     function chart(container) {
 
@@ -52,7 +52,7 @@ d3.chart.horizontalBarChart = function() {
         var points = data.map(function(test){
             return {
                 id: test.id,
-                threads: test.threads[0].length-1,
+                threads: test.iterations[0].length-1,
                 size: test.content_size,
                 value: serie.value(test)
             }});        

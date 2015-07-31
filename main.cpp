@@ -18,8 +18,8 @@ static bench::log::logger & get_logger()
 int main(int argc, const char * argv[])
 {
     bench::log::logger & logger = get_logger();
-    bench::test_collection test_pool = bench::tests::get_all_tests();
-    bench::probe_collection probe_pool = bench::probes::get_all_probes();
+    auto test_pool = bench::tests::get_all_tests();
+    auto probe_pool = bench::probes::get_all_probes();
     bench::app::program program(logger, test_pool, probe_pool);
 
     try

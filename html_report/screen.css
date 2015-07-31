@@ -47,12 +47,13 @@ h1 {
     ry: 5px;
 }
 
-path.thread-speed {
+.line-chart .line {
     stroke-width: 1px;
     stroke: #14749b;
+    fill: none;
 }
 
-path.thread-speed:hover {
+.line-chart .line:hover {
     stroke-width: 3px;
     stroke: #429fd8;
 }
