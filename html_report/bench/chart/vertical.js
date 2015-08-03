@@ -1,6 +1,6 @@
 if (!bench.chart) bench.chart = {};
 
-bench.chart.horizontalBarChart = function() {
+bench.chart.vertical = function() {
 
     var width = 600;
     var height = 600;
@@ -9,11 +9,12 @@ bench.chart.horizontalBarChart = function() {
     var data;
     var svg, graph, header;
     var selectedSerie = 0;
+    var testSeries = d3.values(bench.series.tests);
 
     function chart(container) {
 
-        header = d3.chart
-            .chartSelector()
+        header = bench.chart
+            .selector()
             .on("select", function(inc) {
                 selectedSerie += testSeries.length+inc;
                 update();
@@ -23,10 +24,10 @@ bench.chart.horizontalBarChart = function() {
         svg = container
             .append("svg")
             .classed("bar-chart", true)
-            .classed("horizontal-bar-chart", true)
+            .classed("vertical-bar-chart", true)
             .attr({
-                width: width,
-                height: height
+                "width": width,
+                "height": height
             });
 
         graph = svg
@@ -34,11 +35,10 @@ bench.chart.horizontalBarChart = function() {
             .classed("graph", true)
             .attr("transform", "translate("+padding+")");
 
-        svg
-            .append("g")
+        svg.append("g")
             .classed("axis", true)
-            .classed("left-axis", true)
-            .attr("transform", "translate("+padding+",0)");
+            .classed("bottom-axis", true)
+            .attr("transform", "translate("+padding+","+(height-padding)+")");
 
         update();
     }
@@ -46,12 +46,11 @@ bench.chart.horizontalBarChart = function() {
     function update() {
 
         var serie = testSeries[selectedSerie%testSeries.length];
-
         header.text(serie.name);
 
-        var threadsScale = d3.scale.ordinal()
-            .domain(bench.getThreadCounts(data))
-            .rangeBands([padding,height-padding], 0.5);
+        var xScale = d3.scale.ordinal()
+            .domain(bench.getContentSizes(data))
+            .rangeBands([padding,width-padding], 0.5);
 
         var valueScale = d3.scale.linear()
             .domain(bench.getValueExtent(data, serie))
@@ -65,11 +64,8 @@ bench.chart.horizontalBarChart = function() {
         bars.enter()
             .append("rect")
                 .classed("bar", true)
-                .attr({
-                    "x": 0,
-                    "y": function(d) { return threadsScale(d.thread_count) },
-                    "height": threadsScale.rangeBand()
-                })
+                .attr("x", function(d) { return xScale(d.content_size) })
+                .attr("width", xScale.rangeBand())
                 .on("click", function(d) {
                     graph.selectAll("rect").classed("selected", false);
                     d3.select(this).classed("selected", true);
@@ -78,17 +74,25 @@ bench.chart.horizontalBarChart = function() {
 
         bars
             .transition()
-            .attr("width", function(d) { return valueScale(serie.value(d)) });
+            .attr("y", function(d) { return height-padding-valueScale(serie.value(d)); })
+            .attr("height", function(d) { return valueScale(serie.value(d)); });
 
         var labels = graph
             .selectAll("text")
             .data(data);
 
+        function labelTranform(d) { 
+            var x = xScale(d.content_size) + xScale.rangeBand() / 2;
+            var y = height-padding-valueScale(serie.value(d))+15;
+            return "translate("+x+","+y+")rotate(-90)";
+        }
+
         labels
             .enter()
             .append("text")
-            .attr({
-                "y": function(d) { return threadsScale(d.thread_count) +threadsScale.rangeBand() / 2  },
+            .attr({                
+                "transform": labelTranform,
+                "width": xScale.rangeBand(),
                 "text-anchor": "end",
                 "dominant-baseline": "central",
                 "pointer-events": "none"
@@ -97,10 +101,16 @@ bench.chart.horizontalBarChart = function() {
         labels
             .text(function(d) { return serie.unit(serie.value(d)); })
             .transition()
-            .attr("x", function(d) {return valueScale(serie.value(d)) - 10})
+            .attr("transform", labelTranform)
 
-        var threadsAxis = d3.svg.axis().scale(threadsScale).orient("left").tickFormat(function(d) { return d + "t"; });
-        svg.selectAll(".left-axis").call(threadsAxis);
+        var xAxis = d3.svg.axis()
+            .scale(xScale)
+            .orient("bottom")
+            .tickFormat(function(content_size) { 
+                return unit.byte(content_size); 
+            });
+
+        svg.selectAll("g.bottom-axis").call(xAxis);
     }
 
     chart.data = function(value) {

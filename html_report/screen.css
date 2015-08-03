@@ -3,9 +3,34 @@ body {
 }
 
 h1 {
+    background: #0a1b25;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+h2 {
     color: #429fd8;
     background: #0a1b25;
     padding: 10px;
+}
+
+thead {
+    background: #0a1b25;
+    color: white;    
+}
+
+th, td {
+    padding: 5px 15px 5px 15px;
+    margin: 0;
+    font-weight: normal;
+}
+
+table {
+    background: #429fd8;
+    color: white;
+    border-collapse: true;
+    border-spacing: 0;
 }
 
 .axis path {

@@ -23,13 +23,15 @@ Benchmark tools - Backlog
 - [X] Automatically select horizontal or vertical bar chart
 - [X] Automatically disable summary chart if there is only one test of that class
 - [ ] Automatically selects the test with the highest value
-- [ ] Add summary information in the index page
+- [X] Add summary information in the index page
 - [ ] Show estimated run time at start
 - [ ] Show actual run time at the end
 - [ ] Report memory usage (min/max/average) to teamcity
 - [ ] Report frequency to teamcity
 - [ ] Limit test by number of iterations
 - [ ] Allow to stack traces
+- [ ] Sortable overview table
+- [ ] Show persistent size starting from 0
 
 # Implementation details
 
@@ -61,6 +63,6 @@ For a minimum duplication in test code, the framework must handle:
 - [X] Repeated blob get
 - [X] Repeated int add
 - [X] Repeated queue push
-- [ ] Repeated blob put
+- [X] Repeated blob put
 - [ ] Repeated queue push pop
 - [ ] Repeated set insert

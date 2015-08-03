@@ -1,6 +1,6 @@
 if (!bench.chart) bench.chart = {};
 
-bench.chart.bubbleChart = function() {
+bench.chart.bubble = function() {
 
     var width = 600;
     var height = 600;
@@ -9,11 +9,12 @@ bench.chart.bubbleChart = function() {
     var data;
     var svg, header, graph;
     var selectedSerie = 0;
+    var testSeries = d3.values(bench.series.tests);
 
     function chart(container) {
 
-        header = d3.chart
-            .chartSelector()
+        header = bench.chart
+            .selector()
             .on("select", function(inc) {
                 selectedSerie += testSeries.length+inc;
                 update();

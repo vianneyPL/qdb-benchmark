@@ -18,8 +18,8 @@ bench.chart.lineChart = function() {
 
     function chart(container) {
 
-        header = d3.chart
-            .chartSelector()
+        header = bench.chart
+            .selector()
             .on("select", function(inc) {
                 selectedSerie+=series.length+inc;
                 update();
@@ -65,8 +65,13 @@ bench.chart.lineChart = function() {
         });
 
         if (valueMin == valueMax) {
-            valueMin *= 0.9;
-            valueMax *= 1.1;
+            if (valueMin == 0) {
+                valueMin = -0.001;
+                valueMax = 0.001;
+            } else {
+                valueMin *= 0.9;
+                valueMax *= 1.1;
+            }
         }
 
         var valueScale = d3.scale.linear()
