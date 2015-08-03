@@ -49,7 +49,7 @@ void bench::app::program::run_scheduled_tests()
         auto & test_instance = _schedule[i];
 
         _logger.test_started(i + 1u, _schedule.size(), test_instance);
-        bench::framework::run_test(test_instance, _probe_pool);
+        bench::framework::run_test(test_instance);
         _logger.test_finished(i + 1u, _schedule.size(), test_instance);
 
         _logger.pause(_settings.pause);

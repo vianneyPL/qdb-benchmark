@@ -1,6 +1,6 @@
-if (!d3.chart) d3.chart = {};
+if (!bench.chart) bench.chart = {};
 
-d3.chart.bubbleChart = function() {
+bench.chart.bubbleChart = function() {
 
     var width = 600;
     var height = 600;
@@ -15,7 +15,7 @@ d3.chart.bubbleChart = function() {
         header = d3.chart
             .chartSelector()
             .on("select", function(inc) {
-                selectedSerie+=testSeries.length+inc;
+                selectedSerie += testSeries.length+inc;
                 update();
             });
         header(container);
@@ -28,8 +28,16 @@ d3.chart.bubbleChart = function() {
             });
 
         graph = svg.append("g").classed("graph", true).attr("transform", "translate("+padding+")");
-        svg.append("g").classed("axis", true).classed("bottom-axis", true).attr("transform", "translate("+padding+","+(height-padding)+")");
-        svg.append("g").classed("axis", true).classed("left-axis", true).attr("transform", "translate("+padding+",0)")
+
+        svg.append("g")
+            .classed("axis", true)
+            .classed("bottom-axis", true)
+            .attr("transform", "translate("+padding+","+(height-padding)+")");
+
+        svg.append("g")
+            .classed("axis", true)
+            .classed("left-axis", true)
+            .attr("transform", "translate("+padding+",0)")
 
         update();
     }
@@ -37,43 +45,38 @@ d3.chart.bubbleChart = function() {
     function update() {
 
         var serie = testSeries[selectedSerie%testSeries.length];
-        var points = data.map(function(test){
-            return {
-                id: test.id,
-                threads: test.iterations[0].length-1,
-                size: test.content_size,
-                value: serie.value(test)
-            }});
 
-        var sizeValues = d3.set(points.map(function(d){return d.size})).values();
-        var threadsValues = d3.set(points.map(function(d){return d.threads})).values();
-        var speedExtent = d3.extent(points, function(d) {return d.value});
+        var sizeValues = bench.getContentSizes(data);
+        var threadsValues = bench.getThreadCounts(data);
 
         var d = d3.min([(width-padding*2) / sizeValues.length, (height-padding*2) / threadsValues.length]) - 2;    
 
         var sizeScale = d3.scale.ordinal().domain(sizeValues).rangePoints([d/2+padding,width-d/2-padding]);
         var threadsScale = d3.scale.ordinal().domain(threadsValues).rangePoints([d/2+padding,height-d/2-padding]);
-        var speedScale = d3.scale.linear().domain(speedExtent).range([10,d]);
+
+        var valueScale = d3.scale.linear()
+            .domain(bench.getValueExtent(data, serie))
+            .range([10,d]);
 
         header.text(serie.name);
 
         var circles = graph
             .selectAll("circle")
             .classed("bubble", true)
-            .data(points);
+            .data(data);
 
         circles
             .transition()
-            .attr("r", function(d) { return speedScale(d.value)/2;});
+            .attr("r", function(d) { return valueScale(serie.value(d))/2;});
 
         circles
             .enter()
             .append("circle")
             .classed("bubble", true)
             .attr({
-                cx: function(d) { return sizeScale(d.size) },
-                cy: function(d) { return threadsScale(d.threads) },
-                r: function(d) { return speedScale(d.value)/2 }
+                "cx": function(d) { return sizeScale(d.content_size) },
+                "cy": function(d) { return threadsScale(d.thread_count) },
+                "r": function(d) { return valueScale(serie.value(d))/2 }
             })
             .on("click", function(d) {
                 graph.selectAll("circle").classed("selected", false);
@@ -85,18 +88,16 @@ d3.chart.bubbleChart = function() {
             .exit()
             .remove();
 
-        console.log([d3.max(points, function(p){return p.value})])
-
         var labels = graph
             .selectAll("text")
-            .data(points);
+            .data(data);
 
         labels
             .enter()
             .append("text")
             .attr({
-                "x": function(d) { return sizeScale(d.size) },
-                "y": function(d) { return threadsScale(d.threads) },
+                "x": function(d) { return sizeScale(d.content_size) },
+                "y": function(d) { return threadsScale(d.thread_count) },
                 "text-anchor": "middle",
                 "dominant-baseline": "central",
                 "pointer-events": "none"
@@ -104,9 +105,9 @@ d3.chart.bubbleChart = function() {
 
         labels
             .attr("opacity",0)
-            .attr("font-size", function(d) {return speedScale(d.value)/5 + "px"})
+            .attr("font-size", function(d) {return valueScale(serie.value(d))/5 + "px"})
             .text(function(d){
-                return serie.unit(d.value)
+                return serie.unit(serie.value(d))
             })
             .transition()
             .attr("opacity",1)

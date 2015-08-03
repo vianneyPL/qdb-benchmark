@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bench/tests/test_template.hpp>
+#include <bench/tests/qdb/node_status.hpp>
 #include <utils/qdb_wrapper.hpp>
 #include <utils/random.hpp>
 
@@ -25,6 +26,13 @@ public:
     {
         _alias = create_unique_alias();
         _qdb.connect(_config.cluster_uri);
+    }
+
+    static probe_collection create_probes(test_config cfg)
+    {
+        probe_collection probes;
+        probes.emplace_back(new node_status(cfg.cluster_uri));
+        return probes;
     }
 
 protected:

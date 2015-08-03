@@ -2,8 +2,7 @@
 
 #include <bench/core/clock.hpp>
 #include <bench/core/test_instance.hpp>
-#include <bench/core/probe_instance.hpp>
-#include <bench/core/probe_class.hpp>
+#include <bench/core/probe.hpp>
 #include <bench/framework/test_thread.hpp>
 #include <bench/framework/test_iteration_probe.hpp>
 #include <utils/memory.hpp>
@@ -18,8 +17,7 @@ namespace framework
 class test_runner
 {
 public:
-    test_runner(test_instance & test, const probe_class_collection & probe_pool)
-        : _test(test), _probe_pool(probe_pool)
+    test_runner(test_instance & test) : _test(test)
     {
     }
 
@@ -40,14 +38,8 @@ public:
 private:
     void create_probes()
     {
-        probe_config cfg;
-        cfg.node_uri = _test.config.cluster_uri; // :-(
-        for (auto probe_class : _probe_pool)
-        {
-            _probes.push_back(probe_class->create_instance(cfg));
-        }
-        //_probes.push_back(utils::make_unique<test_iteration_probe>(_threads));
-        _probes.push_back(std::unique_ptr<probe_instance>(new test_iteration_probe(_threads)));
+        _probes = bench::create_test_probes(_test);
+        _probes.emplace_back(new test_iteration_probe(_threads));
     }
 
     void create_threads()
@@ -104,14 +96,13 @@ private:
 
     test_instance & _test;
     test_thread_collection _threads;
-    probe_instance_collection _probes;
-    probe_class_collection _probe_pool;
+    probe_collection _probes;
     time_point _start_time;
 };
 
-void run_test(test_instance & test, const probe_class_collection & probes)
+void run_test(test_instance & test)
 {
-    test_runner(test, probes).run();
+    test_runner(test).run();
 }
 }
 }

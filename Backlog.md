@@ -14,19 +14,22 @@ Benchmark tools - Backlog
 - [X] Save time series of each threads
 - [X] Generate detailed HTML report of each test
 - [X] Generate index HTML with link to each test
-- [ ] Add summary information in the index page
 - [X] Generate summary report for TeamCity
 - [X] Generate plots for each threads
 - [X] Generate summary plots
 - [X] Download node infos like memory consumption
-- [ ] Show estimated run time at start
-- [ ] Show actual run time at the end
-- [ ] Plot total speed
 - [X] Plot memory consumption
 - [X] Plot entry count
+- [X] Automatically select horizontal or vertical bar chart
+- [X] Automatically disable summary chart if there is only one test of that class
+- [ ] Automatically selects the test with the highest value
+- [ ] Add summary information in the index page
+- [ ] Show estimated run time at start
+- [ ] Show actual run time at the end
 - [ ] Report memory usage (min/max/average) to teamcity
 - [ ] Report frequency to teamcity
 - [ ] Limit test by number of iterations
+- [ ] Allow to stack traces
 
 # Implementation details
 
@@ -48,13 +51,16 @@ For a minimum duplication in test code, the framework must handle:
 - [X] Have a single time reference for the whole app (common between all tests and probes)
 - [X] A single probe can generate multiple series
 - [X] Do not create a thread for probes
+- [X] Add thread count in the JSON
+- [X] Attach dedicated probes to test classes
+- [X] Remove probe class
 
 # Tests
 
 - [X] qdb_blob_get_noalloc
-- [ ] Repeated blob put
 - [X] Repeated blob get
 - [X] Repeated int add
 - [X] Repeated queue push
+- [ ] Repeated blob put
 - [ ] Repeated queue push pop
 - [ ] Repeated set insert

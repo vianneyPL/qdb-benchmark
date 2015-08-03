@@ -1,13 +1,13 @@
 #pragma once
 
 #include <bench/framework/test_thread.hpp>
-#include <bench/core/probe_instance.hpp>
+#include <bench/core/probe.hpp>
 
 namespace bench
 {
 namespace framework
 {
-class test_iteration_probe : public probe_instance
+class test_iteration_probe : public probe
 {
 public:
     test_iteration_probe(const test_thread_collection & thread) : _threads(thread)

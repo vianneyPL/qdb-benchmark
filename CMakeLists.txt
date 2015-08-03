@@ -14,7 +14,6 @@ add_subdirectory(bench/app)
 add_subdirectory(bench/core)
 add_subdirectory(bench/framework)
 add_subdirectory(bench/log)
-add_subdirectory(bench/probes)
 add_subdirectory(bench/tests)
 
 add_executable(qdb-benchmark
@@ -30,12 +29,11 @@ target_link_libraries(qdb-benchmark
     qdb-bench-app
     qdb-bench-core
     qdb-bench-log
-    qdb-bench-probes
     qdb-bench-tests
 )
 
 add_test(help qdb-benchmark --help)
-add_test(run qdb-benchmark --tests qdb_int_add --threads 4)
+add_test(run qdb-benchmark --tests qdb_int_add)
 
 if(WIN32)
     add_custom_command(TARGET qdb-benchmark POST_BUILD

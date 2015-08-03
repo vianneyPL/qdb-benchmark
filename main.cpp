@@ -1,7 +1,6 @@
 #include <bench/app/program.hpp>
 #include <bench/log/console_logger.hpp>
 #include <bench/log/teamcity_logger.hpp>
-#include <bench/probes/all_probes.hpp>
 #include <bench/tests/all_tests.hpp>
 
 #include <cstdlib>
@@ -19,8 +18,7 @@ int main(int argc, const char * argv[])
 {
     bench::log::logger & logger = get_logger();
     auto test_pool = bench::tests::get_all_tests();
-    auto probe_pool = bench::probes::get_all_probes();
-    bench::app::program program(logger, test_pool, probe_pool);
+    bench::app::program program(logger, test_pool);
 
     try
     {

@@ -1,35 +1,25 @@
 #pragma once
 
-#include <bench/probes/probe_template.hpp>
+#include <bench/core/probe.hpp>
 #include <utils/qdb_wrapper.hpp>
 #include <rapidjson/document.h>
 
 namespace bench
 {
-namespace probes
+namespace tests
 {
 namespace qdb
 {
-class node_status : public probe_template<node_status>
+class node_status : public probe
 {
 public:
-    node_status(const probe_config & cfg) : _config(cfg)
+    node_status(std::string cluster_uri) : _cluster_uri(cluster_uri)
     {
-    }
-
-    static std::string name()
-    {
-        return "qdb_node_status";
-    }
-
-    static std::string description()
-    {
-        return "Memory usage of a node";
     }
 
     void take_sample(time_point now) override
     {
-        utils::qdb_buffer json = _qdb.node_status(_config.node_uri);
+        utils::qdb_buffer json = _qdb.node_status(_cluster_uri);
 
         rapidjson::Document doc;
         doc.Parse(json.data());
@@ -40,7 +30,7 @@ public:
     }
 
 private:
-    probe_config _config;
+    std::string _cluster_uri;
     utils::qdb_wrapper _qdb;
 };
 }

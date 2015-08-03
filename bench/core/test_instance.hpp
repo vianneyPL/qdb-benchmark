@@ -35,4 +35,9 @@ inline std::unique_ptr<test_code> create_test_code(const test_instance & instanc
 {
     return instance.tclass.create_code(instance.config);
 }
+
+inline probe_collection create_test_probes(const test_instance & instance)
+{
+    return instance.tclass.create_probes(instance.config);
+}
 }

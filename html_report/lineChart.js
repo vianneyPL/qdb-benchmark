@@ -1,6 +1,6 @@
-if (!d3.chart) d3.chart = {};
+if (!bench.chart) bench.chart = {};
 
-d3.chart.lineChart = function() {
+bench.chart.lineChart = function() {
 
     var width = 600;
     var height = 600;

@@ -26,7 +26,17 @@ public:
         {
             return utils::make_unique<Derived>(config);
         }
+
+        probe_collection create_probes(bench::test_config config) const override
+        {
+            return Derived::create_probes(config);
+        }
     };
+
+    static probe_collection create_probes(bench::test_config config)
+    {
+        return {};
+    }
 };
 }
 }

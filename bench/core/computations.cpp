@@ -3,16 +3,16 @@
 #include <algorithm>
 #include <numeric>
 
-static std::int64_t sum_values(const bench::sample & sample)
+static double sum_values(const bench::sample & sample)
 {
-    return std::accumulate(sample.values.begin(), sample.values.end(), 0);
+    return (double)std::accumulate(sample.values.begin(), sample.values.end(), std::int64_t());
 }
 
 double bench::compute_average_speed(const bench::test_instance & test)
 {
     const sample & last_sample = test.result.at("iterations").back();
 
-    unsigned long iterations = sum_values(last_sample);
+    auto iterations = sum_values(last_sample);
 
     time_point stop_time = last_sample.time;
     duration elapsed = stop_time - test.start_time;

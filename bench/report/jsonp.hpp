@@ -37,7 +37,8 @@ private:
         _file << "{"
               << "\"name\":\"" << test.tclass.name << "\","
               << "\"description\":\"" << test.tclass.description << "\","
-              << "\"content_size\":" << test.config.content_size;
+              << "\"content_size\":" << test.config.content_size << ","
+              << "\"thread_count\":" << test.config.thread_count;
 
         for (auto & kvp : test.result)
         {
@@ -61,7 +62,7 @@ private:
 
             _file << "[" << get_elapsed_millis(start_time, sample.time);
 
-            for (unsigned long value : sample.values)
+            for (auto value : sample.values)
             {
                 _file << "," << value;
             }

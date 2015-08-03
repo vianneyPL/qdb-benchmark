@@ -5,10 +5,10 @@
 
 namespace bench
 {
-namespace probes
+namespace tests
 {
 template <typename Derived> // CRTP
-class probe_template : public bench::probe_instance
+class probe_template : public bench::probe
 {
 public:
     class probe_class : public bench::probe_class
@@ -20,7 +20,7 @@ public:
             description = Derived::description();
         }
 
-        std::unique_ptr<bench::probe_instance>
+        std::unique_ptr<bench::probe>
         create_instance(const bench::probe_config & config) const override
         {
             return utils::make_unique<Derived>(config);

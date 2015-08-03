@@ -3,7 +3,6 @@
 #include <bench/app/settings.hpp>
 #include <bench/core/test_class.hpp>
 #include <bench/core/test_instance.hpp>
-#include <bench/core/probe_class.hpp>
 #include <bench/log/logger.hpp>
 
 namespace bench
@@ -13,10 +12,8 @@ namespace app
 class program
 {
 public:
-    program(log::logger & logger,
-            test_class_collection & test_pool,
-            probe_class_collection & probe_pool)
-        : _logger(logger), _test_pool(test_pool), _probe_pool(probe_pool)
+    program(log::logger & logger, test_class_collection & test_pool)
+        : _logger(logger), _test_pool(test_pool)
     {
     }
 
@@ -37,7 +34,6 @@ private:
     settings _settings;
     log::logger & _logger;
     test_class_collection & _test_pool;
-    probe_class_collection & _probe_pool;
     test_instance_collection _schedule;
 };
 }
