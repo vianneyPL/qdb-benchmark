@@ -1,4 +1,4 @@
-add_library(qdb-bench-core
+add_library(bench-core
 	computations.cpp
 	computations.hpp
     probe.hpp

@@ -1,4 +1,4 @@
-add_library(qdb-bench-app
+add_library(bench-app
     program.cpp
     program.hpp
     settings.hpp
@@ -6,6 +6,6 @@ add_library(qdb-bench-app
     command_line.hpp
 )
 
-target_link_libraries(qdb-bench-app
-    qdb-bench-framework
+target_link_libraries(bench-app
+    bench-framework
 )

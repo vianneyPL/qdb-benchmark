@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <thread>
 
 void bench::app::program::parse_command_line(int argc, const char ** argv)
 {
@@ -23,8 +24,7 @@ void bench::app::program::prepare_schedule()
         for (auto thread_count : _settings.thread_counts)
         {
             config.thread_count = thread_count;
-            if (test_class->size_dependent)
-            {
+            if (test_class->size_dependent) {
                 for (auto content_size : _settings.content_sizes)
                 {
                     config.content_size = content_size;
@@ -44,13 +44,9 @@ void bench::app::program::prepare_schedule()
 
 void bench::app::program::run_scheduled_tests()
 {
-    for (auto i = 0u; i < _schedule.size(); i++)
+    for (auto test : _schedule)
     {
-        auto & test_instance = _schedule[i];
-
-        _logger.test_started(i + 1u, _schedule.size(), test_instance);
-        bench::framework::run_test(test_instance);
-        _logger.test_finished(i + 1u, _schedule.size(), test_instance);
+        bench::framework::run_test(test, _logger);
 
         _logger.pause(_settings.pause);
         std::this_thread::sleep_for(_settings.pause);

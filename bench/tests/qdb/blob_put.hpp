@@ -14,25 +14,27 @@ namespace qdb
 class blob_put : public test_base<blob_put>
 {
 public:
-    explicit blob_put(bench::test_config config) : test_base(config)
+    explicit blob_put(bench::test_config config) : test_base(config), _iterations(0)
     {
         _content = utils::create_random_string(_config.content_size);
     }
 
     void run() override
     {
-        std::string alias = get_alias(++_iterations);
-
+        std::string alias = get_alias(_iterations + 1);
         _qdb.call(qdb_put, alias.c_str(), _content.data(), _content.size(), 0);
+        _iterations++;
     }
 
-    ~blob_put() override
+    void cleanup() override
     {
         while (_iterations > 0)
         {
-            std::string alias = get_alias(_iterations--);
-            _qdb.call(qdb_remove, _alias.c_str());
+            std::string alias = get_alias(_iterations);
+            _qdb.call(qdb_remove, alias.c_str());
+            _iterations--;
         }
+        test_base::cleanup();
     }
 
     static std::string name()
@@ -42,7 +44,7 @@ public:
 
     static std::string description()
     {
-        return "Repeated qdb_put() of the same entry.";
+        return "Repeated qdb_put() of new entries.";
     }
 
     static bool size_dependent()

@@ -19,8 +19,7 @@ public:
     }
 
     qdb_buffer(const qdb_buffer &) = delete;
-    qdb_buffer(qdb_buffer && other)
-        : qdb_buffer()
+    qdb_buffer(qdb_buffer && other) : qdb_buffer()
     {
         std::swap(_handle, other._handle);
         std::swap(_content, other._content);
@@ -29,8 +28,7 @@ public:
 
     ~qdb_buffer()
     {
-        if (_content)
-            qdb_free_buffer(_handle, _content);
+        if (_content) qdb_free_buffer(_handle, _content);
     }
 
     const char * data() const
@@ -86,8 +84,7 @@ public:
 private:
     void throw_if_error(qdb_error_t err) const
     {
-        if (!err)
-            return;
+        if (!err) return;
 
         throw std::runtime_error(qdb_error(err));
     }

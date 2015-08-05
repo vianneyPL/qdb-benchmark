@@ -14,7 +14,11 @@ public:
     {
     }
 
-    void take_sample(time_point now) override
+    void setup() override
+    {
+    }
+
+    void take_sample(time_point now, result_type & result) override
     {
         sample sample;
         sample.time = now;
@@ -23,6 +27,10 @@ public:
             sample.values.push_back(thread->iterations());
         }
         result["iterations"].emplace_back(sample);
+    }
+
+    void cleanup() override
+    {
     }
 
 private:

@@ -1,0 +1,8 @@
+add_library(utils
+    command_line.hpp
+    memory.hpp
+    qdb_wrapper.hpp
+    random.hpp
+    teamcity.cpp
+    teamcity.hpp
+)

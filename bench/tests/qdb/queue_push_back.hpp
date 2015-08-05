@@ -14,7 +14,9 @@ namespace qdb
 class queue_push_back : public test_base<queue_push_back>
 {
 public:
-    explicit queue_push_back(bench::test_config config) : test_base(config) {}
+    explicit queue_push_back(bench::test_config config) : test_base(config)
+    {
+    }
 
     void run() override
     {
@@ -23,9 +25,10 @@ public:
         _qdb.call(::qdb_queue_push_back, _alias.c_str(), content.data(), content.size());
     }
 
-    ~queue_push_back() override
+    void cleanup() override
     {
         _qdb.call(qdb_remove, _alias.c_str());
+        test_base::cleanup();
     }
 
     static std::string name()

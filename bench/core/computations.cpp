@@ -8,7 +8,7 @@ static double sum_values(const bench::sample & sample)
     return (double)std::accumulate(sample.values.begin(), sample.values.end(), std::int64_t());
 }
 
-double bench::compute_average_speed(const bench::test_instance & test)
+double bench::compute_average_frequency(const bench::test_instance & test)
 {
     const sample & last_sample = test.result.at("iterations").back();
 
@@ -22,11 +22,17 @@ double bench::compute_average_speed(const bench::test_instance & test)
 
 double bench::compute_average_throughput(const bench::test_instance & test)
 {
-    return compute_average_speed(test) * test.config.content_size;
+    return compute_average_frequency(test) * test.config.content_size;
 }
 
 double bench::compute_memory_variation(const bench::test_instance & test)
 {
     auto & serie = test.result.at("node_memory");
     return sum_values(serie.back()) - sum_values(serie.front());
+}
+
+double bench::compute_iteration_count(const bench::test_instance & test)
+{
+    auto & serie = test.result.at("iterations");
+    return (double)sum_values(serie.back());
 }

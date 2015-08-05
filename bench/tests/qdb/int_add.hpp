@@ -15,6 +15,11 @@ class int_add : public test_base<int_add>
 public:
     explicit int_add(bench::test_config config) : test_base(config)
     {
+    }
+
+    void setup() override
+    {
+        test_base::setup();
         _qdb.call(qdb_int_put, _alias.c_str(), 0, 0);
     }
 
@@ -24,9 +29,10 @@ public:
         _qdb.call(qdb_int_add, _alias.c_str(), 1, &total);
     }
 
-    ~int_add() override
+    void cleanup() override
     {
         _qdb.call(qdb_remove, _alias.c_str());
+        test_base::cleanup();
     }
 
     static std::string name()

@@ -1,11 +1,11 @@
-add_library(qdb-bench-log
-	console_logger.cpp
+add_library(bench-log
 	console_logger.hpp
-	logger.hpp
-	teamcity_logger.cpp
+    logger.hpp
+	logger.cpp
 	teamcity_logger.hpp
 )
 
-target_link_libraries(qdb-bench-log
-	qdb-bench-core
+target_link_libraries(bench-log
+	bench-core
+    utils
 )

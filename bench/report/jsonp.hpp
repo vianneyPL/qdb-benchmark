@@ -40,11 +40,14 @@ private:
               << "\"content_size\":" << test.config.content_size << ","
               << "\"thread_count\":" << test.config.thread_count;
 
+        if (!test.error.empty())
+        {
+            _file << ",\"error\":\"" << test.error << "\"";
+        }
+
         for (auto & kvp : test.result)
         {
-            // if (need_comma)
-            _file << ",";
-            _file << "\"" << kvp.first << "\":";
+            _file << ",\"" << kvp.first << "\":";
             write_time_series(kvp.second, test.start_time);
         }
 

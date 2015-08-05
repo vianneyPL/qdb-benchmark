@@ -17,7 +17,11 @@ public:
     {
     }
 
-    void take_sample(time_point now) override
+    void setup() override
+    {
+    }
+
+    void take_sample(time_point now, result_type & result) override
     {
         utils::qdb_buffer json = _qdb.node_status(_cluster_uri);
 
@@ -27,6 +31,10 @@ public:
         result["node_memory"].push_back({now, {doc["memory"]["vm"]["used"].GetInt64()}});
         result["persisted_size"].push_back({now, {doc["entries"]["persisted"]["size"].GetInt64()}});
         result["resident_size"].push_back({now, {doc["entries"]["resident"]["size"].GetInt64()}});
+    }
+
+    void cleanup() override
+    {
     }
 
 private:

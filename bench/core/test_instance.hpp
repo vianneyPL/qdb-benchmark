@@ -22,6 +22,10 @@ public:
     test_config config;
     test_result result;
     time_point start_time;
+    duration setup_duration;
+    duration test_duration;
+    duration cleanup_duration;
+    std::string error;
 };
 
 using test_instance_collection = std::vector<test_instance>;

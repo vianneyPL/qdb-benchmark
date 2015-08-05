@@ -14,18 +14,20 @@ namespace qdb
 class blob_update : public test_base<blob_update>
 {
 public:
-    explicit blob_update(bench::test_config config) : test_base(config) {}
+    explicit blob_update(bench::test_config config) : test_base(config)
+    {
+    }
 
     void run() override
     {
         std::string content = utils::create_random_string(_config.content_size);
-
         _qdb.call(qdb_update, _alias.c_str(), content.data(), content.size(), 0);
     }
 
-    ~blob_update() override
+    void cleanup() override
     {
         _qdb.call(qdb_remove, _alias.c_str());
+        test_base::cleanup();
     }
 
     static std::string name()

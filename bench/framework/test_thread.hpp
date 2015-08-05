@@ -14,41 +14,61 @@ namespace framework
 class test_thread
 {
 public:
-    explicit test_thread(const test_instance & test)
-        : _is_running(false), _iterations(0), _eptr(nullptr), _test_code(create_test_code(test)),
-          _thread(&test_thread::run, this)
+    explicit test_thread(test_instance & test)
+        : _is_running(false), _iterations(0), _test(create_test_code(test))
     {
     }
 
-    void start()
+    ~test_thread()
+    {
+        if (_thread.joinable()) _thread.join();
+    }
+
+    void setup()
+    {
+        _test->setup();
+        _thread = std::thread(&test_thread::main, this);
+    }
+
+    void run()
     {
         _is_running = true;
     }
 
-    void stop()
+    void cleanup()
     {
         _is_running = false;
         _thread.join();
-        if (_eptr) std::rethrow_exception(_eptr);
+        _test->cleanup();
     }
 
-    unsigned long iterations()
+    unsigned long iterations() const
     {
+        if (_eptr) std::rethrow_exception(_eptr);
         return _iterations;
     }
 
 private:
-    void run()
+    void main()
     {
-        wait_to_start();
         try
         {
-            while (_is_running)
-                run_single_iteration();
+            run_test_loop();
         }
         catch (...)
         {
             _eptr = std::current_exception();
+        }
+    }
+
+    void run_test_loop()
+    {
+        wait_to_start();
+
+        while (_is_running)
+        {
+            _test->run();
+            _iterations++;
         }
     }
 
@@ -58,17 +78,11 @@ private:
             ;
     }
 
-    void run_single_iteration()
-    {
-        _test_code->run();
-        _iterations++;
-    }
-
     volatile bool _is_running;
     volatile unsigned long _iterations;
-    std::exception_ptr _eptr;
-    std::unique_ptr<test_code> _test_code;
+    std::unique_ptr<test_code> _test;
     std::thread _thread;
+    std::exception_ptr _eptr;
 };
 
 using test_thread_collection = std::vector<std::unique_ptr<test_thread>>;

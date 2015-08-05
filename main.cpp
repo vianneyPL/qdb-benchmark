@@ -1,6 +1,5 @@
 #include <bench/app/program.hpp>
 #include <bench/log/console_logger.hpp>
-#include <bench/log/teamcity_logger.hpp>
 #include <bench/tests/all_tests.hpp>
 
 #include <cstdlib>
@@ -9,9 +8,9 @@
 static bench::log::logger & get_logger()
 {
     if (std::getenv("TEAMCITY_VERSION"))
-        return *new bench::log::teamcity_logger();
+        return bench::log::get_teamcity_logger();
     else
-        return *new bench::log::console_logger();
+        return bench::log::get_console_logger();
 }
 
 int main(int argc, const char * argv[])

@@ -12,7 +12,7 @@ bench::test_class_collection bench::tests::get_all_tests()
     return {
         new qdb::blob_get::test_class(),
         new qdb::blob_get_noalloc::test_class(),
-        new qdb::blob_put::test_class(),
+        //    new qdb::blob_put::test_class(),
         new qdb::blob_update::test_class(),
         new qdb::int_add::test_class(),
         new qdb::int_update::test_class(),

@@ -15,6 +15,7 @@ add_subdirectory(bench/core)
 add_subdirectory(bench/framework)
 add_subdirectory(bench/log)
 add_subdirectory(bench/tests)
+add_subdirectory(utils)
 
 add_executable(qdb-benchmark
     main.cpp
@@ -26,14 +27,14 @@ target_compile_definitions(qdb-benchmark
 )
 
 target_link_libraries(qdb-benchmark
-    qdb-bench-app
-    qdb-bench-core
-    qdb-bench-log
-    qdb-bench-tests
+    bench-app
+    bench-core
+    bench-log
+    bench-tests
 )
 
 add_test(help qdb-benchmark --help)
-add_test(run qdb-benchmark --tests qdb_blob_put)
+add_test(run qdb-benchmark --tests qdb_blob_put --sizes 1,2,4 --threads 1,2,4)
 
 if(WIN32)
     add_custom_command(TARGET qdb-benchmark POST_BUILD

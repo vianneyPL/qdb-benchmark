@@ -14,10 +14,21 @@ public:
     virtual void fatal_error(const std::string & message) = 0;
     virtual void pause(std::chrono::duration<int>) = 0;
     virtual void schedule(const std::vector<test_instance> &) = 0;
-    virtual void test_finished(int num, int total, const test_instance &) = 0;
-    virtual void test_started(int num, int total, const test_instance &) = 0;
+
+    virtual void setup_started(const test_instance &) = 0;
+    virtual void setup_failed(const test_instance &) = 0;
+    virtual void setup_finished(const test_instance &) = 0;
+
+    virtual void test_started(const test_instance &) = 0;
+    virtual void test_failed(const test_instance &) = 0;
+    virtual void test_finished(const test_instance &) = 0;
+
+    virtual void cleanup_started(const test_instance &) = 0;
+    virtual void cleanup_failed(const test_instance &) = 0;
+    virtual void cleanup_finished(const test_instance &) = 0;
 };
 
-logger & get_logger();
+logger & get_teamcity_logger();
+logger & get_console_logger();
 }
 }

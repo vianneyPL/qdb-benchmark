@@ -43,6 +43,16 @@ public:
     {
         return format(value, 1000, "Hz");
     }
+
+    static std::string none(double value)
+    {
+        return format(value, 1000, "");
+    }
+
+    static std::string milliseconds(double value)
+    {
+        return format(value / 1000, 1000, "s");
+    }
 };
 }
 }

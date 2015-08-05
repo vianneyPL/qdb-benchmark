@@ -25,7 +25,6 @@ public:
     test_base(test_config config) : _config(config)
     {
         _alias = create_unique_alias();
-        _qdb.connect(_config.cluster_uri);
     }
 
     static probe_collection create_probes(test_config cfg)
@@ -33,6 +32,15 @@ public:
         probe_collection probes;
         probes.emplace_back(new node_status(cfg.cluster_uri));
         return probes;
+    }
+
+    void setup() override
+    {
+        _qdb.connect(_config.cluster_uri);
+    }
+
+    void cleanup() override
+    {
     }
 
 protected:

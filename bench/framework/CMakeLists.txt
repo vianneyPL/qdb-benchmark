@@ -1,10 +1,10 @@
 find_package(Threads)
 
-add_library(qdb-bench-framework
+add_library(bench-framework
     test_runner.cpp
     test_runner.hpp
 )
 
-target_link_libraries(qdb-bench-framework
+target_link_libraries(bench-framework
 	${CMAKE_THREAD_LIBS_INIT}
 )
