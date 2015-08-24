@@ -44,7 +44,7 @@ void bench::app::program::prepare_schedule()
 
 void bench::app::program::run_scheduled_tests()
 {
-    for (auto test : _schedule)
+    for (auto& test : _schedule)
     {
         bench::framework::run_test(test, _logger);
 
