@@ -17,23 +17,17 @@ class int_update : public test_base<int_update>
 public:
     explicit int_update(bench::test_config config) : test_base(config)
     {
-    }
-
-    void setup() override
-    {
-        test_base::setup();
         _qdb.call(qdb_int_put, _alias.c_str(), 0, 0);
     }
 
-    void run() override
+    void run_iteration()
     {
         _qdb.call(qdb_int_update, _alias.c_str(), ++_value, 0);
     }
 
-    void cleanup() override
+    ~int_update() override
     {
-        _qdb.call(qdb_remove, _alias.c_str());
-        test_base::cleanup();
+        _qdb.remove(_alias);
     }
 
     static std::string name()

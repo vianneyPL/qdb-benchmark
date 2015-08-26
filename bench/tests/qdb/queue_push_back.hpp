@@ -18,17 +18,16 @@ public:
     {
     }
 
-    void run() override
+    void run_iteration()
     {
         std::string content = utils::create_random_string(_config.content_size);
 
         _qdb.call(::qdb_queue_push_back, _alias.c_str(), content.data(), content.size());
     }
 
-    void cleanup() override
+    ~queue_push_back()
     {
-        _qdb.call(qdb_remove, _alias.c_str());
-        test_base::cleanup();
+        _qdb.remove(_alias);
     }
 
     static std::string name()

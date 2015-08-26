@@ -14,8 +14,7 @@ namespace framework
 class test_thread
 {
 public:
-    explicit test_thread(test_instance & test)
-        : _is_running(false), _iterations(0), _test(create_test_code(test))
+    explicit test_thread(test_instance & test) : _is_running(false), _test(test)
     {
     }
 
@@ -26,7 +25,7 @@ public:
 
     void setup()
     {
-        _test->setup();
+        _test_loop = create_test_loop(_test);
         _thread = std::thread(&test_thread::main, this);
     }
 
@@ -37,39 +36,36 @@ public:
 
     void cleanup()
     {
-        _is_running = false;
         _thread.join();
-        _test->cleanup();
+        _test_loop.reset();
     }
 
     unsigned long iterations() const
     {
         if (_eptr) std::rethrow_exception(_eptr);
-        return _iterations;
+        return _test_loop->iterations();
+    }
+
+    bool is_running() const
+    {
+        return _is_running;
     }
 
 private:
     void main()
     {
+        wait_to_start();
+
         try
         {
-            run_test_loop();
+            _test_loop->run(clock::now() + _test.config.duration);
         }
         catch (...)
         {
             _eptr = std::current_exception();
         }
-    }
 
-    void run_test_loop()
-    {
-        wait_to_start();
-
-        while (_is_running)
-        {
-            _test->run();
-            _iterations++;
-        }
+        _is_running = false;
     }
 
     void wait_to_start() const
@@ -79,8 +75,8 @@ private:
     }
 
     volatile bool _is_running;
-    volatile unsigned long _iterations;
-    std::unique_ptr<test_code> _test;
+    test_instance & _test;
+    std::unique_ptr<test_loop> _test_loop;
     std::thread _thread;
     std::exception_ptr _eptr;
 };

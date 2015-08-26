@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bench/core/test_class.hpp>
-#include <bench/core/test_code.hpp>
+#include <bench/core/test_loop.hpp>
 #include <bench/core/time_series.hpp>
 
 #include <map>
@@ -35,9 +35,9 @@ inline test_instance create_test_instance(const test_class & cls, test_config cf
     return test_instance(cls, cfg);
 }
 
-inline std::unique_ptr<test_code> create_test_code(const test_instance & instance)
+inline std::unique_ptr<test_loop> create_test_loop(const test_instance & instance)
 {
-    return instance.tclass.create_code(instance.config);
+    return instance.tclass.create_loop(instance.config);
 }
 
 inline probe_collection create_test_probes(const test_instance & instance)

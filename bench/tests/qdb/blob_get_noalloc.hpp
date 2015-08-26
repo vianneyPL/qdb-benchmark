@@ -16,26 +16,20 @@ class blob_get_noalloc : public test_base<blob_get_noalloc>
 public:
     blob_get_noalloc(bench::test_config config) : test_base(config), _buffer(config.content_size)
     {
-        _content = utils::create_random_vector(config.content_size);
+        _content = utils::create_random_string(config.content_size);
+        _qdb.blob_put(_alias, _content);
     }
 
-    void setup() override
-    {
-        test_base::setup();
-        _qdb.call(qdb_put, _alias.c_str(), _content.data(), _content.size(), 0);
-    }
-
-    void run() override
+    void run_iteration()
     {
         std::size_t result_size = _buffer.size();
         _qdb.call(qdb_get_noalloc, _alias.c_str(), _buffer.data(), &result_size);
         if (result_size != _buffer.size()) throw std::exception();
     }
 
-    void cleanup() override
+    ~blob_get_noalloc() override
     {
-        _qdb.call(qdb_remove, _alias.c_str());
-        test_base::cleanup();
+        _qdb.remove(_alias);
     }
 
     static std::string name()
@@ -55,7 +49,7 @@ public:
 
 private:
     std::vector<char> _buffer;
-    std::vector<char> _content;
+    std::string _content;
 };
 }
 }

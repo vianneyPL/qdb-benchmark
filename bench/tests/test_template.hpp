@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bench/core/test_class.hpp>
-#include <bench/core/test_code.hpp>
+#include <bench/core/test_loop.hpp>
 #include <utils/memory.hpp>
 
 namespace bench
@@ -9,7 +9,7 @@ namespace bench
 namespace tests
 {
 template <typename Derived> // CRTP
-class test_template : public bench::test_code
+class test_template : public bench::test_loop
 {
 public:
     class test_class : public bench::test_class
@@ -22,7 +22,7 @@ public:
             size_dependent = Derived::size_dependent();
         }
 
-        std::unique_ptr<bench::test_code> create_code(bench::test_config config) const override
+        std::unique_ptr<bench::test_loop> create_loop(bench::test_config config) const override
         {
             return utils::make_unique<Derived>(config);
         }

@@ -22,13 +22,11 @@ function add_charts_for_test_class(test) {
         .append("p")
             .text(test[0].description);
 
-    var summaryDiv = div.append("div").classed("summary", true);
-    var detailDiv = div.append("div").classed("detail", true);
-
     var columnCount = bench.getContentSizes(test).length;
     var rowCount = bench.getThreadCounts(test).length;
 
     if (columnCount > 1 || rowCount > 1) {
+        var summaryDiv = div.append("div").classed("summary", true);
         var summaryChart;
 
         if (columnCount == 1) {
@@ -48,6 +46,7 @@ function add_charts_for_test_class(test) {
         });
     }
     
+    var detailDiv = div.append("div").classed("detail", true);
     var detailChart = bench.chart.lineChart();
     detailChart.data(test[0]);
     detailChart(detailDiv);

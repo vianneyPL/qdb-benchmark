@@ -1,10 +1,10 @@
 add_library(bench-core
-	computations.cpp
-	computations.hpp
+    computations.cpp
+    computations.hpp
     probe.hpp
     test_class.hpp
     test_config.hpp
     test_instance.hpp
-    test_code.hpp
+    test_loop.hpp
     time_series.hpp
 )

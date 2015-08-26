@@ -1,6 +1,7 @@
 #pragma once
 
 #include <qdb/client.h>
+#include <qdb/blob.h>
 
 #include <string>
 
@@ -36,6 +37,11 @@ public:
         return _content;
     }
 
+    size_t size() const
+    {
+        return _content_size;
+    }
+
 private:
     qdb_handle_t _handle;
     const char * _content;
@@ -69,8 +75,31 @@ public:
     {
         const char * content;
         size_t content_size;
-        call(qdb_node_status, node_uri.c_str(), &content, &content_size);
+        call(::qdb_node_status, node_uri.c_str(), &content, &content_size);
         return qdb_buffer(_handle, content, content_size);
+    }
+
+    void blob_put(const std::string & alias, const std::string & content)
+    {
+        call(qdb_put, alias.c_str(), content.data(), content.size(), 0);
+    }
+
+    void blob_update(const std::string & alias, const std::string & content)
+    {
+        call(qdb_update, alias.c_str(), content.data(), content.size(), 0);
+    }
+
+    qdb_buffer blob_get(const std::string & alias)
+    {
+        const char * result;
+        std::size_t result_size;
+        call(::qdb_get, alias.c_str(), &result, &result_size);
+        return qdb_buffer(_handle, result, result_size);
+    }
+
+    void remove(const std::string & alias)
+    {
+        call(::qdb_remove, alias.c_str());
     }
 
     template <typename Function, typename... Args>

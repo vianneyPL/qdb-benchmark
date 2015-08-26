@@ -25,6 +25,7 @@ public:
     test_base(test_config config) : _config(config)
     {
         _alias = create_unique_alias();
+        _qdb.connect(_config.cluster_uri);
     }
 
     static probe_collection create_probes(test_config cfg)
@@ -34,13 +35,13 @@ public:
         return probes;
     }
 
-    void setup() override
+    void run(time_point timeout) override
     {
-        _qdb.connect(_config.cluster_uri);
-    }
-
-    void cleanup() override
-    {
+        while (clock::now() < timeout)
+        {
+            ((Derived *)this)->run_iteration();
+            test_loop::add_iteration();
+        }
     }
 
 protected:

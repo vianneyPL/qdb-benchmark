@@ -19,22 +19,21 @@ public:
         _content = utils::create_random_string(_config.content_size);
     }
 
-    void run() override
+    void run_iteration()
     {
         std::string alias = get_alias(_iterations + 1);
-        _qdb.call(qdb_put, alias.c_str(), _content.data(), _content.size(), 0);
+        _qdb.blob_put(alias, _content);
         _iterations++;
     }
 
-    void cleanup() override
+    ~blob_put()
     {
         while (_iterations > 0)
         {
             std::string alias = get_alias(_iterations);
-            _qdb.call(qdb_remove, alias.c_str());
+            _qdb.remove(alias);
             _iterations--;
         }
-        test_base::cleanup();
     }
 
     static std::string name()
