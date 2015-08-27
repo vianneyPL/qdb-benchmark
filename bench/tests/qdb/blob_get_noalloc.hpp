@@ -20,7 +20,7 @@ public:
         _qdb.blob_put(_alias, _content);
     }
 
-    void run_iteration()
+    void run_iteration(unsigned long iteration)
     {
         std::size_t result_size = _buffer.size();
         _qdb.call(qdb_get_noalloc, _alias.c_str(), _buffer.data(), &result_size);
@@ -39,7 +39,7 @@ public:
 
     static std::string description()
     {
-        return "Repeated qdb_get_noalloc() of the same entry.";
+        return "Call qdb_get_noalloc() on one entry.";
     }
 
     static bool size_dependent()

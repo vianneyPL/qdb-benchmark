@@ -20,7 +20,7 @@ public:
         _qdb.call(qdb_int_put, _alias.c_str(), 0, 0);
     }
 
-    void run_iteration()
+    void run_iteration(unsigned long iteration)
     {
         _qdb.call(qdb_int_update, _alias.c_str(), ++_value, 0);
     }
@@ -37,7 +37,7 @@ public:
 
     static std::string description()
     {
-        return "Repeated qdb_int_update() of the same entry.";
+        return "Call qdb_int_update() on one entry.";
     }
 
     static bool size_dependent()

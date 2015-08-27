@@ -2,6 +2,7 @@
 
 #include <qdb/client.h>
 #include <qdb/blob.h>
+#include <qdb/queue.h>
 
 #include <string>
 
@@ -100,6 +101,11 @@ public:
     void remove(const std::string & alias)
     {
         call(::qdb_remove, alias.c_str());
+    }
+
+    void queue_push_back(const std::string & alias, const std::string & content)
+    {
+        call(::qdb_queue_push_back, alias.c_str(), content.data(), content.size());
     }
 
     template <typename Function, typename... Args>

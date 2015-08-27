@@ -37,6 +37,58 @@ public:
     {
         return {};
     }
+
+    test_template(test_config config) : _config(config), _prepared_iterations(0)
+    {
+    }
+
+    void run() override
+    {
+        if (_prepared_iterations > 0)
+            run_n_iterations(_prepared_iterations);
+        else
+            run_iteration_until(clock::now() + _config.duration);
+    }
+
+protected:
+    void perform_per_iteration_cleanup()
+    {
+        for (unsigned long i = 0; i < test_loop::iterations(); i++)
+        {
+            ((Derived *)this)->cleanup_iteration(i);
+        }
+    }
+
+    void perform_per_iteration_setup()
+    {
+        clock::time_point timeout = clock::now() + _config.duration;
+        while (clock::now() < timeout)
+        {
+            ((Derived *)this)->setup_iteration(_prepared_iterations++);
+        }
+    }
+
+private:
+    void run_iteration_until(clock::time_point timeout)
+    {
+        while (clock::now() < timeout)
+        {
+            ((Derived *)this)->run_iteration(iterations());
+            test_loop::add_iteration();
+        }
+    }
+
+    void run_n_iterations(unsigned long count)
+    {
+        while (iterations() < count)
+        {
+            ((Derived *)this)->run_iteration(iterations());
+            test_loop::add_iteration();
+        }
+    }
+
+    test_config _config;
+    unsigned long _prepared_iterations;
 };
 }
 }

@@ -60,9 +60,9 @@ public:
         std::cout << "Setting up test... " << std::endl;
     }
 
-    void setup_failed(const test_instance & test) override
+    void setup_failed(const test_instance & test, const std::string & error) override
     {
-        std::cout << "Setting up test... FAILED (" << test.error << ")" << std::endl;
+        std::cout << "Setting up test... FAILED (" << error << ")" << std::endl;
     }
 
     void setup_finished(const test_instance & test) override
@@ -79,9 +79,9 @@ public:
         std::cout << "Executing test... " << std::endl;
     }
 
-    void test_failed(const test_instance & test) override
+    void test_failed(const test_instance & test, const std::string & error) override
     {
-        std::cout << "Executing test... FAILED (" << test.error << ")" << std::endl;
+        std::cout << "Executing test... FAILED (" << error << ")" << std::endl;
     }
 
     void test_finished(const test_instance & test) override
@@ -112,9 +112,9 @@ public:
         std::cout << "Cleaning up... " << std::endl;
     }
 
-    void cleanup_failed(const test_instance & test) override
+    void cleanup_failed(const test_instance & test, const std::string & error) override
     {
-        std::cout << "Cleaning up... FAILED (" << test.error << ")" << std::endl;
+        std::cout << "Cleaning up... FAILED (" << error << ")" << std::endl;
     }
 
     void cleanup_finished(const test_instance & test) override

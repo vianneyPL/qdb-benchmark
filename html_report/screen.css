@@ -57,6 +57,11 @@ table {
     fill: #0b334c;
 }
 
+.bubble-chart .bubble.error,
+.bar-chart .bar.error {
+    fill: red;
+}
+
 .bubble-chart text,
 .bar-chart .graph text {
     font-family: sans-serif;

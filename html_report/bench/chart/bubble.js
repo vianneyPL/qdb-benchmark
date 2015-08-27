@@ -66,9 +66,19 @@ bench.chart.bubble = function() {
             .classed("bubble", true)
             .data(data);
 
+        var get_radius = function(test) {
+            return valueScale(serie.value(test))/2 || d/4;
+        }
+
+        var get_text = function(test) {
+            var value = serie.value(test);
+            return value != undefined ? serie.unit(value) : "N/A";
+        }
+
         circles
+            .classed("error", function(d) {return !!d.error})
             .transition()
-            .attr("r", function(d) { return valueScale(serie.value(d))/2;});
+            .attr("r", get_radius)            
 
         circles
             .enter()
@@ -77,8 +87,9 @@ bench.chart.bubble = function() {
             .attr({
                 "cx": function(d) { return sizeScale(d.content_size) },
                 "cy": function(d) { return threadsScale(d.thread_count) },
-                "r": function(d) { return valueScale(serie.value(d))/2 }
+                "r": get_radius
             })
+            .classed("error", function(d) {return !!d.error})
             .on("click", function(d) {
                 graph.selectAll("circle").classed("selected", false);
                 d3.select(this).classed("selected", true);
@@ -107,9 +118,7 @@ bench.chart.bubble = function() {
         labels
             .attr("opacity",0)
             .attr("font-size", function(d) {return valueScale(serie.value(d))/5 + "px"})
-            .text(function(d){
-                return serie.unit(serie.value(d))
-            })
+            .text(get_text)
             .transition()
             .attr("opacity",1)
 

@@ -34,7 +34,7 @@ target_link_libraries(qdb-benchmark
 )
 
 add_test(help qdb-benchmark --help)
-add_test(run qdb-benchmark --sizes 1 --threads 1)
+add_test(run qdb-benchmark --tests qdb_blob_put --sizes 1 --threads 8 --duration 4)
 
 if(WIN32)
     add_custom_command(TARGET qdb-benchmark POST_BUILD

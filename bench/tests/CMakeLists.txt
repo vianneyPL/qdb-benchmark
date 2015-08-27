@@ -2,6 +2,7 @@ add_library(bench-tests
     qdb/blob_get.hpp
     qdb/blob_get_noalloc.hpp
     qdb/blob_put.hpp
+    qdb/blob_remove.hpp
     qdb/blob_update.hpp
     qdb/int_add.hpp
     qdb/int_update.hpp

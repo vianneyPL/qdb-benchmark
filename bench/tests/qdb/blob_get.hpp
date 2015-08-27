@@ -14,11 +14,11 @@ class blob_get : public test_base<blob_get>
 public:
     blob_get(bench::test_config config) : test_base(config)
     {
-        _content = utils::create_random_string(_config.content_size);
+        _content = utils::create_random_string(config.content_size);
         _qdb.blob_put(_alias, _content);
     }
 
-    void run_iteration()
+    void run_iteration(unsigned long iteration)
     {
         auto content = _qdb.blob_get(_alias);
         if (content.size() != _content.size()) throw std::exception();
@@ -36,7 +36,7 @@ public:
 
     static std::string description()
     {
-        return "Repeated qdb_get() of the same entry.";
+        return "Call qdb_get() on one entry.";
     }
 
     static bool size_dependent()

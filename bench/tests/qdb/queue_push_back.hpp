@@ -3,8 +3,6 @@
 #include <bench/tests/qdb/test_base.hpp>
 #include <utils/random.hpp>
 
-#include <qdb/queue.h>
-
 namespace bench
 {
 namespace tests
@@ -16,13 +14,12 @@ class queue_push_back : public test_base<queue_push_back>
 public:
     explicit queue_push_back(bench::test_config config) : test_base(config)
     {
+        _content = utils::create_random_string(config.content_size);
     }
 
-    void run_iteration()
+    void run_iteration(unsigned long iteration)
     {
-        std::string content = utils::create_random_string(_config.content_size);
-
-        _qdb.call(::qdb_queue_push_back, _alias.c_str(), content.data(), content.size());
+        _qdb.queue_push_back(_alias, _content);
     }
 
     ~queue_push_back()
@@ -37,13 +34,16 @@ public:
 
     static std::string description()
     {
-        return "Repeated qdb_queue_push_back() to the same entry.";
+        return "Call qdb_queue_push_back() on one entry.";
     }
 
     static bool size_dependent()
     {
         return true;
     }
+
+private:
+    std::string _content;
 };
 }
 }

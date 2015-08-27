@@ -15,7 +15,7 @@ public:
     {
     }
 
-    virtual void run(time_point timeout) = 0;
+    virtual void run() = 0;
 
     unsigned long iterations() const
     {

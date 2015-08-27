@@ -29,9 +29,9 @@ public:
         utils::teamcity::test_started(make_test_name(test));
     }
 
-    void setup_failed(const test_instance & test) override
+    void setup_failed(const test_instance & test, const std::string & error) override
     {
-        utils::teamcity::test_failed(make_test_name(test), "Test set up failed", test.error);
+        utils::teamcity::test_failed(make_test_name(test), "Test set up failed", error);
         utils::teamcity::test_finished(make_test_name(test));
     }
 
@@ -45,9 +45,9 @@ public:
     {
     }
 
-    void test_failed(const test_instance & test)
+    void test_failed(const test_instance & test, const std::string & error)
     {
-        utils::teamcity::test_failed(make_test_name(test), test.error);
+        utils::teamcity::test_failed(make_test_name(test), error);
         utils::teamcity::test_finished(make_test_name(test));
     }
 
@@ -71,9 +71,9 @@ public:
     {
     }
 
-    void cleanup_failed(const test_instance & test) override
+    void cleanup_failed(const test_instance & test, const std::string & error) override
     {
-        utils::teamcity::test_failed(make_test_name(test), "Test set up failed", test.error);
+        utils::teamcity::test_failed(make_test_name(test), "Test set up failed", error);
         utils::teamcity::test_finished(make_test_name(test));
     }
 
