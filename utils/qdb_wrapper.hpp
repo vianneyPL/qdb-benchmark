@@ -108,6 +108,11 @@ public:
         call(::qdb_deque_push_back, alias.c_str(), content.data(), content.size());
     }
 
+    void deque_push_front(const std::string & alias, const std::string & content)
+    {
+        call(::qdb_deque_push_front, alias.c_str(), content.data(), content.size());
+    }
+
     template <typename Function, typename... Args>
     qdb_error_t call(Function function, Args... args) const
     {
