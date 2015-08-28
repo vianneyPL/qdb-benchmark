@@ -8,7 +8,7 @@ namespace utils
 class master_slave_barrier
 {
 public:
-    master_slave_barrier(int slaves) : _slaves(slaves), _ready_slaves(0), _waking_slaves(0)
+    master_slave_barrier(int slaves) : _slaves(slaves), _ready_slaves(0), _cycle(0)
     {
     }
 
@@ -17,9 +17,9 @@ public:
         std::unique_lock<std::mutex> lock(_mutex);
         _cv.wait(lock, [=]
                  {
-                     return _ready_slaves == _slaves;
+                     return _ready_slaves >= _slaves;
                  });
-        _ready_slaves = 0;
+        _ready_slaves -= _slaves;
     }
 
     template <class Rep, class Period>
@@ -28,17 +28,16 @@ public:
         std::unique_lock<std::mutex> lock(_mutex);
         bool ok = _cv.wait_for(lock, rel_time, [=]
                                {
-                                   return _ready_slaves == _slaves;
+                                   return _ready_slaves >= _slaves;
                                });
         if (!ok) return false;
-        _ready_slaves = 0;
+        _ready_slaves -= _slaves;
         return true;
     }
 
     void notify_master()
     {
         std::unique_lock<std::mutex> lock(_mutex);
-
         _ready_slaves++;
         lock.unlock();
         _cv.notify_all();
@@ -47,19 +46,17 @@ public:
     void wait_master()
     {
         std::unique_lock<std::mutex> lock(_mutex);
-
+        int next_cycle = _cycle + 1;
         _cv.wait(lock, [=]
                  {
-                     return _waking_slaves > 0;
+                     return next_cycle == _cycle;
                  });
-        _waking_slaves--;
     }
 
     void notify_slaves()
     {
         std::unique_lock<std::mutex> lock(_mutex);
-
-        _waking_slaves = _slaves;
+        _cycle++;
         lock.unlock();
         _cv.notify_all();
     }
@@ -67,6 +64,7 @@ public:
 private:
     std::condition_variable _cv;
     std::mutex _mutex;
-    int _slaves, _ready_slaves, _waking_slaves;
+    int _slaves, _ready_slaves;
+    int _cycle;
 };
 }
