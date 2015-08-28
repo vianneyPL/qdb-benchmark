@@ -23,7 +23,7 @@ public:
     void run_iteration(unsigned long iteration)
     {
         std::size_t result_size = _buffer.size();
-        _qdb.call(qdb_get_noalloc, _alias.c_str(), _buffer.data(), &result_size);
+        _qdb.call(qdb_blob_get_noalloc, _alias.c_str(), _buffer.data(), &result_size);
         if (result_size != _buffer.size()) throw std::exception();
     }
 
