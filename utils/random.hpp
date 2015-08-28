@@ -13,12 +13,12 @@ inline std::vector<char> create_random_vector(int size)
 
 inline char get_random_char()
 {
-    const char charset[] = "0123456789"
-                           "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                           "abcdefghijklmnopqrstuvwxyz";
+    static const char charset[] = "0123456789"
+                                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                  "abcdefghijklmnopqrstuvwxyz";
 
-    std::default_random_engine generator;
-    std::uniform_int_distribution<int> distribution(0, sizeof(charset) - 1);
+    static std::default_random_engine generator;
+    static std::uniform_int_distribution<int> distribution(0, sizeof(charset) - 1);
 
     return charset[distribution(generator)];
 }
