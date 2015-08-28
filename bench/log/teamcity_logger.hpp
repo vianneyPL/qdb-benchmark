@@ -15,8 +15,11 @@ public:
         utils::teamcity::build_problem(message);
     }
 
-    void pause(std::chrono::duration<int>) override
+    void pause(std::chrono::duration<int> duration) override
     {
+        utils::teamcity::message(
+            "Waiting " + std::to_string(std::chrono::duration_cast<std::chrono::seconds>(duration)
+                                            .count()) + "seconds");
     }
 
     void schedule(const std::vector<test_instance> &) override
@@ -27,6 +30,7 @@ public:
     void setup_started(const test_instance & test) override
     {
         utils::teamcity::test_started(make_test_name(test));
+        utils::teamcity::message("Setting up test...");
     }
 
     void setup_failed(const test_instance & test, const std::string & error) override
@@ -37,12 +41,14 @@ public:
 
     void setup_finished(const test_instance & test) override
     {
+        utils::teamcity::message("Setting up test... OK");
     }
 
     // Test
 
     void test_started(const test_instance & test)
     {
+        utils::teamcity::message("Executing test...");
     }
 
     void test_failed(const test_instance & test, const std::string & error)
@@ -53,6 +59,8 @@ public:
 
     void test_finished(const test_instance & test)
     {
+        utils::teamcity::message("Executing test... OK");
+
         std::string test_name = make_test_name(test);
 
         if (test.config.content_size)
@@ -69,6 +77,7 @@ public:
 
     void cleanup_started(const test_instance & test) override
     {
+        utils::teamcity::message("Cleaning up test...");
     }
 
     void cleanup_failed(const test_instance & test, const std::string & error) override
@@ -79,6 +88,7 @@ public:
 
     void cleanup_finished(const test_instance & test) override
     {
+        utils::teamcity::message("Cleaning up test... OK");
         utils::teamcity::test_finished(make_test_name(test));
     }
 

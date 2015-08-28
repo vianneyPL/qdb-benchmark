@@ -13,6 +13,11 @@ void utils::teamcity::build_statistic(std::string name, double value)
               << std::endl;
 }
 
+void utils::teamcity::message(std::string text)
+{
+    std::cout << "##teamcity[message text='" << text << "']" << std::endl;
+}
+
 void utils::teamcity::test_failed(std::string name, std::string message)
 {
     std::cout << "##teamcity[testFailed name='" << name << "', message='" << message << "']"
