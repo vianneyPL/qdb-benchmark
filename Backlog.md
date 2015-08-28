@@ -62,7 +62,7 @@ For a minimum duplication in test code, the framework must handle:
 - [X] qdb_blob_get_noalloc
 - [X] Repeated blob get
 - [X] Repeated int add
-- [X] Repeated queue push
+- [X] Repeated deque push
 - [X] Repeated blob put
-- [ ] Repeated queue push pop
+- [ ] Repeated deque push pop
 - [ ] Repeated set insert

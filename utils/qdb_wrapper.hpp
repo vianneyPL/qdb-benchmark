@@ -103,7 +103,7 @@ public:
         call(::qdb_remove, alias.c_str());
     }
 
-    void queue_push_back(const std::string & alias, const std::string & content)
+    void deque_push_back(const std::string & alias, const std::string & content)
     {
         call(::qdb_deque_push_back, alias.c_str(), content.data(), content.size());
     }

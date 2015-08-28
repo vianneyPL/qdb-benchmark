@@ -7,7 +7,7 @@ add_library(bench-tests
     qdb/int_add.hpp
     qdb/int_update.hpp
     qdb/node_status.hpp
-    qdb/queue_push_back.hpp
+    qdb/deque_push_back.hpp
     qdb/test_base.hpp
 
     all_tests.cpp
