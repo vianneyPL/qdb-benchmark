@@ -6,27 +6,19 @@
 
 namespace utils
 {
-inline std::vector<char> create_random_vector(int size)
-{
-    return std::vector<char>(size);
-}
-
-inline char get_random_char()
+inline std::string create_random_string(size_t size)
 {
     static const char charset[] = "0123456789"
                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                   "abcdefghijklmnopqrstuvwxyz";
-
-    static std::default_random_engine generator;
     static std::uniform_int_distribution<int> distribution(0, sizeof(charset) - 1);
 
-    return charset[distribution(generator)];
-}
+    std::default_random_engine generator;
 
-inline std::string create_random_string(int size)
-{
     std::string str(size, 0);
-    std::generate_n(str.begin(), size, get_random_char);
+    for (size_t i = 0; i < size; i++)
+        str[i] = charset[distribution(generator)];
+
     return str;
 }
 }
