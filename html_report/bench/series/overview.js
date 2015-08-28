@@ -36,7 +36,7 @@ bench.series.overview = [
     }
 },
 {
-    "name": "Persised",
+    "name": "Persisted",
     "unit": unit.byte,
     "value": function(tests){
         return d3.max(tests, function(test) {
