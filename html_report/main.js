@@ -10,17 +10,14 @@ var class_names = Object.keys(test_per_class);
 
 var content = d3.select("#content");
 
-function add_charts_for_test_class(test) {
-    var div = content.append("div").classed("test", true);
+function add_charts_for_test_class(test_name) {  
 
-    div
-        .append("h2")
-            .attr("id", test[0].name)
-            .text(test[0].name);
+    var div = d3.select(this);
+    var test = test_per_class[test_name];
 
-    div
-        .append("p")
-            .text(test[0].description);
+    div.attr("id", test_name);
+    div.append("h2").text(test_name);
+    div.append("p").text(test[0].description);
 
     var columnCount = bench.getContentSizes(test).length;
     var rowCount = bench.getThreadCounts(test).length;
@@ -59,9 +56,15 @@ content
 
 var overview = bench.chart.overview();
 overview.data(d3.values(test_per_class));
+overview.on("checked", function(test, checked) {
+    d3.select("#"+test).style("display", checked ? "block" : "none");
+});
 overview(content.append("div").classed("overview", true));
 
-for (var key in test_per_class)
-{
-    setTimeout(add_charts_for_test_class, 10, test_per_class[key]);    
-}
+content
+    .selectAll("div.test")
+    .data(class_names)
+    .enter()
+    .append("div").classed("test", true)
+    .each(add_charts_for_test_class);
+
