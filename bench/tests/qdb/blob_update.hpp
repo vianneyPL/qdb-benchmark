@@ -14,15 +14,14 @@ namespace qdb
 class blob_update : public test_base<blob_update>
 {
 public:
-    explicit blob_update(bench::test_config config)
-        : test_base(config), _content_size(config.content_size)
+    explicit blob_update(bench::test_config config) : test_base(config)
     {
+        _content = utils::create_random_string(config.content_size);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        std::string content = utils::create_random_string(_content_size);
-        _qdb.blob_update(_alias, content);
+        _qdb.blob_update(_alias, _content);
     }
 
     ~blob_update()
@@ -46,7 +45,7 @@ public:
     }
 
 private:
-    unsigned long _content_size;
+    std::string _content;
 };
 }
 }
