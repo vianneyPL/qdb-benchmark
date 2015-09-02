@@ -15,7 +15,9 @@ public:
     {
     }
 
+    virtual void setup() = 0;
     virtual void run() = 0;
+    virtual void cleanup() = 0;
 
     unsigned long iterations() const
     {

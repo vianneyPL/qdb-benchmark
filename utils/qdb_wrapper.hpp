@@ -1,10 +1,10 @@
 #pragma once
 
-#include <qdb/blob.h>
 #include <qdb/client.h>
-#include <qdb/deque.h>
 
 #include <string>
+#include <stdexcept>
+#include <cstdint>
 
 namespace utils
 {
@@ -52,81 +52,39 @@ private:
 class qdb_wrapper
 {
 public:
-    qdb_wrapper()
-    {
-        _handle = qdb_open_tcp();
-    }
+    qdb_wrapper();
+    ~qdb_wrapper();
 
-    ~qdb_wrapper()
-    {
-        call(qdb_close);
-    }
+    void connect(const std::string & cluster_uri);
+    qdb_buffer node_status(const std::string & node_uri);
+    void free_buffer(const char * buffer);
 
-    void connect(const std::string & cluster_uri)
-    {
-        call(qdb_connect, cluster_uri.c_str());
-    }
+    void remove(const std::string & alias);
 
-    void free_buffer(const char * buffer)
-    {
-        qdb_free_buffer(_handle, buffer);
-    }
+    void blob_put(const std::string & alias, const std::string & content);
+    void blob_update(const std::string & alias, const std::string & content);
+    qdb_buffer blob_get(const std::string & alias);
+    void blob_get_noalloc(const std::string & alias, std::string & content);
 
-    qdb_buffer node_status(const std::string & node_uri)
-    {
-        const char * content;
-        size_t content_size;
-        call(::qdb_node_status, node_uri.c_str(), &content, &content_size);
-        return qdb_buffer(_handle, content, content_size);
-    }
+    void deque_push_back(const std::string & alias, const std::string & content);
+    void deque_push_front(const std::string & alias, const std::string & content);
 
-    void blob_put(const std::string & alias, const std::string & content)
-    {
-        call(qdb_blob_put, alias.c_str(), content.data(), content.size(), 0);
-    }
+    std::int64_t int_add(const std::string & alias, std::int64_t value);
+    void int_put(const std::string & alias, std::int64_t value);
+    void int_update(const std::string & alias, std::int64_t value);
 
-    void blob_update(const std::string & alias, const std::string & content)
+private:
+    bool is_error(qdb_error_t err) const
     {
-        call(qdb_blob_update, alias.c_str(), content.data(), content.size(), 0);
-    }
-
-    qdb_buffer blob_get(const std::string & alias)
-    {
-        const char * result;
-        std::size_t result_size;
-        call(::qdb_blob_get, alias.c_str(), &result, &result_size);
-        return qdb_buffer(_handle, result, result_size);
-    }
-
-    void remove(const std::string & alias)
-    {
-        call(::qdb_remove, alias.c_str());
-    }
-
-    void deque_push_back(const std::string & alias, const std::string & content)
-    {
-        call(::qdb_deque_push_back, alias.c_str(), content.data(), content.size());
-    }
-
-    void deque_push_front(const std::string & alias, const std::string & content)
-    {
-        call(::qdb_deque_push_front, alias.c_str(), content.data(), content.size());
+        return err != qdb_e_ok;
     }
 
     template <typename Function, typename... Args>
-    qdb_error_t call(Function function, Args... args) const
+    qdb_error_t call(std::string name, Function function, Args... args) const
     {
-        qdb_error_t error = function(_handle, args...);
-        throw_if_error(error);
-        return error;
-    }
-
-private:
-    void throw_if_error(qdb_error_t err) const
-    {
-        if (!err) return;
-
-        throw std::runtime_error(qdb_error(err));
+        qdb_error_t err = function(_handle, args...);
+        if (is_error(err)) throw std::runtime_error(name + ": " + qdb_error(err));
+        return err;
     }
 
     qdb_handle_t _handle;

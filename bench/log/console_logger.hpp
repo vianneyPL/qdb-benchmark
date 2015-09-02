@@ -101,8 +101,11 @@ public:
         std::cout << "  - total iterations = " << unit::none(compute_iteration_count(test))
                   << std::endl;
 
-        std::cout << "  - memory variation = " << unit::byte(compute_memory_variation(test))
-                  << std::endl;
+        if (test.result.find("node_memory") != test.result.end())
+        {
+            std::cout << "  - memory variation = " << unit::byte(compute_memory_variation(test))
+                      << std::endl;
+        }
     }
 
     // Test cleanup
@@ -124,8 +127,8 @@ public:
     }
 
 private:
-    int _test_count;
-    int _test_num;
+    size_t _test_count;
+    size_t _test_num;
 
     std::string duration_to_string(duration duration)
     {

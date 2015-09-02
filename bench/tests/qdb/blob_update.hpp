@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/tests/qdb/test_base.hpp>
+#include <bench/tests/qdb/qdb_test_template.hpp>
 #include <utils/random.hpp>
 
 #include <qdb/blob.h>
@@ -11,10 +11,10 @@ namespace tests
 {
 namespace qdb
 {
-class blob_update : public test_base<blob_update>
+class blob_update : public qdb_test_template<blob_update>
 {
 public:
-    explicit blob_update(bench::test_config config) : test_base(config)
+    explicit blob_update(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
@@ -24,7 +24,7 @@ public:
         _qdb.blob_update(_alias, _content);
     }
 
-    ~blob_update()
+    void cleanup() override
     {
         _qdb.remove(_alias);
     }

@@ -42,6 +42,10 @@ public:
     {
     }
 
+    void setup() override
+    {
+    }
+
     void run() override
     {
         if (_prepared_iterations > 0)
@@ -50,21 +54,27 @@ public:
             run_iteration_until(clock::now() + _config.duration);
     }
 
+    void cleanup() override
+    {
+    }
+
 protected:
-    void perform_per_iteration_cleanup()
+    template <typename Function>
+    void cleanup_each(Function function)
     {
         for (unsigned long i = 0; i < test_loop::iterations(); i++)
         {
-            ((Derived *)this)->cleanup_iteration(i);
+            function(i);
         }
     }
 
-    void perform_per_iteration_setup()
+    template <typename Function>
+    void setup_each(Function function)
     {
         clock::time_point timeout = clock::now() + _config.duration;
         while (clock::now() < timeout)
         {
-            ((Derived *)this)->setup_iteration(_prepared_iterations++);
+            function(_prepared_iterations++);
         }
     }
 

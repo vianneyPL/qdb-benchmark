@@ -2,6 +2,6 @@
 @cd ..
 @mkdir build
 cd build        || @exit /b 1 
-cmake ..        || @exit /b 1
-cmake --build . || @exit /b 3
-ctest -VV .     || @exit /b 4
+cmake -G "Visual Studio 12 2013 Win64" .. || @exit /b 1
+cmake --build . --config "Debug" || @exit /b 3
+ctest -C "Debug" -VV .     || @exit /b 4

@@ -6,6 +6,8 @@ namespace utils
 {
 namespace teamcity
 {
+void block_opened(std::string name);
+void block_closed(std::string name);
 void build_problem(std::string text);
 void build_statistic(std::string name, double value);
 void message(std::string message);

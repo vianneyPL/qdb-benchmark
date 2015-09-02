@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/tests/qdb/test_base.hpp>
+#include <bench/tests/qdb/qdb_test_template.hpp>
 #include <utils/random.hpp>
 
 namespace bench
@@ -9,10 +9,10 @@ namespace tests
 {
 namespace qdb
 {
-class deque_push_back : public test_base<deque_push_back>
+class deque_push_back : public qdb_test_template<deque_push_back>
 {
 public:
-    explicit deque_push_back(bench::test_config config) : test_base(config)
+    explicit deque_push_back(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
@@ -22,7 +22,7 @@ public:
         _qdb.deque_push_back(_alias, _content);
     }
 
-    ~deque_push_back()
+    void cleanup() override
     {
         _qdb.remove(_alias);
     }

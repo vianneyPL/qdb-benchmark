@@ -8,7 +8,6 @@
 #include <utils/for_each.hpp>
 
 #include <chrono>
-#include <iostream>
 #include <algorithm>
 
 namespace bench
@@ -19,10 +18,11 @@ class test_runner
 {
 public:
     test_runner(test_instance & test, log::logger & logger)
-        : _test(test), _logger(logger), _barrier(_test.config.thread_count)
+        : _test(test), _logger(logger), _synchronizer(_test.config.thread_count)
     {
         for (int i = 0; i < _test.config.thread_count; i++)
-            _threads.emplace_back(new test_thread(_test, _barrier));
+            _threads.emplace_back(new test_thread(_test, _synchronizer));
+        _synchronizer.wait_workers();
 
         _probes = bench::create_test_probes(_test);
         _probes.emplace_back(new test_iteration_probe(_threads));
@@ -30,108 +30,123 @@ public:
 
     ~test_runner()
     {
+        _synchronizer.send_order(&test_thread::terminate);
     }
 
     void run()
     {
-        step1_setup();
-        step2_test();
+        if (step1_setup())
+        {
+            step2_test();
+        }
         step3_cleanup();
     }
 
 private:
-    void step1_setup()
-    {
-        _logger.setup_started(_test);
-        auto start_time = clock::now();
-
-        _barrier.notify_slaves();
-
-        setup_probes();
-
-        _barrier.wait_slaves();
-
-        _test.setup_duration = clock::now() - start_time;
-
-        set_setup_error(_threads.first_setup_error());
-
-        if (_setup_error.empty())
-            _logger.setup_finished(_test);
-        else
-            _logger.setup_failed(_test, _setup_error);
-    }
-
-    void setup_probes()
+    bool step1_setup()
     {
         try
         {
-            utils::for_each(_probes, &probe::setup);
+            auto start_time = clock::now();
+            _logger.setup_started(_test);
+
+            _synchronizer.send_order(&test_thread::setup);
+            setup_probes();
+            _synchronizer.wait_workers();
+            _test.setup_duration = clock::now() - start_time;
+
+            _synchronizer.rethrow();
+
+            _logger.setup_finished(_test);
+            return true;
         }
         catch (std::exception & e)
         {
-            set_setup_error(e.what());
+            _test.error = std::string("Setup error: ") + e.what();
+            _logger.setup_failed(_test, e.what());
+            return false;
         }
     }
 
     void step2_test()
     {
-        if (!_test.error.empty())
+        try
         {
-            _barrier.notify_slaves();
-            _barrier.wait_slaves();
-            return;
-        }
+            const duration sampling_period = std::chrono::milliseconds(100);
+            _test.start_time = clock::now();
+            _logger.test_started(_test);
 
-        const duration sampling_period = std::chrono::milliseconds(100);
-
-        _logger.test_started(_test);
-        _test.start_time = clock::now();
-
-        _barrier.notify_slaves();
-        sample_now();
-        while (!_barrier.wait_slaves_for(sampling_period))
-        {
+            _synchronizer.send_order(&test_thread::test);
             sample_now();
-        }
-        sample_now();
+            while (!_synchronizer.wait_workers_for(sampling_period))
+            {
+                sample_now();
+            }
+            sample_now();
+            _test.test_duration = clock::now() - _test.start_time;
 
-        _test.test_duration = clock::now() - _test.start_time;
+            _synchronizer.rethrow();
 
-        set_test_error(_threads.first_test_error());
-
-        if (_test_error.empty())
             _logger.test_finished(_test);
-        else
-            _logger.test_failed(_test, _test_error);
+        }
+        catch (std::exception & e)
+        {
+            _test.error = e.what();
+            _logger.test_failed(_test, e.what());
+        }
     }
 
     void step3_cleanup()
     {
-        _logger.cleanup_started(_test);
-        auto start_time = clock::now();
+        try
+        {
+            auto start_time = clock::now();
+            _logger.cleanup_started(_test);
 
-        _barrier.notify_slaves();
-        cleanup_probes();
-        _barrier.wait_slaves();
-        _test.cleanup_duration = clock::now() - start_time;
+            _synchronizer.send_order(&test_thread::cleanup);
+            cleanup_probes();
+            _synchronizer.wait_workers();
 
-        set_cleanup_error(_threads.first_cleanup_error());
+            _test.cleanup_duration = clock::now() - start_time;
 
-        if (_cleanup_error.empty())
+            _synchronizer.rethrow();
+
             _logger.cleanup_finished(_test);
-        else
-            _logger.cleanup_failed(_test, _cleanup_error);
+        }
+        catch (std::exception & e)
+        {
+            _test.error = std::string("Cleanup error: ") + e.what();
+            _logger.cleanup_failed(_test, e.what());
+        }
+    }
+
+    void setup_probes()
+    {
+        for (auto & probe : _probes)
+        {
+            try
+            {
+                probe->setup();
+            }
+            catch (...)
+            {
+                _synchronizer.report_exception(std::current_exception());
+            }
+        }
     }
 
     void cleanup_probes()
     {
-        try
+        for (auto & probe : _probes)
         {
-            utils::for_each(_probes, &probe::cleanup);
-        }
-        catch (std::exception & e)
-        {
-            set_cleanup_error(e.what());
+            try
+            {
+                probe->cleanup();
+            }
+            catch (...)
+            {
+                _synchronizer.report_exception(std::current_exception());
+            }
         }
     }
 
@@ -140,36 +155,23 @@ private:
         time_point now = clock::now();
 
         for (auto & probe : _probes)
-            probe->take_sample(now, _test.result);
-    }
-
-    void set_setup_error(std::string err)
-    {
-        if (err.empty()) return;
-        if (_setup_error.empty()) _setup_error = err;
-        if (_test.error.empty()) _test.error = "Setup error: " + err;
-    }
-
-    void set_test_error(std::string err)
-    {
-        if (err.empty()) return;
-        if (_test_error.empty()) _test_error = err;
-        if (_test.error.empty()) _test.error = err;
-    }
-
-    void set_cleanup_error(std::string err)
-    {
-        if (err.empty()) return;
-        if (_cleanup_error.empty()) _cleanup_error = err;
-        if (_test.error.empty()) _test.error = "Cleanup error: " + err;
+        {
+            try
+            {
+                probe->take_sample(now, _test.result);
+            }
+            catch (...)
+            {
+                _synchronizer.report_exception(std::current_exception());
+            }
+        }
     }
 
     test_instance & _test;
+    log::logger & _logger;
+    thread_synchronizer<test_thread> _synchronizer;
     test_thread_collection _threads;
     probe_collection _probes;
-    log::logger & _logger;
-    utils::master_slave_barrier _barrier;
-    std::string _setup_error, _test_error, _cleanup_error;
 };
 
 void run_test(test_instance & test, log::logger & logger)

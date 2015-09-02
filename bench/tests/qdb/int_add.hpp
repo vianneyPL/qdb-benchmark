@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/tests/qdb/test_base.hpp>
+#include <bench/tests/qdb/qdb_test_template.hpp>
 
 #include <qdb/integer.h>
 
@@ -10,21 +10,25 @@ namespace tests
 {
 namespace qdb
 {
-class int_add : public test_base<int_add>
+class int_add : public qdb_test_template<int_add>
 {
 public:
-    explicit int_add(bench::test_config config) : test_base(config)
+    explicit int_add(bench::test_config config) : qdb_test_template(config)
     {
-        _qdb.call(qdb_int_put, _alias.c_str(), 0, 0);
+    }
+
+    void setup() override
+    {
+        qdb_test_template::setup();
+        _qdb.int_put(_alias, 0);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        qdb_int_t total;
-        _qdb.call(qdb_int_add, _alias.c_str(), 1, &total);
+        _qdb.int_add(_alias, 1);
     }
 
-    ~int_add() override
+    void cleanup() override
     {
         _qdb.remove(_alias);
     }

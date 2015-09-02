@@ -18,14 +18,14 @@ namespace tests
 namespace qdb
 {
 template <typename Derived>
-class test_base : public test_template<Derived>
+class qdb_test_template : public test_template<Derived>
 {
 public:
-    test_base(test_config config)
+    qdb_test_template(test_config config)
         : test_template<Derived>(config), _thread_id(std::this_thread::get_id())
     {
         _alias = create_unique_alias();
-        _qdb.connect(config.cluster_uri);
+        _qdb.connect(config.cluster_uri);        
     }
 
     static probe_collection create_probes(test_config cfg)

@@ -3,6 +3,7 @@ add_library(bench-log
     logger.hpp
 	logger.cpp
 	teamcity_logger.hpp
+    unit.hpp
 )
 
 target_link_libraries(bench-log

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/tests/qdb/test_base.hpp>
+#include <bench/tests/qdb/qdb_test_template.hpp>
 #include <utils/random.hpp>
 
 #include <qdb/blob.h>
@@ -11,23 +11,28 @@ namespace tests
 {
 namespace qdb
 {
-class blob_get_noalloc : public test_base<blob_get_noalloc>
+class blob_get_noalloc : public qdb_test_template<blob_get_noalloc>
 {
 public:
-    blob_get_noalloc(bench::test_config config) : test_base(config), _buffer(config.content_size)
+    blob_get_noalloc(bench::test_config config)
+        : qdb_test_template(config), _buffer(config.content_size, 0)
     {
         _content = utils::create_random_string(config.content_size);
+    }
+
+    void setup() override
+    {
+        qdb_test_template::setup();
         _qdb.blob_put(_alias, _content);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        std::size_t result_size = _buffer.size();
-        _qdb.call(qdb_blob_get_noalloc, _alias.c_str(), _buffer.data(), &result_size);
-        if (result_size != _buffer.size()) throw std::exception();
+        _qdb.blob_get_noalloc(_alias, _buffer);
+        if (_content.size() != _buffer.size()) throw std::exception();
     }
 
-    ~blob_get_noalloc() override
+    void cleanup() override
     {
         _qdb.remove(_alias);
     }
@@ -48,7 +53,7 @@ public:
     }
 
 private:
-    std::vector<char> _buffer;
+    std::string _buffer;
     std::string _content;
 };
 }

@@ -17,9 +17,9 @@ public:
 
     void pause(std::chrono::duration<int> duration) override
     {
-        utils::teamcity::message(
-            "Waiting " + std::to_string(std::chrono::duration_cast<std::chrono::seconds>(duration)
-                                            .count()) + "seconds");
+        auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+        utils::teamcity::message("Wait " + std::to_string(seconds)
+                                 + (seconds > 1 ? " seconds" : " second"));
     }
 
     void schedule(const std::vector<test_instance> &) override
@@ -30,36 +30,34 @@ public:
     void setup_started(const test_instance & test) override
     {
         utils::teamcity::test_started(make_test_name(test));
-        utils::teamcity::message("Setting up test...");
+        utils::teamcity::message("Setup started");
     }
 
     void setup_failed(const test_instance & test, const std::string & error) override
     {
-        utils::teamcity::test_failed(make_test_name(test), "Test set up failed", error);
-        utils::teamcity::test_finished(make_test_name(test));
+        utils::teamcity::message("Setup failed: " + error);
     }
 
     void setup_finished(const test_instance & test) override
     {
-        utils::teamcity::message("Setting up test... OK");
+        utils::teamcity::message("Setup finished");
     }
 
     // Test
 
     void test_started(const test_instance & test)
     {
-        utils::teamcity::message("Executing test...");
+        utils::teamcity::message("Test started");
     }
 
     void test_failed(const test_instance & test, const std::string & error)
     {
-        utils::teamcity::test_failed(make_test_name(test), error);
-        utils::teamcity::test_finished(make_test_name(test));
+        utils::teamcity::message("Test failed: " + error);
     }
 
     void test_finished(const test_instance & test)
     {
-        utils::teamcity::message("Executing test... OK");
+        utils::teamcity::message("Test finished");
 
         std::string test_name = make_test_name(test);
 
@@ -77,18 +75,22 @@ public:
 
     void cleanup_started(const test_instance & test) override
     {
-        utils::teamcity::message("Cleaning up test...");
+        utils::teamcity::message("Cleanup started");
     }
 
     void cleanup_failed(const test_instance & test, const std::string & error) override
     {
-        utils::teamcity::test_failed(make_test_name(test), "Test set up failed", error);
+        utils::teamcity::message("Cleanup failed: " + error);
+        utils::teamcity::test_failed(make_test_name(test), test.error);
         utils::teamcity::test_finished(make_test_name(test));
     }
 
     void cleanup_finished(const test_instance & test) override
     {
-        utils::teamcity::message("Cleaning up test... OK");
+        utils::teamcity::message("Cleanup finished");
+
+        if (test.error.size() > 0) utils::teamcity::test_failed(make_test_name(test), test.error);
+
         utils::teamcity::test_finished(make_test_name(test));
     }
 

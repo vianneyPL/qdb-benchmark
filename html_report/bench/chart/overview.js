@@ -35,7 +35,9 @@ bench.chart.overview = function() {
                 row.append("td").append("label").text(tests[0].name);
 
                  bench.series.overview.forEach(function(serie) {
-                     row.append("td").text(serie.unit(serie.value(tests)));
+                    var value = serie.value(tests);
+                    var text = isNaN(value) ? "N/A" : serie.unit(value);
+                    row.append("td").text(text);
                  });
             });
     }

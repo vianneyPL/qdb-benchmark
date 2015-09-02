@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/tests/qdb/test_base.hpp>
+#include <bench/tests/qdb/qdb_test_template.hpp>
 #include <utils/random.hpp>
 
 #include <qdb/blob.h>
@@ -11,17 +11,12 @@ namespace tests
 {
 namespace qdb
 {
-class blob_put : public test_base<blob_put>
+class blob_put : public qdb_test_template<blob_put>
 {
 public:
-    explicit blob_put(bench::test_config config) : test_base(config)
+    explicit blob_put(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
-    }
-
-    ~blob_put()
-    {
-        perform_per_iteration_cleanup();
     }
 
     void run_iteration(unsigned long iteration)
@@ -29,9 +24,12 @@ public:
         _qdb.blob_put(get_alias(iteration), _content);
     }
 
-    void cleanup_iteration(unsigned long iteration)
+    void cleanup() override
     {
-        _qdb.remove(get_alias(iteration));
+        cleanup_each([=](unsigned long iteration)
+                     {
+                         _qdb.remove(get_alias(iteration));
+                     });
     }
 
     static std::string name()

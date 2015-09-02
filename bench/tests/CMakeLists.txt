@@ -9,11 +9,17 @@ add_library(bench-tests
     qdb/node_status.hpp
     qdb/deque_push_back.hpp
     qdb/deque_push_front.hpp
-    qdb/test_base.hpp
+    qdb/qdb_test_template.hpp
+    stdio/fread.hpp
 
     all_tests.cpp
     all_tests.hpp
     test_template.hpp
+)
+
+target_compile_options(bench-tests
+    PRIVATE
+    -D_CRT_SECURE_NO_WARNINGS
 )
 
 target_link_libraries(bench-tests

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/tests/qdb/test_base.hpp>
+#include <bench/tests/qdb/qdb_test_template.hpp>
 #include <utils/random.hpp>
 
 namespace bench
@@ -9,12 +9,17 @@ namespace tests
 {
 namespace qdb
 {
-class blob_get : public test_base<blob_get>
+class blob_get : public qdb_test_template<blob_get>
 {
 public:
-    blob_get(bench::test_config config) : test_base(config)
+    blob_get(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
+    }
+
+    void setup() override
+    {
+        qdb_test_template::setup();
         _qdb.blob_put(_alias, _content);
     }
 
@@ -24,7 +29,7 @@ public:
         if (content.size() != _content.size()) throw std::exception();
     }
 
-    ~blob_get() override
+    void cleanup() override
     {
         _qdb.remove(_alias);
     }

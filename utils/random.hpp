@@ -21,4 +21,9 @@ inline std::string create_random_string(size_t size)
 
     return str;
 }
+
+inline std::string get_temporary_filename()
+{
+    return create_random_string(16) + ".tmp";
+}
 }

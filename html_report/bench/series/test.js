@@ -18,6 +18,7 @@ bench.series.tests = {
         "unit": unit.byte_per_second,
         "value": function(test) {
             if (!test.iterations) return undefined;
+            if (!test.content_size) return NaN;
             var lastSample = test.iterations[test.iterations.length-1];
             var duration = lastSample[0];
             var iterations = d3.sum(lastSample.slice(1));
