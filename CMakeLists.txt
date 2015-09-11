@@ -42,3 +42,11 @@ if(WIN32)
         ${QDB_API_DLL}
         $<TARGET_FILE_DIR:qdb-benchmark>)
 endif()
+
+set(CPACK_PACKAGE_VERSION "2.0.0")
+include(CPack)
+install(TARGETS qdb-benchmark
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
