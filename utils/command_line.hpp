@@ -1,9 +1,10 @@
 #pragma once
 
 #include <algorithm>
-#include <string>
-#include <sstream>
 #include <iomanip>
+#include <list>
+#include <sstream>
+#include <string>
 #include <vector>
 
 namespace utils
@@ -12,12 +13,12 @@ namespace utils
 class command_line
 {
     std::ostringstream _help;
-    const char ** _begin;
-    const char ** _end;
+    std::list<std::string> _args;
 
 public:
-    command_line(int argc, const char ** argv) : _begin(argv), _end(argv + argc)
+    command_line(int argc, const char ** argv)
     {
+        std::copy(argv + 1, argv + argc, std::inserter(_args, _args.end()));
     }
 
     std::string help()
@@ -25,11 +26,21 @@ public:
         return _help.str();
     }
 
+    void check_unknown()
+    {
+        if (!_args.empty())
+            throw std::runtime_error("Command line argument \"" + *_args.begin()
+                                     + "\" is not supported");
+    }
+
     bool get_flag(const std::string & short_syntax,
                   const std::string & long_syntax,
                   const std::string & description)
     {
-        return find(short_syntax, long_syntax, description, "") != _end;
+        auto it = find(short_syntax, long_syntax, description, "");
+        if (it == _args.end()) return false;
+        _args.erase(it);
+        return false;
     }
 
     std::string get_string(const std::string & short_syntax,
@@ -37,11 +48,14 @@ public:
                            const std::string & description,
                            const std::string & default_value)
     {
-        auto it = find(short_syntax, long_syntax, description, default_value);
-        if (it != _end && ++it != _end)
-            return *it;
-        else
-            return default_value;
+        auto value = find(short_syntax, long_syntax, description, default_value);
+        if (value == _args.end()) return default_value;
+        auto flag = value++;
+        if (value == _args.end()) return default_value;
+        std::string result = *value;
+        _args.erase(flag);
+        _args.erase(value);
+        return result;
     }
 
     std::vector<std::string> get_strings(const std::string & short_syntax,
@@ -52,10 +66,9 @@ public:
         try
         {
             std::vector<std::string> values;
-            std::string list = get_string(short_syntax, long_syntax,
-                                          description, default_value);
+            std::string _args = get_string(short_syntax, long_syntax, description, default_value);
 
-            for_each_token(list, [&](std::string x)
+            for_each_token(_args, [&](std::string x)
                            {
                                values.push_back(x);
                            });
@@ -64,8 +77,7 @@ public:
         }
         catch (...)
         {
-            throw std::runtime_error("Command line argument " + long_syntax
-                                     + " is invalid");
+            throw std::runtime_error("Command line argument " + long_syntax + " is invalid");
         }
     }
 
@@ -76,13 +88,11 @@ public:
     {
         try
         {
-            return std::stoi(get_string(short_syntax, long_syntax, description,
-                                        default_value));
+            return std::stoi(get_string(short_syntax, long_syntax, description, default_value));
         }
         catch (...)
         {
-            throw std::runtime_error("Command line argument " + long_syntax
-                                     + " is invalid");
+            throw std::runtime_error("Command line argument " + long_syntax + " is invalid");
         }
     }
 
@@ -94,10 +104,9 @@ public:
                                   Selector selector)
     {
         std::vector<Value> values;
-        std::string list =
-            get_string(short_syntax, long_syntax, description, default_value);
+        std::string _args = get_string(short_syntax, long_syntax, description, default_value);
 
-        for_each_token(list, [&](std::string x)
+        for_each_token(_args, [&](std::string x)
                        {
                            values.push_back(selector(x));
                        });
@@ -110,30 +119,29 @@ public:
                                   const std::string & description,
                                   const std::string & default_value)
     {
-        return get_values<int>(short_syntax, long_syntax, description,
-                               default_value, [](std::string s)
+        return get_values<int>(short_syntax, long_syntax, description, default_value,
+                               [](std::string s)
                                {
                                    return std::stoi(s);
                                });
     }
 
 private:
-    const char ** find(const std::string & short_syntax,
-                       const std::string & long_syntax,
-                       const std::string & description,
-                       const std::string & default_value)
+    std::list<std::string>::iterator find(const std::string & short_syntax,
+                                          const std::string & long_syntax,
+                                          const std::string & description,
+                                          const std::string & default_value)
     {
-        _help << "  " << std::left << std::setw(3) << short_syntax
-              << std::setw(16) << long_syntax << description;
+        _help << "  " << std::left << std::setw(3) << short_syntax << std::setw(16) << long_syntax
+              << description;
 
         if (default_value.size() > 0) _help << " (default: " << default_value << ")";
 
         _help << std::endl;
 
-        return std::find_if(_begin, _end, [&](const char * arg)
+        return std::find_if(_args.begin(), _args.end(), [&](const std::string & arg)
                             {
-                                return arg == short_syntax
-                                       || arg == long_syntax;
+                                return arg == short_syntax || arg == long_syntax;
                             });
     }
 
@@ -158,8 +166,7 @@ private:
                 throw std::runtime_error("Unexpected token: " + token);
             }
 
-            if (stop == std::string::npos)
-                break;
+            if (stop == std::string::npos) break;
 
             start = stop + 1u;
         }

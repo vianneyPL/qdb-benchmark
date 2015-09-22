@@ -55,6 +55,7 @@ void bench::app::command_line::parse(int argc, const char ** argv)
         {
             return get_test_by_name(_test_pool, name);
         });
+    parser.check_unknown();
 
     if (_settings.tests.empty()) _settings.tests = _test_pool; // all test by default
 
