@@ -5,11 +5,11 @@
 #include <utils/qdb_wrapper.hpp>
 #include <utils/random.hpp>
 
+#include <atomic>
 #include <chrono>
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include <thread>
 
 namespace bench
 {
@@ -21,11 +21,10 @@ template <typename Derived>
 class qdb_test_template : public test_template<Derived>
 {
 public:
-    qdb_test_template(test_config config)
-        : test_template<Derived>(config), _thread_id(std::this_thread::get_id())
+    qdb_test_template(test_config config) : test_template<Derived>(config)
     {
-        _alias = create_unique_alias();
-        _qdb.connect(config.cluster_uri);        
+        _alias_prefix = create_unique_prefix();
+        _qdb.connect(config.cluster_uri);
     }
 
     static probe_collection create_probes(test_config cfg)
@@ -36,26 +35,29 @@ public:
     }
 
 protected:
-    std::string _alias;
     utils::qdb_wrapper _qdb;
 
-private:
-    std::string create_unique_alias()
+    std::string get_alias(long long iteration) const
     {
-        static int alias_counter;
+        return _alias_prefix + std::to_string(iteration);
+    }
+
+private:
+    static std::string create_unique_prefix()
+    {
+        static std::atomic<int> __counter;
         std::ostringstream s;
 
         s << "benchmarks-"
           << std::chrono::duration_cast<std::chrono::seconds>(
-                 std::chrono::steady_clock::now().time_since_epoch()).count() << "-" << _thread_id
-          << "-" << alias_counter;
-
-        alias_counter++;
+                 std::chrono::steady_clock::now().time_since_epoch())
+                 .count()
+          << "-" << __counter++ << "-";
 
         return s.str();
     }
 
-    std::thread::id _thread_id;
+    std::string _alias_prefix;
 };
 }
 }

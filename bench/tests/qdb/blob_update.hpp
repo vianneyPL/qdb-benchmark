@@ -16,6 +16,7 @@ class blob_update : public qdb_test_template<blob_update>
 public:
     explicit blob_update(bench::test_config config) : qdb_test_template(config)
     {
+        _alias = get_alias(0); // only one alias is needed
         _content = utils::create_random_string(config.content_size);
     }
 
@@ -45,6 +46,7 @@ public:
     }
 
 private:
+    std::string _alias;
     std::string _content;
 };
 }

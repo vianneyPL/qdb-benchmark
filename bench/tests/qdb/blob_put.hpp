@@ -48,11 +48,6 @@ public:
     }
 
 private:
-    std::string get_alias(long long iteration) const
-    {
-        return _alias + std::to_string(iteration);
-    }
-
     std::string _content;
 };
 }

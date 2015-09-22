@@ -40,7 +40,7 @@ public:
         auto it = find(short_syntax, long_syntax, description, "");
         if (it == _args.end()) return false;
         _args.erase(it);
-        return false;
+        return true;
     }
 
     std::string get_string(const std::string & short_syntax,
