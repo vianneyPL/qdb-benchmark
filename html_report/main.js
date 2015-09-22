@@ -1,19 +1,26 @@
-var test_per_class = {};
-results.forEach(function(test, i) {
-    test.id = i;
-    if (test_per_class[test.name] != undefined)
-        test_per_class[test.name].push(test);
+var renderTimeout;
+var tests_by_class = {};
+var test_by_id = [];
+
+function addTestResult(test) {
+    test.id = test_by_id.length;
+    test_by_id.push(test);
+
+    if (tests_by_class[test.name] != undefined)
+        tests_by_class[test.name].push(test);
     else 
-        test_per_class[test.name] = [test];
-});
-var class_names = Object.keys(test_per_class);
+        tests_by_class[test.name] = [test];
+
+    clearTimeout(renderTimeout);
+    renderTimeout = setTimeout(render);
+}
 
 var content = d3.select("#content");
 
 function add_charts_for_test_class(test_name) {  
 
     var div = d3.select(this);
-    var test = test_per_class[test_name];
+    var test = tests_by_class[test_name];
 
     div.attr("id", test_name);
     div.append("h2").text(test_name);
@@ -38,7 +45,7 @@ function add_charts_for_test_class(test_name) {
         summaryChart(summaryDiv);
         summaryChart.on("select", function(id){
             console.log("test "+id);   
-            detailChart.data(results[id]);  
+            detailChart.data(test_by_id[id]);  
             detailChart.update();      
         });
     }
@@ -49,22 +56,26 @@ function add_charts_for_test_class(test_name) {
     detailChart(detailDiv);
 }
 
-content
-    .append("h1")
-        .attr("id", "overview")
-        .text("Benchmark Results");
+function render()
+{
+    var class_names = Object.keys(tests_by_class);
 
-var overview = bench.chart.overview();
-overview.data(d3.values(test_per_class));
-overview.on("checked", function(test, checked) {
-    d3.select("#"+test).style("display", checked ? "block" : "none");
-});
-overview(content.append("div").classed("overview", true));
+    content
+        .append("h1")
+            .attr("id", "overview")
+            .text("Benchmark Results");
 
-content
-    .selectAll("div.test")
-    .data(class_names)
-    .enter()
-    .append("div").classed("test", true)
-    .each(add_charts_for_test_class);
+    var overview = bench.chart.overview();
+    overview.data(d3.values(tests_by_class));
+    overview.on("checked", function(test, checked) {
+        d3.select("#"+test).style("display", checked ? "block" : "none");
+    });
+    overview(content.append("div").classed("overview", true));
 
+    content
+        .selectAll("div.test")
+        .data(class_names)
+        .enter()
+        .append("div").classed("test", true)
+        .each(add_charts_for_test_class);
+}

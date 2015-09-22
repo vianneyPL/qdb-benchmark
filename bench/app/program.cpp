@@ -24,7 +24,8 @@ void bench::app::program::prepare_schedule()
         for (auto thread_count : _settings.thread_counts)
         {
             config.thread_count = thread_count;
-            if (test_class->size_dependent) {
+            if (test_class->size_dependent)
+            {
                 for (auto content_size : _settings.content_sizes)
                 {
                     config.content_size = content_size;
@@ -44,16 +45,13 @@ void bench::app::program::prepare_schedule()
 
 void bench::app::program::run_scheduled_tests()
 {
-    for (auto& test : _schedule)
+    for (auto & test : _schedule)
     {
         bench::framework::run_test(test, _logger);
 
         _logger.pause(_settings.pause);
         std::this_thread::sleep_for(_settings.pause);
-    }
-}
 
-void bench::app::program::save_jsonp_report()
-{
-    bench::report::jsonp(_schedule).save();
+        _report.add_test(test);
+    }
 }

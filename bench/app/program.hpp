@@ -4,6 +4,7 @@
 #include <bench/core/test_class.hpp>
 #include <bench/core/test_instance.hpp>
 #include <bench/log/logger.hpp>
+#include <bench/report/jsonp.hpp>
 
 namespace bench
 {
@@ -22,7 +23,6 @@ public:
         parse_command_line(argc, argv);
         prepare_schedule();
         run_scheduled_tests();
-        save_jsonp_report();
     }
 
 private:
@@ -35,6 +35,7 @@ private:
     log::logger & _logger;
     test_class_collection & _test_pool;
     test_instance_collection _schedule;
+    report::jsonp _report;
 };
 }
 }

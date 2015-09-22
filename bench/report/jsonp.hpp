@@ -14,27 +14,19 @@ namespace report
 class jsonp
 {
 public:
-    jsonp(const std::vector<test_instance> & tests) : _tests(tests)
-    {
-    }
-
-    void save()
+    jsonp()
     {
         _file.open("results.jsonp");
-        _file << "results=[";
-        for (unsigned i = 0; i < _tests.size(); i++)
-        {
-            if (i > 0) _file << ",";
-            write_test(_tests[i]);
-        }
-        _file << "]";
+    }
+
+    ~jsonp()
+    {
         _file.close();
     }
 
-private:
-    void write_test(const test_instance & test)
+    void add_test(const test_instance & test)
     {
-        _file << "{"
+        _file << "addTestResult({"
               << "\"name\":\"" << test.tclass.name << "\","
               << "\"description\":\"" << test.tclass.description << "\","
               << "\"content_size\":" << test.config.content_size << ","
@@ -51,9 +43,10 @@ private:
             write_time_series(kvp.second, test.start_time);
         }
 
-        _file << "}";
+        _file << "});" << std::endl;
     }
 
+private:
     void write_time_series(const time_series & samples, time_point start_time)
     {
         _file << "[";
@@ -83,7 +76,6 @@ private:
     }
 
     std::ofstream _file;
-    const std::vector<test_instance> & _tests;
 };
 }
 }

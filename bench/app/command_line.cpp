@@ -47,9 +47,9 @@ void bench::app::command_line::parse(int argc, const char ** argv)
     _settings.duration = std::chrono::seconds(
         parser.get_integer("-d", "--duration", "Set the duration of each test, in seconds", "4"));
     _settings.thread_counts =
-        parser.get_integers("", "--threads", "Set number of threads", "1,2,4,8");
-    _settings.content_sizes = parser.get_values<std::size_t>("", "--sizes", "Set contents sizes",
-                                                             "1,10,100,1K,10K,100K,1M", parse_size);
+        parser.get_integers("", "--threads", "Set number of threads", "1,2,4");
+    _settings.content_sizes =
+        parser.get_values<std::size_t>("", "--sizes", "Set contents sizes", "1,1K,1M", parse_size);
     _settings.tests = parser.get_values<const test_class *>(
         "", "--tests", "Select the tests to run (default=all)", "", [this](const std::string & name)
         {
