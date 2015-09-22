@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/tests/qdb/qdb_test_template.hpp>
-#include <utils/random.hpp>
 
 namespace bench
 {
@@ -9,12 +8,11 @@ namespace tests
 {
 namespace qdb
 {
-class blob_remove : public qdb_test_template<blob_remove>
+class int_remove : public qdb_test_template<int_remove>
 {
 public:
-    explicit blob_remove(bench::test_config config) : qdb_test_template(config)
+    explicit int_remove(bench::test_config config) : qdb_test_template(config)
     {
-        _content = utils::create_random_string(config.content_size);
     }
 
     void setup() override
@@ -23,7 +21,7 @@ public:
 
         setup_each([=](unsigned long iteration)
                    {
-                       _qdb.blob_put(get_alias(iteration), _content);
+                       _qdb.int_put(get_alias(iteration), 42);
                    });
     }
 
@@ -34,21 +32,18 @@ public:
 
     static std::string name()
     {
-        return "qdb_blob_remove";
+        return "qdb_int_remove";
     }
 
     static std::string description()
     {
-        return "Call qdb_remove() on blob entries.";
+        return "Call qdb_remove() on integer entries.";
     }
 
     static bool size_dependent()
     {
-        return true;
+        return false;
     }
-
-private:
-    std::string _content;
 };
 }
 }

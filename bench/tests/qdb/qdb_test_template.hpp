@@ -37,7 +37,7 @@ public:
 protected:
     utils::qdb_wrapper _qdb;
 
-    std::string get_alias(long long iteration) const
+    std::string get_alias(unsigned long iteration) const
     {
         return _alias_prefix + std::to_string(iteration);
     }
