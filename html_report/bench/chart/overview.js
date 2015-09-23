@@ -8,11 +8,23 @@ bench.chart.overview = function() {
         var table = container.append("table");
 
         var head = table.append("thead").append("tr");
-        head.append("th");
+        head.append("th")
+            .append("input")
+            .attr("type", "checkbox")
+            .attr("checked", true)
+            .on("change", function() {
+                var tbody = table.select("tbody");
+                var chks = tbody.selectAll("[type=checkbox]");
+                var checked = this.checked;
+                chks.property("checked", checked);
+                tbody.selectAll("tr").each(function(tests) {
+                    dispatch.checked(tests[0].name, checked);
+                });
+            });
         head.append("th").text("Test");
-        bench.series.overview.forEach(function(serie) {            
+        bench.series.overview.forEach(function(serie) {
             head.append("th")
-                .text(serie.name);                 
+                .text(serie.name);
         });
 
         var tbody = table.append("tbody");
