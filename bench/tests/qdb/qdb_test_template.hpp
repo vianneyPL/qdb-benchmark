@@ -5,18 +5,14 @@
 #include <utils/qdb_wrapper.hpp>
 #include <utils/random.hpp>
 
-#include <atomic>
-#include <chrono>
-#include <iostream>
-#include <vector>
-#include <sstream>
-
 namespace bench
 {
 namespace tests
 {
 namespace qdb
 {
+std::string create_unique_prefix();
+
 template <typename Derived>
 class qdb_test_template : public test_template<Derived>
 {
@@ -43,20 +39,6 @@ protected:
     }
 
 private:
-    static std::string create_unique_prefix()
-    {
-        static std::atomic<int> __counter;
-        std::ostringstream s;
-
-        s << "benchmarks-"
-          << std::chrono::duration_cast<std::chrono::seconds>(
-                 std::chrono::steady_clock::now().time_since_epoch())
-                 .count()
-          << "-" << __counter++ << "-";
-
-        return s.str();
-    }
-
     std::string _alias_prefix;
 };
 }

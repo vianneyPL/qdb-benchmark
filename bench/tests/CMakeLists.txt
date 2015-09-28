@@ -9,6 +9,7 @@ add_library(bench-tests
     qdb/node_status.hpp
     qdb/deque_push_back.hpp
     qdb/deque_push_front.hpp
+    qdb/qdb_test_template.cpp
     qdb/qdb_test_template.hpp
     stdio/fread.hpp
 
