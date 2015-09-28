@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <iterator>
 #include <iomanip>
 #include <list>
 #include <sstream>
