@@ -57,9 +57,24 @@ var lineSeries = [
         "lines": makeLineFunction("iterations")
     },
     {
+        "name": "Successes",
+        "unit": unit.none,
+        "lines": makeLineFunction("successes")
+    },
+    {
+        "name": "Failures",
+        "unit": unit.none,
+        "lines": makeLineFunction("failures")
+    },
+    {
         "name": "Memory usage",
         "unit": unit.byte,
         "lines": makeLineFunction("node_memory")
+    },
+    {
+        "name": "Evictions",
+        "unit": unit.none,
+        "lines": makeLineFunction("evictions")
     },
     {
         "name": "Persisted size",
@@ -67,8 +82,18 @@ var lineSeries = [
         "lines": makeLineFunction("persisted_size")
     },
     {
+        "name": "Persisted count",
+        "unit": unit.none,
+        "lines": makeLineFunction("persisted_count")
+    },
+    {
         "name": "Resident size",
         "unit": unit.byte,
         "lines": makeLineFunction("resident_size")
+    },
+    {
+        "name": "Resident count",
+        "unit": unit.none,
+        "lines": makeLineFunction("resident_count")
     }
 ];

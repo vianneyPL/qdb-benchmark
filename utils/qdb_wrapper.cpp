@@ -30,11 +30,19 @@ void utils::qdb_wrapper::free_buffer(const char * buffer)
     qdb_free_buffer(_handle, buffer);
 }
 
-utils::qdb_buffer utils::qdb_wrapper::node_status(const std::string & node_uri)
+utils::qdb_buffer utils::qdb_wrapper::node_status(const std::string & node_uri) const
 {
     const char * content;
     size_t content_size;
     call(qdb_node_status, node_uri.c_str(), &content, &content_size);
+    return qdb_buffer(_handle, content, content_size);
+}
+
+utils::qdb_buffer utils::qdb_wrapper::node_topology(const std::string & node_uri) const
+{
+    const char * content;
+    size_t content_size;
+    call(qdb_node_topology, node_uri.c_str(), &content, &content_size);
     return qdb_buffer(_handle, content, content_size);
 }
 

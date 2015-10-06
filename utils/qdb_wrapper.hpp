@@ -56,7 +56,8 @@ public:
     ~qdb_wrapper();
 
     void connect(const std::string & cluster_uri);
-    qdb_buffer node_status(const std::string & node_uri);
+    qdb_buffer node_status(const std::string & node_uri) const;
+    qdb_buffer node_topology(const std::string & node_uri) const;
     void free_buffer(const char * buffer);
 
     void remove(const std::string & alias);

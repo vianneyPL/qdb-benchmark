@@ -16,8 +16,9 @@ double bench::compute_average_frequency(const bench::test_instance & test)
 
     time_point stop_time = last_sample.time;
     duration elapsed = stop_time - test.start_time;
+    auto elapsed_millis = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
 
-    return (double)iterations / std::chrono::duration_cast<std::chrono::seconds>(elapsed).count();
+    return 1000.0 * iterations / elapsed_millis;
 }
 
 double bench::compute_average_throughput(const bench::test_instance & test)
