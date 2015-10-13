@@ -5,7 +5,7 @@
 /qdb/
 
 # Useful during development
-/html_report/results.jsonp
+/html_report/*.jsonp
 
 # OS X
 .DS_Store

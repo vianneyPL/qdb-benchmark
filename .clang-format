@@ -6,7 +6,6 @@ AccessModifierOffset: -4
 AlignEscapedNewlinesLeft: false
 AllowShortBlocksOnASingleLine: false
 AllowShortIfStatementsOnASingleLine : true
-AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: Empty
 # AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: true

@@ -1,8 +1,7 @@
 #pragma once
 
 #include <bench/tests/qdb/qdb_test_template.hpp>
-
-#include <qdb/integer.h>
+#include <utils/random.hpp>
 
 namespace bench
 {
@@ -10,23 +9,19 @@ namespace tests
 {
 namespace qdb
 {
-class int_update : public qdb_test_template<int_update>
+class hset_insert : public qdb_test_template<hset_insert>
 {
 public:
-    explicit int_update(bench::test_config config) : qdb_test_template(config)
+    explicit hset_insert(bench::test_config config) : qdb_test_template(config)
     {
         _alias = get_alias(0); // only one alias is needed
-    }
-
-    void setup() override
-    {
-        qdb_test_template::setup();
-        _qdb.int_put(_alias, 0);
+        _content = utils::create_random_string(config.content_size);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.int_update(_alias, iteration);
+        set_watermark(_content, iteration);
+        _qdb.hset_insert(_alias, _content);
     }
 
     void cleanup() override
@@ -36,21 +31,22 @@ public:
 
     static std::string name()
     {
-        return "qdb_int_update";
+        return "qdb_hset_insert";
     }
 
     static std::string description()
     {
-        return "Each thread repeats qdb_int_update() on one entry";
+        return "Call qdb_hset_insert() on one entry";
     }
 
     static bool size_dependent()
     {
-        return false;
+        return true;
     }
 
 private:
     std::string _alias;
+    std::string _content;
 };
 }
 }

@@ -77,10 +77,22 @@ public:
     void int_update(const std::string & alias, std::int64_t value);
     std::int64_t int_get(const std::string & alias);
 
+    bool hset_contains(const std::string & alias, const std::string & content);
+    bool hset_erase(const std::string & alias, const std::string & content);
+    bool hset_insert(const std::string & alias, const std::string & content);
+
 private:
     bool is_error(qdb_error_t err) const
     {
-        return err != qdb_e_ok;
+        switch (err)
+        {
+        case qdb_e_ok:
+        case qdb_e_element_already_exists:
+        case qdb_e_element_not_found:
+            return false;
+        default:
+            return true;
+        }
     }
 
     template <typename Function, typename... Args>

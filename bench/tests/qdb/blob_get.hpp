@@ -42,7 +42,7 @@ public:
 
     static std::string description()
     {
-        return "Call qdb_get() on one entry.";
+        return "Each thread repeats qdb_blob_get() on one entry";
     }
 
     static bool size_dependent()

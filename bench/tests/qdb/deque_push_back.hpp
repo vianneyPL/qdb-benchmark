@@ -35,7 +35,7 @@ public:
 
     static std::string description()
     {
-        return "Call qdb_deque_push_back() on one entry.";
+        return "Each thread repeats qdb_deque_push_back() on a queue";
     }
 
     static bool size_dependent()

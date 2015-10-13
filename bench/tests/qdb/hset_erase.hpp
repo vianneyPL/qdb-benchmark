@@ -9,11 +9,12 @@ namespace tests
 {
 namespace qdb
 {
-class deque_pop_front : public qdb_test_template<deque_pop_front>
+class hset_erase : public qdb_test_template<hset_erase>
 {
 public:
-    explicit deque_pop_front(bench::test_config config) : qdb_test_template(config)
+    explicit hset_erase(bench::test_config config) : qdb_test_template(config)
     {
+        _alias = get_alias(0);
         _content = utils::create_random_string(config.content_size);
     }
 
@@ -23,23 +24,30 @@ public:
 
         setup_each([=](unsigned long iteration)
                    {
-                       _qdb.deque_push_front(get_alias(iteration), _content);
+                       set_watermark(_content, iteration);
+                       _qdb.hset_insert(get_alias(iteration), _content);
                    });
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.deque_pop_front(get_alias(iteration));
+        set_watermark(_content, iteration);
+        _qdb.hset_erase(_alias, _content);
+    }
+
+    void cleanup() override
+    {
+        _qdb.remove(_alias);
     }
 
     static std::string name()
     {
-        return "qdb_deque_pop_front";
+        return "qdb_hset_erase";
     }
 
     static std::string description()
     {
-        return "Each thread repeats qdb_deque_pop_front() on a queue";
+        return "Each thread repeats qdb_hset_erase() on one entry";
     }
 
     static bool size_dependent()
@@ -48,6 +56,7 @@ public:
     }
 
 private:
+    std::string _alias;
     std::string _content;
 };
 }

@@ -43,7 +43,7 @@ public:
 
     static std::string description()
     {
-        return "Call qdb_get_noalloc() on one entry.";
+        return "Each thread repeats qdb_blob_get_noalloc() on one entry";
     }
 
     static bool size_dependent()

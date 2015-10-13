@@ -12,6 +12,7 @@ namespace tests
 namespace qdb
 {
 std::string create_unique_prefix();
+void set_watermark(std::string & str, unsigned long iteration);
 
 template <typename Derived>
 class qdb_test_template : public test_template<Derived>

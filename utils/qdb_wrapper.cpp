@@ -2,6 +2,7 @@
 
 #include <qdb/blob.h>
 #include <qdb/deque.h>
+#include <qdb/hset.h>
 #include <qdb/integer.h>
 
 #define ARG0(x, ...) x
@@ -124,4 +125,22 @@ std::int64_t utils::qdb_wrapper::int_get(const std::string & alias)
     std::int64_t value;
     call(qdb_int_get, alias.c_str(), &value);
     return value;
+}
+
+bool utils::qdb_wrapper::hset_contains(const std::string & alias, const std::string & content)
+{
+    return call(qdb_hset_contains, alias.c_str(), content.data(), content.size())
+           == qdb_e_element_already_exists;
+}
+
+bool utils::qdb_wrapper::hset_erase(const std::string & alias, const std::string & content)
+{
+    return call(qdb_hset_contains, alias.c_str(), content.data(), content.size())
+           != qdb_e_element_not_found;
+}
+
+bool utils::qdb_wrapper::hset_insert(const std::string & alias, const std::string & content)
+{
+    return call(qdb_hset_insert, alias.c_str(), content.data(), content.size())
+           != qdb_e_element_already_exists;
 }

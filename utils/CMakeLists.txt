@@ -3,6 +3,7 @@ add_library(utils
     memory.hpp
 	qdb_wrapper.cpp
 	qdb_wrapper.hpp
+    random.cpp
     random.hpp
     teamcity.cpp
     teamcity.hpp

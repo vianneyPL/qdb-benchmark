@@ -39,7 +39,7 @@ public:
 
     static std::string description()
     {
-        return "Call qdb_remove() on blob entries.";
+        return "Each thread repeats qdb_remove() on blob entries";
     }
 
     static bool size_dependent()

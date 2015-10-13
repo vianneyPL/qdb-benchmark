@@ -35,7 +35,7 @@ public:
 
     static std::string description()
     {
-        return "Call qdb_put().";
+        return "Each thread repeats qdb_put() with new aliases";
     }
 
     static bool size_dependent()

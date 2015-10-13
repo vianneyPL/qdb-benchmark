@@ -41,7 +41,7 @@ public:
 
     static std::string description()
     {
-        return "Call qdb_int_get() on one entry.";
+        return "Each thread repeats qdb_int_get() on one entry";
     }
 
     static bool size_dependent()

@@ -35,7 +35,7 @@ public:
 
     static std::string description()
     {
-        return "Call qdb_update() on one entry.";
+        return "Each thread repeats qdb_blob_update() on one entry";
     }
 
     static bool size_dependent()

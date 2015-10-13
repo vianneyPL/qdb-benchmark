@@ -37,7 +37,7 @@ public:
 
     static std::string description()
     {
-        return "Call qdb_remove() on integer entries.";
+        return "Each thread repeats qdb_remove() on integer entries";
     }
 
     static bool size_dependent()

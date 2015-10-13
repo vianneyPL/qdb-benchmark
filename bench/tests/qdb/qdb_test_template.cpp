@@ -20,3 +20,14 @@ std::string bench::tests::qdb::create_unique_prefix()
 
     return s.str();
 }
+
+void bench::tests::qdb::set_watermark(std::string & str, unsigned long iteration)
+{
+    // print decimal representation in reverse order
+    for (int digit = 0; digit < 10; digit++)
+    {
+        if (digit >= str.size()) break;
+        str[digit] = iteration % 10;
+        iteration /= 10;
+    }
+}

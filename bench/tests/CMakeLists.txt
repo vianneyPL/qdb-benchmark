@@ -4,14 +4,23 @@ add_library(bench-tests
     qdb/blob_put.hpp
     qdb/blob_remove.hpp
     qdb/blob_update.hpp
-    qdb/int_add.hpp
-    qdb/int_update.hpp
-    qdb/node_status.hpp
+    qdb/deque_pop_back.hpp
+    qdb/deque_pop_front.hpp
     qdb/deque_push_back.hpp
     qdb/deque_push_front.hpp
+    qdb/hset_contains.hpp
+    qdb/hset_erase.hpp
+    qdb/hset_insert.hpp
+    qdb/int_add.hpp
+    qdb/int_get.hpp
+    qdb/int_put.hpp
+    qdb/int_remove.hpp
+    qdb/int_update.hpp
+    qdb/node_status.hpp
     qdb/qdb_test_template.cpp
     qdb/qdb_test_template.hpp
     stdio/fread.hpp
+    stdio/fwrite.hpp
 
     all_tests.cpp
     all_tests.hpp

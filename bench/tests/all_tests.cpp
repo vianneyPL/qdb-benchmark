@@ -11,6 +11,9 @@
 #include <bench/tests/qdb/deque_pop_front.hpp>
 #include <bench/tests/qdb/deque_push_back.hpp>
 #include <bench/tests/qdb/deque_push_front.hpp>
+#include <bench/tests/qdb/hset_contains.hpp>
+#include <bench/tests/qdb/hset_erase.hpp>
+#include <bench/tests/qdb/hset_insert.hpp>
 #include <bench/tests/qdb/int_add.hpp>
 #include <bench/tests/qdb/int_get.hpp>
 #include <bench/tests/qdb/int_put.hpp>
@@ -36,6 +39,9 @@ bench::test_class_collection bench::tests::get_all_tests()
       new qdb::deque_pop_front::test_class(),
       new qdb::deque_push_back::test_class(),
       new qdb::deque_push_front::test_class(),
+      new qdb::hset_contains::test_class(),
+      new qdb::hset_erase::test_class(),
+      new qdb::hset_insert::test_class(),
       new qdb::int_add::test_class(),
       new qdb::int_get::test_class(),
       new qdb::int_put::test_class(),
