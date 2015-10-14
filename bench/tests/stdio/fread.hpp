@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bench/tests/stdio/file_exception.hpp>
+
 #include <cstdio>
 #include <string>
 
@@ -16,21 +18,35 @@ public:
     {
         _filename = utils::get_temporary_filename();
         _content = utils::create_random_string(config.content_size);
+    }
 
+    void setup() override
+    {
         auto fp = std::fopen(_filename.c_str(), "wb");
-        std::fwrite(_content.c_str(), 1, _content.size(), fp);
+        if (fp == nullptr) throw create_file_exception(_filename, errno);
+
+        std::fwrite(_content.c_str(), _content.size(), 1, fp);
+        auto err = std::ferror(fp);
+
         std::fclose(fp);
+
+        if (err != 0) throw write_file_exception(_filename, err);
     }
 
     void run_iteration(unsigned long iteration)
     {
         auto fp = std::fopen(_filename.c_str(), "rb");
-        size_t n = std::fread(const_cast<char *>(_content.c_str()), 1, _content.size(), fp);
+        if (fp == nullptr) throw create_file_exception(_filename, errno);
+
+        std::fread(const_cast<char *>(_content.c_str()), _content.size(), 1, fp);
+        auto err = std::ferror(fp);
+
         std::fclose(fp);
-        if (n != _content.size()) throw std::exception();
+
+        if (err != 0) throw read_file_exception(_filename, err);
     }
 
-    ~fread() override
+    void cleanup() override
     {
         std::remove(_filename.c_str());
     }

@@ -1,5 +1,3 @@
-#pragma once
-
 #include <bench/tests/qdb/alias.hpp>
 
 #include <atomic>

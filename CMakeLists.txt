@@ -34,7 +34,7 @@ target_link_libraries(qdb-benchmark
 )
 
 add_test(help qdb-benchmark --help)
-add_test(run qdb-benchmark --tests qdb_deque_pop_back --threads 8 --sizes 1M)
+add_test(run qdb-benchmark --tests stdio_fread,stdio_fwrite --threads 8)
 
 if(WIN32)
     add_custom_command(TARGET qdb-benchmark POST_BUILD

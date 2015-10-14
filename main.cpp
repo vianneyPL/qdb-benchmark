@@ -29,4 +29,9 @@ int main(int argc, const char * argv[])
         logger.fatal_error(e.what());
         return EXIT_FAILURE;
     }
+    catch (...)
+    {
+        logger.fatal_error("Unknown exception!");
+        return EXIT_FAILURE;
+    }
 }

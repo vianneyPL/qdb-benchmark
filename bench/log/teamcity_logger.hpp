@@ -10,7 +10,7 @@ namespace log
 class teamcity_logger : public logger
 {
 public:
-    void fatal_error(const std::string & message)
+    void fatal_error(const std::string & message) override
     {
         utils::teamcity::build_problem(message);
     }
@@ -45,17 +45,17 @@ public:
 
     // Test
 
-    void test_started(const test_instance & test)
+    void test_started(const test_instance & test) override
     {
         utils::teamcity::message("Test started");
     }
 
-    void test_failed(const test_instance & test, const std::string & error)
+    void test_failed(const test_instance & test, const std::string & error) override
     {
         utils::teamcity::message("Test failed: " + error);
     }
 
-    void test_finished(const test_instance & test)
+    void test_finished(const test_instance & test) override
     {
         utils::teamcity::message("Test finished");
 

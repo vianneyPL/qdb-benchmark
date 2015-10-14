@@ -10,7 +10,7 @@ static char get_random_char()
     static const char charset[] = "0123456789"
                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                   "abcdefghijklmnopqrstuvwxyz";
-    static std::uniform_int_distribution<int> distribution(0, sizeof(charset) - 1);
+    static std::uniform_int_distribution<int> distribution(0, sizeof(charset) - 2);
 
     return charset[distribution(__generator)];
 }
