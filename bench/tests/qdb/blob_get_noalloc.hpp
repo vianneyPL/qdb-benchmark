@@ -15,7 +15,6 @@ public:
     blob_get_noalloc(bench::test_config config)
         : qdb_test_template(config), _buffer(config.content_size, 0)
     {
-        _alias = get_alias(0); // only one alias is needed
         _content = utils::create_random_string(config.content_size);
     }
 
@@ -52,7 +51,6 @@ public:
     }
 
 private:
-    std::string _alias;
     std::string _buffer;
     std::string _content;
 };

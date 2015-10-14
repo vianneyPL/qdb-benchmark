@@ -14,7 +14,6 @@ class hset_erase : public qdb_test_template<hset_erase>
 public:
     explicit hset_erase(bench::test_config config) : qdb_test_template(config)
     {
-        _alias = get_alias(0);
         _content = utils::create_random_string(config.content_size);
     }
 
@@ -25,7 +24,7 @@ public:
         setup_each([=](unsigned long iteration)
                    {
                        set_watermark(_content, iteration);
-                       _qdb.hset_insert(get_alias(iteration), _content);
+                       _qdb.hset_insert(_alias, _content);
                    });
     }
 
@@ -56,7 +55,6 @@ public:
     }
 
 private:
-    std::string _alias;
     std::string _content;
 };
 }

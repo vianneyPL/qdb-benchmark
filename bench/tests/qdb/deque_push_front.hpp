@@ -14,7 +14,6 @@ class deque_push_front : public qdb_test_template<deque_push_front>
 public:
     explicit deque_push_front(bench::test_config config) : qdb_test_template(config)
     {
-        _alias = get_alias(0); // only one alias is needed
         _content = utils::create_random_string(config.content_size);
     }
 
@@ -44,7 +43,6 @@ public:
     }
 
 private:
-    std::string _alias;
     std::string _content;
 };
 }

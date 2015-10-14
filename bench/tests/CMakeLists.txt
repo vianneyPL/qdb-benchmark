@@ -1,4 +1,6 @@
 add_library(bench-tests
+    qdb/alias.hpp
+    qdb/alias.cpp
     qdb/blob_get.hpp
     qdb/blob_get_noalloc.hpp
     qdb/blob_put.hpp
@@ -17,7 +19,6 @@ add_library(bench-tests
     qdb/int_remove.hpp
     qdb/int_update.hpp
     qdb/node_status.hpp
-    qdb/qdb_test_template.cpp
     qdb/qdb_test_template.hpp
     stdio/fread.hpp
     stdio/fwrite.hpp

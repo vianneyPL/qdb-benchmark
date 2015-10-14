@@ -15,7 +15,6 @@ class int_update : public qdb_test_template<int_update>
 public:
     explicit int_update(bench::test_config config) : qdb_test_template(config)
     {
-        _alias = get_alias(0); // only one alias is needed
     }
 
     void setup() override
@@ -48,9 +47,6 @@ public:
     {
         return false;
     }
-
-private:
-    std::string _alias;
 };
 }
 }

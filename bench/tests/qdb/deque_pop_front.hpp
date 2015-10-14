@@ -21,15 +21,15 @@ public:
     {
         qdb_test_template::setup();
 
-        setup_each([=](unsigned long iteration)
+        setup_each([&](unsigned long iteration)
                    {
-                       _qdb.deque_push_front(get_alias(iteration), _content);
+                       _qdb.deque_push_front(_alias, _content);
                    });
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.deque_pop_front(get_alias(iteration));
+        _qdb.deque_pop_front(_alias);
     }
 
     static std::string name()
