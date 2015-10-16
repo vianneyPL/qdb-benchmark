@@ -26,12 +26,6 @@ double bench::compute_average_throughput(const bench::test_instance & test)
     return compute_average_frequency(test) * test.config.content_size;
 }
 
-double bench::compute_memory_variation(const bench::test_instance & test)
-{
-    auto & serie = test.result.at("node_memory");
-    return sum_values(serie.back()) - sum_values(serie.front());
-}
-
 double bench::compute_iteration_count(const bench::test_instance & test)
 {
     auto & serie = test.result.at("iterations");

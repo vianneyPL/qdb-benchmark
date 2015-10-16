@@ -67,9 +67,14 @@ var lineSeries = [
         "lines": makeLineFunction("failures")
     },
     {
-        "name": "Memory usage",
+        "name": "Virtual memory usage", 
         "unit": unit.byte,
-        "lines": makeLineFunction("node_memory")
+        "lines": makeLineFunction("vm_used")
+    },
+    {
+        "name": "Physical memory usage", 
+        "unit": unit.byte,
+        "lines": makeLineFunction("physmem_used")
     },
     {
         "name": "Evictions",

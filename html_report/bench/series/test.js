@@ -46,9 +46,9 @@ bench.series.tests = {
         "name": "Memory delta",
         "unit": unit.byte,
         "value": function(test) {
-            if (!test.node_memory) return undefined;
-            var before = d3.sum(test.node_memory[0].slice(1));
-            var after = d3.sum(test.node_memory[test.node_memory.length-1].slice(1));
+            if (!test.physmem_used) return undefined;
+            var before = d3.sum(test.physmem_used[0].slice(1));
+            var after = d3.sum(test.physmem_used[test.physmem_used.length-1].slice(1));
             return after - before;
         }},
     "persistedSizeDelta": {

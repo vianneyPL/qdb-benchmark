@@ -32,7 +32,7 @@ public:
 
     void take_sample(time_point now, result_type & result) override
     {
-        std::vector<std::int64_t> memory, evictions;
+        std::vector<std::int64_t> physmem_used, vm_used, evictions;
         std::vector<std::int64_t> persisted_size, persisted_count;
         std::vector<std::int64_t> resident_size, resident_count;
         std::vector<std::int64_t> successes, failures;
@@ -40,7 +40,8 @@ public:
         for (auto node : _node_uris)
         {
             auto node_status = get_node_status(node);
-            memory.push_back(node_status["memory"]["vm"]["used"].GetInt64());
+            physmem_used.push_back(node_status["memory"]["physmem"]["used"].GetInt64());
+            vm_used.push_back(node_status["memory"]["vm"]["used"].GetInt64());
             evictions.push_back(node_status["overall"]["evictions"].GetInt64());
             persisted_size.push_back(node_status["entries"]["persisted"]["size"].GetInt64());
             persisted_count.push_back(node_status["entries"]["persisted"]["count"].GetInt64());
@@ -50,7 +51,8 @@ public:
             failures.push_back(node_status["overall"]["failures"].GetInt64());
         }
 
-        result["node_memory"].push_back({now, memory});
+        result["physmem_used"].push_back({now, physmem_used});
+        result["vm_used"].push_back({now, vm_used});
         result["evictions"].push_back({now, evictions});
         result["persisted_size"].push_back({now, persisted_size});
         result["persisted_count"].push_back({now, persisted_count});
