@@ -55,7 +55,8 @@ public:
                   << std::endl;
         std::cout << "  - thread count = " << test.config.thread_count << std::endl;
         if (test.tclass.size_dependent)
-            std::cout << "  - content size = " << unit::byte(test.config.content_size) << std::endl;
+            std::cout << "  - content size = "
+                      << unit::byte(static_cast<double>(test.config.content_size)) << std::endl;
 
         std::cout << "Setting up test... " << std::endl;
     }
@@ -67,8 +68,9 @@ public:
 
     void setup_finished(const test_instance & test) override
     {
-        double duration = (double)std::chrono::duration_cast<std::chrono::milliseconds>(
-                              test.setup_duration).count();
+        double duration =
+            (double)std::chrono::duration_cast<std::chrono::milliseconds>(test.setup_duration)
+                .count();
         std::cout << "Setting up test... OK (" << unit::milliseconds(duration) << ")" << std::endl;
     }
 
@@ -82,6 +84,8 @@ public:
     void test_failed(const test_instance & test, const std::string & error) override
     {
         std::cout << "Executing test... FAILED (" << error << ")" << std::endl;
+        std::cout << "  - total iterations = " << unit::none(compute_iteration_count(test))
+                  << std::endl;
     }
 
     void test_finished(const test_instance & test) override
@@ -100,12 +104,6 @@ public:
 
         std::cout << "  - total iterations = " << unit::none(compute_iteration_count(test))
                   << std::endl;
-
-        if (test.result.find("node_memory") != test.result.end())
-        {
-            std::cout << "  - memory variation = " << unit::byte(compute_memory_variation(test))
-                      << std::endl;
-        }
     }
 
     // Test cleanup
