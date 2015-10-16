@@ -14,6 +14,13 @@ namespace bench
 {
 namespace framework
 {
+duration compute_sampling_period(duration test_duration)
+{
+    const duration longest = std::chrono::minutes(1);
+    const duration shortest = std::chrono::milliseconds(100);
+    return std::min(std::max(shortest, test_duration / 100), longest);
+}
+
 class test_runner
 {
 public:
@@ -26,6 +33,8 @@ public:
 
         _probes = bench::create_test_probes(_test);
         _probes.emplace_back(new test_iteration_probe(_threads));
+
+        _sampling_period = compute_sampling_period(_test.config.duration);
     }
 
     ~test_runner()
@@ -72,13 +81,12 @@ private:
     {
         try
         {
-            const duration sampling_period = std::chrono::milliseconds(100);
             _test.start_time = clock::now();
             _logger.test_started(_test);
 
             _synchronizer.send_order(&test_thread::test);
             sample_now();
-            while (!_synchronizer.wait_workers_for(sampling_period))
+            while (!_synchronizer.wait_workers_for(_sampling_period))
             {
                 sample_now();
             }
@@ -172,6 +180,7 @@ private:
     thread_synchronizer<test_thread> _synchronizer;
     test_thread_collection _threads;
     probe_collection _probes;
+    duration _sampling_period;
 };
 
 void run_test(test_instance & test, log::logger & logger)
