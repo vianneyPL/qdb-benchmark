@@ -1,10 +1,12 @@
 add_library(utils
+    qdb_wrapper.cpp
+    qdb_wrapper.hpp
     command_line.hpp
     memory.hpp
-	qdb_wrapper.cpp
-	qdb_wrapper.hpp
     random.cpp
     random.hpp
     teamcity.cpp
     teamcity.hpp
+    unique_alias.cpp
+    unique_alias.hpp
 )

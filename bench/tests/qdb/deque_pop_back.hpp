@@ -23,13 +23,13 @@ public:
 
         setup_each([&](unsigned long iteration)
                    {
-                       _qdb.deque_push_back(_alias, _content);
+                       _qdb.deque_push_back(alias(0), _content);
                    });
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.deque_pop_back(_alias);
+        _qdb.deque_pop_back(alias(0));
     }
 
     static std::string name()

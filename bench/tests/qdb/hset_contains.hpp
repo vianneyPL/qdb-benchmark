@@ -24,19 +24,19 @@ public:
         setup_each([=](unsigned long iteration)
                    {
                        set_watermark(_content, iteration);
-                       _qdb.hset_insert(_alias, _content);
+                       _qdb.hset_insert(alias(0), _content);
                    });
     }
 
     void run_iteration(unsigned long iteration)
     {
         set_watermark(_content, iteration);
-        _qdb.hset_contains(_alias, _content);
+        _qdb.hset_contains(alias(0), _content);
     }
 
     void cleanup() override
     {
-        _qdb.remove(_alias);
+        _qdb.remove(alias(0));
     }
 
     static std::string name()

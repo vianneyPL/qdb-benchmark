@@ -1,10 +1,10 @@
 #pragma once
 
 #include <bench/tests/test_template.hpp>
-#include <bench/tests/qdb/alias.hpp>
 #include <bench/tests/qdb/node_status.hpp>
 #include <utils/qdb_wrapper.hpp>
 #include <utils/random.hpp>
+#include <utils/unique_alias.hpp>
 
 namespace bench
 {
@@ -27,9 +27,14 @@ template <typename Derived>
 class qdb_test_template : public test_template<Derived>
 {
 public:
-    qdb_test_template(test_config config) : test_template<Derived>(config)
+    qdb_test_template(test_config config)
+        : test_template<Derived>(config), _cluster_uri(config.cluster_uri)
     {
-        _qdb.connect(config.cluster_uri);
+    }
+
+    void setup() override
+    {
+        _qdb.connect(_cluster_uri);
     }
 
     static probe_collection create_probes(test_config cfg)
@@ -41,7 +46,16 @@ public:
 
 protected:
     utils::qdb_wrapper _qdb;
-    alias _alias;
+
+    const std::string & alias(unsigned long iteration) const
+    {
+        _alias.set_watermark(iteration);
+        return _alias;
+    }
+
+private:
+    std::string _cluster_uri;
+    mutable utils::unique_alias _alias;
 };
 }
 }

@@ -2,16 +2,12 @@
 
 #include <string>
 
-namespace bench
+namespace utils
 {
-namespace tests
-{
-namespace qdb
-{
-class alias
+class unique_alias
 {
 public:
-    alias();
+    unique_alias();
 
     void set_watermark(unsigned long iteration);
 
@@ -23,6 +19,4 @@ public:
 private:
     std::string _string;
 };
-}
-}
 }

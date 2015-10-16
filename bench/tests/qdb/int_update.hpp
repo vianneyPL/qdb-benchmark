@@ -20,17 +20,17 @@ public:
     void setup() override
     {
         qdb_test_template::setup();
-        _qdb.int_put(_alias, 0);
+        _qdb.int_put(alias(0), 0);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.int_update(_alias, iteration);
+        _qdb.int_update(alias(0), iteration);
     }
 
     void cleanup() override
     {
-        _qdb.remove(_alias);
+        _qdb.remove(alias(0));
     }
 
     static std::string name()

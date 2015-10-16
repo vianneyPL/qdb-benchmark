@@ -81,6 +81,8 @@ public:
     bool hset_erase(const std::string & alias, const std::string & content);
     bool hset_insert(const std::string & alias, const std::string & content);
 
+    void add_tag(const std::string & alias, const std::string & tag);
+
 private:
     bool is_error(qdb_error_t err) const
     {

@@ -19,12 +19,12 @@ public:
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.blob_update(_alias, _content);
+        _qdb.blob_update(alias(0), _content);
     }
 
     void cleanup() override
     {
-        _qdb.remove(_alias);
+        _qdb.remove(alias(0));
     }
 
     static std::string name()

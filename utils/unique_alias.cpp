@@ -1,4 +1,4 @@
-#include <bench/tests/qdb/alias.hpp>
+#include <utils/unique_alias.hpp>
 
 #include <atomic>
 #include <chrono>
@@ -6,7 +6,7 @@
 
 static std::atomic<int> __counter(0);
 
-bench::tests::qdb::alias::alias()
+utils::unique_alias::unique_alias()
 {
     std::ostringstream s;
 
@@ -19,7 +19,7 @@ bench::tests::qdb::alias::alias()
     _string = s.str();
 }
 
-void bench::tests::qdb::alias::set_watermark(unsigned long iteration)
+void utils::unique_alias::set_watermark(unsigned long iteration)
 {
     size_t index = _string.size();
     for (int digit = 0; digit < 6; digit++)

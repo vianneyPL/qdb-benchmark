@@ -21,15 +21,13 @@ public:
 
         setup_each([=](unsigned long iteration)
                    {
-                       _alias.set_watermark(iteration);
-                       _qdb.int_put(_alias, 42);
+                       _qdb.int_put(alias(iteration), 42);
                    });
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _alias.set_watermark(iteration);
-        _qdb.remove(_alias);
+        _qdb.remove(alias(iteration));
     }
 
     static std::string name()

@@ -4,6 +4,7 @@
 #include <qdb/deque.h>
 #include <qdb/hset.h>
 #include <qdb/integer.h>
+#include <qdb/tag.h>
 
 #define ARG0(x, ...) x
 #define STR0(x) #x
@@ -143,4 +144,9 @@ bool utils::qdb_wrapper::hset_insert(const std::string & alias, const std::strin
 {
     return call(qdb_hset_insert, alias.c_str(), content.data(), content.size())
            != qdb_e_element_already_exists;
+}
+
+void utils::qdb_wrapper::add_tag(const std::string & alias, const std::string & tag)
+{
+    call(qdb_add_tag, alias.c_str(), tag.c_str());
 }

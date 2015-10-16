@@ -21,18 +21,18 @@ public:
     void setup() override
     {
         qdb_test_template::setup();
-        _qdb.blob_put(_alias, _content);
+        _qdb.blob_put(alias(0), _content);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.blob_get_noalloc(_alias, _buffer);
+        _qdb.blob_get_noalloc(alias(0), _buffer);
         if (_content.size() != _buffer.size()) throw std::exception();
     }
 
     void cleanup() override
     {
-        _qdb.remove(_alias);
+        _qdb.remove(alias(0));
     }
 
     static std::string name()

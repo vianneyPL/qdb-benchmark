@@ -19,12 +19,12 @@ public:
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.deque_push_back(_alias, _content);
+        _qdb.deque_push_back(alias(0), _content);
     }
 
     void cleanup() override
     {
-        _qdb.remove(_alias);
+        _qdb.remove(alias(0));
     }
 
     static std::string name()
