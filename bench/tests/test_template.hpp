@@ -8,6 +8,7 @@ namespace bench
 {
 namespace tests
 {
+
 template <typename Derived> // CRTP
 class test_template : public bench::test_loop
 {
@@ -22,7 +23,7 @@ public:
             size_dependent = Derived::size_dependent();
         }
 
-        std::unique_ptr<bench::test_loop> create_loop(bench::test_config config) const override
+        ::std::unique_ptr<bench::test_loop> create_loop(bench::test_config config) const override
         {
             return utils::make_unique<Derived>(config);
         }
@@ -100,5 +101,6 @@ private:
     test_config _config;
     unsigned long _prepared_iterations;
 };
-}
-}
+
+} // namespace tests
+} // namespace bench
