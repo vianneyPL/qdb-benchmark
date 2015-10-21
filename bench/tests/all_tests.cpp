@@ -52,7 +52,7 @@ bench::test_class_collection bench::tests::get_all_tests()
       new qdb::int_put::test_class(),
       new qdb::int_remove::test_class(),
       new qdb::int_update::test_class(),
-      new qdb::tag_add_blob::test_class(),
+      // new qdb::tag_add_blob::test_class(),
       new std::atomic::test_class(),
       new std::fread::test_class(),
       new std::fwrite::test_class(),
