@@ -9,36 +9,34 @@ namespace tests
 {
 namespace qdb
 {
-
-class blob_put : public qdb_test_template<blob_put>
+namespace deque
+{
+class push_back : public qdb_test_template<push_back>
 {
 public:
-    explicit blob_put(bench::test_config config) : qdb_test_template(config)
+    explicit push_back(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.blob_put(alias(iteration), _content);
+        _qdb.deque_push_back(alias(0), _content);
     }
 
     void cleanup() override
     {
-        cleanup_each([=](unsigned long iteration)
-                     {
-                         _qdb.remove(alias(iteration));
-                     });
+        _qdb.remove(alias(0));
     }
 
     static ::std::string name()
     {
-        return "qdb_blob_put";
+        return "qdb_deque_push_back";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_blob_put() with new aliases";
+        return "Each thread repeats qdb_deque_push_back() on a queue";
     }
 
     static bool size_dependent()
@@ -49,7 +47,7 @@ public:
 private:
     ::std::string _content;
 };
-
+} // namespace deque
 } // namespace qdb
 } // namespace tests
 } // namespace bench

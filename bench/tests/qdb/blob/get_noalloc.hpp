@@ -9,11 +9,13 @@ namespace tests
 {
 namespace qdb
 {
-
-class blob_remove : public qdb_test_template<blob_remove>
+namespace blob
+{
+class get_noalloc : public qdb_test_template<get_noalloc>
 {
 public:
-    explicit blob_remove(bench::test_config config) : qdb_test_template(config)
+    get_noalloc(bench::test_config config)
+        : qdb_test_template(config), _buffer(config.content_size, 0)
     {
         _content = utils::create_random_string(config.content_size);
     }
@@ -21,26 +23,28 @@ public:
     void setup() override
     {
         qdb_test_template::setup();
-
-        setup_each([=](unsigned long iteration)
-                   {
-                       _qdb.blob_put(alias(iteration), _content);
-                   });
+        _qdb.blob_put(alias(0), _content);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.remove(alias(iteration));
+        _qdb.blob_get_noalloc(alias(0), _buffer);
+        if (_content.size() != _buffer.size()) throw ::std::exception();
+    }
+
+    void cleanup() override
+    {
+        _qdb.remove(alias(0));
     }
 
     static ::std::string name()
     {
-        return "qdb_blob_remove";
+        return "qdb_blob_get_noalloc";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_remove() on blob entries";
+        return "Each thread repeats qdb_blob_get_noalloc() on one entry";
     }
 
     static bool size_dependent()
@@ -49,9 +53,10 @@ public:
     }
 
 private:
+    ::std::string _buffer;
     ::std::string _content;
 };
-
+} // namespace blob
 } // namespace qdb
 } // namespace tests
 } // namespace bench

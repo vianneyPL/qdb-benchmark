@@ -6,14 +6,20 @@ namespace utils
 {
 namespace teamcity
 {
-void block_opened(std::string name);
-void block_closed(std::string name);
-void build_problem(std::string text);
-void build_statistic(std::string name, double value);
-void message(std::string message);
-void test_failed(std::string name, std::string message);
-void test_failed(std::string name, std::string message, std::string details);
-void test_finished(std::string name);
-void test_started(std::string name);
+void block_opened(const std::string & name);
+void block_closed(const std::string & name);
+
+void build_problem(const std::string & text);
+void build_statistic(const std::string & name, double value);
+
+void message(const std::string & message);
+void progressMessage(const std::string & message);
+
+void test_failed(const std::string & name, const std::string & message);
+void test_failed(const std::string & name,
+                 const std::string & message,
+                 const std::string & details);
+void test_finished(const std::string & name);
+void test_started(const std::string & name);
 }
 }

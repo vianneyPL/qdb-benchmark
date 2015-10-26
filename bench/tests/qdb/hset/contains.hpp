@@ -9,19 +9,31 @@ namespace tests
 {
 namespace qdb
 {
-
-class hset_insert : public qdb_test_template<hset_insert>
+namespace hset
+{
+class contains : public qdb_test_template<contains>
 {
 public:
-    explicit hset_insert(bench::test_config config) : qdb_test_template(config)
+    explicit contains(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
+    }
+
+    void setup() override
+    {
+        qdb_test_template::setup();
+
+        setup_each([=](unsigned long iteration)
+                   {
+                       set_watermark(_content, iteration);
+                       _qdb.hset_insert(alias(0), _content);
+                   });
     }
 
     void run_iteration(unsigned long iteration)
     {
         set_watermark(_content, iteration);
-        _qdb.hset_insert(alias(0), _content);
+        _qdb.hset_contains(alias(0), _content);
     }
 
     void cleanup() override
@@ -31,12 +43,12 @@ public:
 
     static ::std::string name()
     {
-        return "qdb_hset_insert";
+        return "qdb_hset_contains";
     }
 
     static ::std::string description()
     {
-        return "Call qdb_hset_insert() on one entry";
+        return "Each thread repeats qdb_hset_contains() on one entry";
     }
 
     static bool size_dependent()
@@ -47,7 +59,7 @@ public:
 private:
     ::std::string _content;
 };
-
+} // namespace hset
 } // namespace qdb
 } // namespace tests
 } // namespace bench

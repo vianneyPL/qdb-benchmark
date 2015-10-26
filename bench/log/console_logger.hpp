@@ -21,10 +21,7 @@ public:
 
     void pause(std::chrono::duration<int> duration) override
     {
-        std::cout << std::endl
-                  << "Wait " << std::chrono::duration_cast<std::chrono::seconds>(duration).count()
-                  << " seconds" << std::endl
-                  << std::endl;
+        std::cout << std::endl << "Wait " << duration_to_string(duration) << std::endl << std::endl;
     }
 
     void schedule(const std::vector<test_instance> & tests) override
@@ -68,29 +65,35 @@ public:
 
     void setup_finished(const test_instance & test) override
     {
-        double duration =
-            (double)std::chrono::duration_cast<std::chrono::milliseconds>(test.setup_duration)
-                .count();
-        std::cout << "Setting up test... OK (" << unit::milliseconds(duration) << ")" << std::endl;
+        std::cout << "Setting up test... OK (" << duration_to_string(test.setup_duration) << ")"
+                  << std::endl;
     }
 
     // Test
 
     void test_started(const test_instance & test) override
     {
-        std::cout << "Executing test... " << std::endl;
+        std::cout << "Executing test... " << std::flush;
+    }
+
+    void test_progress(const test_instance & test) override
+    {
+        auto elapsed = clock::now() - test.start_time;
+        auto iterations = compute_iteration_count(test);
+        std::cout << "\rExecuting test... " << unit::none(iterations) << "iterations ("
+                  << duration_to_string(elapsed) << ")      " << std::flush;
     }
 
     void test_failed(const test_instance & test, const std::string & error) override
     {
-        std::cout << "Executing test... FAILED (" << error << ")" << std::endl;
+        std::cout << "\nExecuting test... FAILED (" << error << ")" << std::endl;
         std::cout << "  - total iterations = " << unit::none(compute_iteration_count(test))
                   << std::endl;
     }
 
     void test_finished(const test_instance & test) override
     {
-        std::cout << "Executing test... OK (" << duration_to_string(test.test_duration) << ")"
+        std::cout << "\nExecuting test... OK (" << duration_to_string(test.test_duration) << ")"
                   << std::endl;
 
         if (test.tclass.size_dependent)

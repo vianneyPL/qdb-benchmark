@@ -9,26 +9,20 @@ namespace tests
 {
 namespace qdb
 {
-
-class blob_get_noalloc : public qdb_test_template<blob_get_noalloc>
+namespace hset
+{
+class insert : public qdb_test_template<insert>
 {
 public:
-    blob_get_noalloc(bench::test_config config)
-        : qdb_test_template(config), _buffer(config.content_size, 0)
+    explicit insert(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
 
-    void setup() override
-    {
-        qdb_test_template::setup();
-        _qdb.blob_put(alias(0), _content);
-    }
-
     void run_iteration(unsigned long iteration)
     {
-        _qdb.blob_get_noalloc(alias(0), _buffer);
-        if (_content.size() != _buffer.size()) throw ::std::exception();
+        set_watermark(_content, iteration);
+        _qdb.hset_insert(alias(0), _content);
     }
 
     void cleanup() override
@@ -38,12 +32,12 @@ public:
 
     static ::std::string name()
     {
-        return "qdb_blob_get_noalloc";
+        return "qdb_hset_insert";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_blob_get_noalloc() on one entry";
+        return "Call qdb_hset_insert() on one entry";
     }
 
     static bool size_dependent()
@@ -52,10 +46,9 @@ public:
     }
 
 private:
-    ::std::string _buffer;
     ::std::string _content;
 };
-
+} // namespace hset
 } // namespace qdb
 } // namespace tests
 } // namespace bench

@@ -9,18 +9,26 @@ namespace tests
 {
 namespace qdb
 {
-
-class blob_update : public qdb_test_template<blob_update>
+namespace blob
+{
+class get : public qdb_test_template<get>
 {
 public:
-    explicit blob_update(bench::test_config config) : qdb_test_template(config)
+    get(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
 
+    void setup() override
+    {
+        qdb_test_template::setup();
+        _qdb.blob_put(alias(0), _content);
+    }
+
     void run_iteration(unsigned long iteration)
     {
-        _qdb.blob_update(alias(0), _content);
+        auto content = _qdb.blob_get(alias(0));
+        if (content.size() != _content.size()) throw ::std::exception();
     }
 
     void cleanup() override
@@ -30,12 +38,12 @@ public:
 
     static ::std::string name()
     {
-        return "qdb_blob_update";
+        return "qdb_blob_get";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_blob_update() on one entry";
+        return "Each thread repeats qdb_blob_get() on one entry";
     }
 
     static bool size_dependent()
@@ -46,7 +54,7 @@ public:
 private:
     ::std::string _content;
 };
-
+} // namespace blob
 } // namespace qdb
 } // namespace tests
 } // namespace bench

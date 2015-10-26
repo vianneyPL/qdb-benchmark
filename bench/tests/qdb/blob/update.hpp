@@ -9,30 +9,19 @@ namespace tests
 {
 namespace qdb
 {
-
-class hset_erase : public qdb_test_template<hset_erase>
+namespace blob
+{
+class update : public qdb_test_template<update>
 {
 public:
-    explicit hset_erase(bench::test_config config) : qdb_test_template(config)
+    explicit update(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
 
-    void setup() override
-    {
-        qdb_test_template::setup();
-
-        setup_each([=](unsigned long iteration)
-                   {
-                       set_watermark(_content, iteration);
-                       _qdb.hset_insert(alias(0), _content);
-                   });
-    }
-
     void run_iteration(unsigned long iteration)
     {
-        set_watermark(_content, iteration);
-        _qdb.hset_erase(alias(0), _content);
+        _qdb.blob_update(alias(0), _content);
     }
 
     void cleanup() override
@@ -42,12 +31,12 @@ public:
 
     static ::std::string name()
     {
-        return "qdb_hset_erase";
+        return "qdb_blob_update";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_hset_erase() on one entry";
+        return "Each thread repeats qdb_blob_update() on one entry";
     }
 
     static bool size_dependent()
@@ -58,7 +47,7 @@ public:
 private:
     ::std::string _content;
 };
-
+} // namespace blob
 } // namespace qdb
 } // namespace tests
 } // namespace bench

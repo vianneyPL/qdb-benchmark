@@ -20,6 +20,7 @@ public:
     virtual void setup_finished(const test_instance &) = 0;
 
     virtual void test_started(const test_instance &) = 0;
+    virtual void test_progress(const test_instance &) = 0;
     virtual void test_failed(const test_instance &, const std::string & error) = 0;
     virtual void test_finished(const test_instance &) = 0;
 

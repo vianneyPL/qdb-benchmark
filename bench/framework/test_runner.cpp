@@ -89,6 +89,7 @@ private:
             while (!_synchronizer.wait_workers_for(_sampling_period))
             {
                 sample_now();
+                log_progress();
             }
             sample_now();
             _test.test_duration = clock::now() - _test.start_time;
@@ -173,6 +174,11 @@ private:
                 _synchronizer.report_exception(std::current_exception());
             }
         }
+    }
+
+    void log_progress()
+    {
+        _logger.test_progress(_test);
     }
 
     test_instance & _test;

@@ -9,32 +9,31 @@ namespace tests
 {
 namespace qdb
 {
-class tag_add_blob : public qdb_test_template<tag_add_blob>
+namespace blob
+{
+class add_tag : public qdb_test_template<add_tag>
 {
 public:
-    tag_add_blob(bench::test_config config) : qdb_test_template(config)
+    add_tag(bench::test_config config) : qdb_test_template(config)
     {
-        _tag = alias(0) + "-tag";
-        _content = utils::create_random_string(16);
+        _target_alias = alias(0) + "-target";
     }
 
     void setup() override
     {
         qdb_test_template::setup();
-        setup_each([=](unsigned long iteration)
-                   {
-                       _qdb.blob_put(alias(iteration), _content);
-                   });
+        _qdb.blob_put(_target_alias, utils::create_random_string(16));
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.add_tag(alias(iteration), _tag);
+        _qdb.add_tag(_target_alias, alias(iteration));
     }
 
     void cleanup() override
     {
-        _qdb.remove(_tag);
+        _qdb.remove(_target_alias);
+
         cleanup_each([=](unsigned long iteration)
                      {
                          _qdb.remove(alias(iteration));
@@ -43,12 +42,12 @@ public:
 
     static ::std::string name()
     {
-        return "qdb_tag_add_blob";
+        return "qdb_blob_add_tag";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_add_tag() on many blobs";
+        return "Each thread repeats qdb_add_tag() on one blob";
     }
 
     static bool size_dependent()
@@ -57,10 +56,9 @@ public:
     }
 
 private:
-    ::std::string _tag;
-    ::std::string _content;
+    ::std::string _target_alias;
 };
-
+} // namespace blob
 } // namespace qdb
 } // namespace tests
 } // namespace bench

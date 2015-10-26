@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/tests/qdb/qdb_test_template.hpp>
-#include <utils/random.hpp>
 
 namespace bench
 {
@@ -9,18 +8,24 @@ namespace tests
 {
 namespace qdb
 {
-
-class deque_push_back : public qdb_test_template<deque_push_back>
+namespace integer
+{
+class update : public qdb_test_template<update>
 {
 public:
-    explicit deque_push_back(bench::test_config config) : qdb_test_template(config)
+    explicit update(bench::test_config config) : qdb_test_template(config)
     {
-        _content = utils::create_random_string(config.content_size);
+    }
+
+    void setup() override
+    {
+        qdb_test_template::setup();
+        _qdb.int_put(alias(0), 0);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.deque_push_back(alias(0), _content);
+        _qdb.int_update(alias(0), iteration);
     }
 
     void cleanup() override
@@ -30,23 +35,20 @@ public:
 
     static ::std::string name()
     {
-        return "qdb_deque_push_back";
+        return "qdb_int_update";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_deque_push_back() on a queue";
+        return "Each thread repeats qdb_int_update() on one entry";
     }
 
     static bool size_dependent()
     {
-        return true;
+        return false;
     }
-
-private:
-    ::std::string _content;
 };
-
+} // namespace integer
 } // namespace qdb
 } // namespace tests
 } // namespace bench

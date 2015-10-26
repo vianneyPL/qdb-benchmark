@@ -8,11 +8,12 @@ namespace tests
 {
 namespace qdb
 {
-
-class int_remove : public qdb_test_template<int_remove>
+namespace integer
+{
+class remove : public qdb_test_template<remove>
 {
 public:
-    explicit int_remove(bench::test_config config) : qdb_test_template(config)
+    explicit remove(bench::test_config config) : qdb_test_template(config)
     {
     }
 
@@ -46,7 +47,7 @@ public:
         return false;
     }
 };
-
+} // namespace integer
 } // namespace qdb
 } // namespace tests
 } // namespace bench

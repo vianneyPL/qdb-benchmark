@@ -9,11 +9,12 @@ namespace tests
 {
 namespace qdb
 {
-
-class deque_pop_back : public qdb_test_template<deque_pop_back>
+namespace blob
+{
+class remove : public qdb_test_template<remove>
 {
 public:
-    explicit deque_pop_back(bench::test_config config) : qdb_test_template(config)
+    explicit remove(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
@@ -22,25 +23,25 @@ public:
     {
         qdb_test_template::setup();
 
-        setup_each([&](unsigned long iteration)
+        setup_each([=](unsigned long iteration)
                    {
-                       _qdb.deque_push_back(alias(0), _content);
+                       _qdb.blob_put(alias(iteration), _content);
                    });
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.deque_pop_back(alias(0));
+        _qdb.remove(alias(iteration));
     }
 
     static ::std::string name()
     {
-        return "qdb_deque_pop_back";
+        return "qdb_blob_remove";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_deque_pop_back() on a queue.";
+        return "Each thread repeats qdb_remove() on blob entries";
     }
 
     static bool size_dependent()
@@ -51,7 +52,7 @@ public:
 private:
     ::std::string _content;
 };
-
+} // namespace blob
 } // namespace qdb
 } // namespace tests
 } // namespace bench

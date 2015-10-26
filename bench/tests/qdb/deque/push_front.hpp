@@ -9,11 +9,12 @@ namespace tests
 {
 namespace qdb
 {
-
-class deque_push_front : public qdb_test_template<deque_push_front>
+namespace deque
+{
+class push_front : public qdb_test_template<push_front>
 {
 public:
-    explicit deque_push_front(bench::test_config config) : qdb_test_template(config)
+    explicit push_front(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
@@ -46,7 +47,7 @@ public:
 private:
     ::std::string _content;
 };
-
+} // namespace deque
 } // namespace qdb
 } // namespace tests
 } // namespace bench

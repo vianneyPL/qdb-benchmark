@@ -26,8 +26,8 @@ double bench::compute_average_throughput(const bench::test_instance & test)
     return compute_average_frequency(test) * test.config.content_size;
 }
 
-double bench::compute_iteration_count(const bench::test_instance & test)
+long long bench::compute_iteration_count(const bench::test_instance & test)
 {
     auto & serie = test.result.at("iterations");
-    return (double)sum_values(serie.back());
+    return (long long)sum_values(serie.back());
 }

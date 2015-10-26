@@ -2,19 +2,18 @@
 
 #include <bench/tests/qdb/qdb_test_template.hpp>
 
-#include <qdb/integer.h>
-
 namespace bench
 {
 namespace tests
 {
 namespace qdb
 {
-
-class int_update : public qdb_test_template<int_update>
+namespace integer
+{
+class add : public qdb_test_template<add>
 {
 public:
-    explicit int_update(bench::test_config config) : qdb_test_template(config)
+    explicit add(bench::test_config config) : qdb_test_template(config)
     {
     }
 
@@ -26,7 +25,7 @@ public:
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.int_update(alias(0), iteration);
+        _qdb.int_add(alias(0), 1);
     }
 
     void cleanup() override
@@ -36,12 +35,12 @@ public:
 
     static ::std::string name()
     {
-        return "qdb_int_update";
+        return "qdb_int_add";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_int_update() on one entry";
+        return "Each thread repeats qdb_int_add() on one entry";
     }
 
     static bool size_dependent()
@@ -49,7 +48,7 @@ public:
         return false;
     }
 };
-
+} // namespace integer
 } // namespace qdb
 } // namespace tests
 } // namespace bench

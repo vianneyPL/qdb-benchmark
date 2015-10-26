@@ -9,11 +9,12 @@ namespace tests
 {
 namespace qdb
 {
-
-class hset_contains : public qdb_test_template<hset_contains>
+namespace deque
+{
+class pop_front : public qdb_test_template<pop_front>
 {
 public:
-    explicit hset_contains(bench::test_config config) : qdb_test_template(config)
+    explicit pop_front(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
@@ -22,32 +23,25 @@ public:
     {
         qdb_test_template::setup();
 
-        setup_each([=](unsigned long iteration)
+        setup_each([&](unsigned long iteration)
                    {
-                       set_watermark(_content, iteration);
-                       _qdb.hset_insert(alias(0), _content);
+                       _qdb.deque_push_front(alias(0), _content);
                    });
     }
 
     void run_iteration(unsigned long iteration)
     {
-        set_watermark(_content, iteration);
-        _qdb.hset_contains(alias(0), _content);
-    }
-
-    void cleanup() override
-    {
-        _qdb.remove(alias(0));
+        _qdb.deque_pop_front(alias(0));
     }
 
     static ::std::string name()
     {
-        return "qdb_hset_contains";
+        return "qdb_deque_pop_front";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_hset_contains() on one entry";
+        return "Each thread repeats qdb_deque_pop_front() on a queue";
     }
 
     static bool size_dependent()
@@ -58,7 +52,7 @@ public:
 private:
     ::std::string _content;
 };
-
+} // namespace deque
 } // namespace qdb
 } // namespace tests
 } // namespace bench

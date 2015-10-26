@@ -9,11 +9,12 @@ namespace tests
 {
 namespace qdb
 {
-
-class deque_pop_front : public qdb_test_template<deque_pop_front>
+namespace stream
+{
+class write : public qdb_test_template<write>
 {
 public:
-    explicit deque_pop_front(bench::test_config config) : qdb_test_template(config)
+    explicit write(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
@@ -21,26 +22,28 @@ public:
     void setup() override
     {
         qdb_test_template::setup();
-
-        setup_each([&](unsigned long iteration)
-                   {
-                       _qdb.deque_push_front(alias(0), _content);
-                   });
+        _stream = _qdb.stream_open(alias(0), qdb_stream_mode_write);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.deque_pop_front(alias(0));
+        _stream.write(_content);
+    }
+
+    void cleanup() override
+    {
+        _stream.close();
+        _qdb.stream_remove(alias(0));
     }
 
     static ::std::string name()
     {
-        return "qdb_deque_pop_front";
+        return "qdb_stream_write";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_deque_pop_front() on a queue";
+        return "Each thread repeats qdb_stream_write() on one entry";
     }
 
     static bool size_dependent()
@@ -50,8 +53,9 @@ public:
 
 private:
     ::std::string _content;
+    utils::qdb_stream_wrapper _stream;
 };
-
+} // namespace stream
 } // namespace qdb
 } // namespace tests
 } // namespace bench

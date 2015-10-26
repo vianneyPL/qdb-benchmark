@@ -50,6 +50,12 @@ public:
         utils::teamcity::message("Test started");
     }
 
+    void test_progress(const test_instance & test) override
+    {
+        utils::teamcity::progressMessage(std::to_string(compute_iteration_count(test))
+                                         + " iterations");
+    }
+
     void test_failed(const test_instance & test, const std::string & error) override
     {
         utils::teamcity::message("Test failed: " + error);

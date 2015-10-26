@@ -1,6 +1,7 @@
 #pragma once
 
 #include <qdb/client.h>
+#include <qdb/stream.h>
 
 #include <string>
 #include <stdexcept>
@@ -49,6 +50,20 @@ private:
     size_t _content_size;
 };
 
+class qdb_stream_wrapper
+{
+public:
+    qdb_stream_wrapper(qdb_stream_t h = nullptr) : _handle(h)
+    {
+    }
+
+    void close();
+    void write(const std::string & content);
+
+private:
+    qdb_stream_t _handle;
+};
+
 class qdb_wrapper
 {
 public:
@@ -83,28 +98,10 @@ public:
 
     void add_tag(const std::string & alias, const std::string & tag);
 
+    qdb_stream_t stream_open(const std::string & alias, qdb_stream_mode_t mode);
+    void stream_remove(const std::string & alias);
+
 private:
-    bool is_error(qdb_error_t err) const
-    {
-        switch (err)
-        {
-        case qdb_e_ok:
-        case qdb_e_element_already_exists:
-        case qdb_e_element_not_found:
-            return false;
-        default:
-            return true;
-        }
-    }
-
-    template <typename Function, typename... Args>
-    qdb_error_t call(std::string name, Function function, Args... args) const
-    {
-        qdb_error_t err = function(_handle, args...);
-        if (is_error(err)) throw std::runtime_error(name + ": " + qdb_error(err));
-        return err;
-    }
-
     qdb_handle_t _handle;
 };
 }

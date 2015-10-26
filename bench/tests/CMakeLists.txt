@@ -1,25 +1,26 @@
 add_library(bench-tests
-    qdb/blob_add_tag.hpp
-    qdb/blob_get.hpp
-    qdb/blob_get_noalloc.hpp
-    qdb/blob_put.hpp
-    qdb/blob_remove.hpp
-    qdb/blob_update.hpp
-    qdb/deque_pop_back.hpp
-    qdb/deque_pop_front.hpp
-    qdb/deque_push_back.hpp
-    qdb/deque_push_front.hpp
-    qdb/hset_contains.hpp
-    qdb/hset_erase.hpp
-    qdb/hset_insert.hpp
-    qdb/int_add.hpp
-    qdb/int_get.hpp
-    qdb/int_put.hpp
-    qdb/int_remove.hpp
-    qdb/int_update.hpp
+    qdb/blob/add_tag.hpp
+    qdb/blob/get.hpp
+    qdb/blob/get_noalloc.hpp
+    qdb/blob/put.hpp
+    qdb/blob/remove.hpp
+    qdb/blob/update.hpp
+    qdb/deque/pop_back.hpp
+    qdb/deque/pop_front.hpp
+    qdb/deque/push_back.hpp
+    qdb/deque/push_front.hpp
+    qdb/hset/contains.hpp
+    qdb/hset/erase.hpp
+    qdb/hset/insert.hpp
+    qdb/integer/add.hpp
+    qdb/integer/get.hpp
+    qdb/integer/put.hpp
+    qdb/integer/remove.hpp
+    qdb/integer/update.hpp
     qdb/node_status.hpp
     qdb/qdb_test_template.hpp
-    qdb/tag_add_blob.hpp
+    qdb/stream/write.hpp
+    qdb/tag/add_blob.hpp
     std/atomic.hpp
     std/fread.hpp
     std/fwrite.hpp

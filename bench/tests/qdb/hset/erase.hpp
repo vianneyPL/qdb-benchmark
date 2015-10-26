@@ -9,11 +9,12 @@ namespace tests
 {
 namespace qdb
 {
-
-class blob_get : public qdb_test_template<blob_get>
+namespace hset
+{
+class erase : public qdb_test_template<erase>
 {
 public:
-    blob_get(bench::test_config config) : qdb_test_template(config)
+    explicit erase(bench::test_config config) : qdb_test_template(config)
     {
         _content = utils::create_random_string(config.content_size);
     }
@@ -21,13 +22,18 @@ public:
     void setup() override
     {
         qdb_test_template::setup();
-        _qdb.blob_put(alias(0), _content);
+
+        setup_each([=](unsigned long iteration)
+                   {
+                       set_watermark(_content, iteration);
+                       _qdb.hset_insert(alias(0), _content);
+                   });
     }
 
     void run_iteration(unsigned long iteration)
     {
-        auto content = _qdb.blob_get(alias(0));
-        if (content.size() != _content.size()) throw ::std::exception();
+        set_watermark(_content, iteration);
+        _qdb.hset_erase(alias(0), _content);
     }
 
     void cleanup() override
@@ -37,12 +43,12 @@ public:
 
     static ::std::string name()
     {
-        return "qdb_blob_get";
+        return "qdb_hset_erase";
     }
 
     static ::std::string description()
     {
-        return "Each thread repeats qdb_blob_get() on one entry";
+        return "Each thread repeats qdb_hset_erase() on one entry";
     }
 
     static bool size_dependent()
@@ -53,7 +59,7 @@ public:
 private:
     ::std::string _content;
 };
-
+} // namespace hset
 } // namespace qdb
 } // namespace tests
 } // namespace bench
