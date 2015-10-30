@@ -1,24 +1,18 @@
 if (!bench.chart) bench.chart = {};
 
 bench.chart.bubble = function() {
-
     var width = 600;
     var height = 600;
-    var padding = 30; 
+    var padding = 30;
     var dispatch = d3.dispatch("select");
     var data;
     var svg, header, graph;
-    var selectedSerie = 0;
     var testSeries = d3.values(bench.series.tests);
 
     function chart(container) {
-
         header = bench.chart
-            .selector()
-            .on("select", function(inc) {
-                selectedSerie += testSeries.length+inc;
-                update();
-            });
+            .selector(testSeries)
+            .on("select", function(idx) { update(); });
         header(container);
 
         svg = container.append("svg")
@@ -44,22 +38,20 @@ bench.chart.bubble = function() {
     }
 
     function update() {
-
-        var serie = testSeries[selectedSerie%testSeries.length];
+        var serie = testSeries[header.selected()];
+        header.text(header.selected(), serie.name);
 
         var sizeValues = bench.getContentSizes(data);
         var threadsValues = bench.getThreadCounts(data);
 
-        var d = d3.min([(width-padding*2) / sizeValues.length, (height-padding*2) / threadsValues.length]) - 2;    
+        var d = d3.min([(width-padding*2) / sizeValues.length, (height-padding*2) / threadsValues.length]) - 2;
 
         var sizeScale = d3.scale.ordinal().domain(sizeValues).rangePoints([d/2+padding,width-d/2-padding]);
         var threadsScale = d3.scale.ordinal().domain(threadsValues).rangePoints([d/2+padding,height-d/2-padding]);
 
-        var valueScale = d3.scale.linear()
+        var valueScale = d3.scale.log()
             .domain(bench.getValueExtent(data, serie))
-            .range([10,d]);
-
-        header.text(serie.name);
+            .range([30,d]);
 
         var circles = graph
             .selectAll("circle")
@@ -78,7 +70,7 @@ bench.chart.bubble = function() {
         circles
             .classed("error", function(d) {return !!d.error})
             .transition()
-            .attr("r", get_radius)            
+            .attr("r", get_radius)
 
         circles
             .enter()

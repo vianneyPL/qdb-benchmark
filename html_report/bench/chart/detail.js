@@ -1,29 +1,23 @@
 if (!bench.chart) bench.chart = {};
 
 bench.chart.lineChart = function() {
-
     var width = 600;
     var height = 600;
-    var leftPadding = 80; 
-    var rightPadding = 80; 
-    var padding = 30; 
+    var leftPadding = 80;
+    var rightPadding = 80;
+    var padding = 30;
     var data;
     var svg, header;
 
     var headerHeight = 30;
     var headerWidth = 300;
-    var selectedSerie = 0;
 
     var series = lineSeries;
 
     function chart(container) {
-
         header = bench.chart
-            .selector()
-            .on("select", function(inc) {
-                selectedSerie+=series.length+inc;
-                update();
-            });
+            .selector(series)
+            .on("select", function(idx) { update(); });
         header(container);
 
         svg = container.append("svg")
@@ -41,10 +35,9 @@ bench.chart.lineChart = function() {
     }
 
     chart.update = update;
-    function update() {      
-
-        var serie = series[selectedSerie%series.length];
-        header.text(serie.name);
+    function update() {
+        var serie = series[header.selected()];
+        header.text(header.selected(), serie.name);
 
         var lines = serie.lines(data);
         var timeMax = d3.max(lines[0], function(d){return d.time})
@@ -114,7 +107,7 @@ bench.chart.lineChart = function() {
 
         var valueAxis = d3.svg.axis().scale(valueScale).orient("left")
             .tickFormat(function(d) { return serie.unit(d); })
-        svg.selectAll(".left-axis").call(valueAxis); 
+        svg.selectAll(".left-axis").call(valueAxis);
     }
 
     chart.data = function(value) {

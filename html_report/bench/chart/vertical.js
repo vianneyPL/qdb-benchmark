@@ -1,24 +1,19 @@
 if (!bench.chart) bench.chart = {};
 
 bench.chart.vertical = function() {
-
     var width = 600;
     var height = 600;
-    var padding = 30; 
+    var padding = 30;
     var dispatch = d3.dispatch("select");
     var data;
     var svg, graph, header;
-    var selectedSerie = 0;
     var testSeries = d3.values(bench.series.tests);
 
     function chart(container) {
-
+        console.log("chart(container)");
         header = bench.chart
-            .selector()
-            .on("select", function(inc) {
-                selectedSerie += testSeries.length+inc;
-                update();
-            });
+            .selector(testSeries)
+            .on("select", function(idx) { update(); });
         header(container);
 
         svg = container
@@ -44,9 +39,8 @@ bench.chart.vertical = function() {
     }
 
     function update() {
-
-        var serie = testSeries[selectedSerie%testSeries.length];
-        header.text(serie.name);
+        var serie = testSeries[header.selected()];
+        header.text(header.selected(), serie.name);
 
         var xScale = d3.scale.ordinal()
             .domain(bench.getContentSizes(data))
@@ -81,7 +75,7 @@ bench.chart.vertical = function() {
             .selectAll("text")
             .data(data);
 
-        function labelTranform(d) { 
+        function labelTranform(d) {
             var x = xScale(d.content_size) + xScale.rangeBand() / 2;
             var y = height-padding-valueScale(serie.value(d))+15;
             return "translate("+x+","+y+")rotate(-90)";
@@ -90,7 +84,7 @@ bench.chart.vertical = function() {
         labels
             .enter()
             .append("text")
-            .attr({                
+            .attr({
                 "transform": labelTranform,
                 "width": xScale.rangeBand(),
                 "text-anchor": "end",
@@ -106,8 +100,8 @@ bench.chart.vertical = function() {
         var xAxis = d3.svg.axis()
             .scale(xScale)
             .orient("bottom")
-            .tickFormat(function(content_size) { 
-                return unit.byte(content_size); 
+            .tickFormat(function(content_size) {
+                return unit.byte(content_size);
             });
 
         svg.selectAll("g.bottom-axis").call(xAxis);
