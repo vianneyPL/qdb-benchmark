@@ -72,7 +72,7 @@ private:
     {
         rapidjson::Document doc;
         utils::qdb_buffer json = _qdb.node_status(node_uri);
-        doc.Parse(json.data());
+        doc.Parse(static_cast<const char *>(json.data()));
         return doc;
     }
 
@@ -80,7 +80,7 @@ private:
     {
         rapidjson::Document doc;
         utils::qdb_buffer json = _qdb.node_topology(node_uri);
-        doc.Parse(json.data());
+        doc.Parse(static_cast<const char *>(json.data()));
         return doc;
     }
 

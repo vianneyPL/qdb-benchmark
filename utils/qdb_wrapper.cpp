@@ -79,7 +79,7 @@ void utils::qdb_wrapper::blob_update(const std::string & alias, const std::strin
 
 utils::qdb_buffer utils::qdb_wrapper::blob_get(const std::string & alias)
 {
-    const char * result;
+    const void * result;
     std::size_t result_size;
     CALL(qdb_blob_get, alias.c_str(), &result, &result_size);
     return qdb_buffer(_handle, result, result_size);
@@ -99,7 +99,7 @@ void utils::qdb_wrapper::remove(const std::string & alias)
 
 utils::qdb_buffer utils::qdb_wrapper::deque_pop_back(const std::string & alias)
 {
-    const char * result;
+    const void * result;
     std::size_t result_size;
     CALL(qdb_deque_pop_back, alias.c_str(), &result, &result_size);
     return qdb_buffer(_handle, result, result_size);
@@ -107,7 +107,7 @@ utils::qdb_buffer utils::qdb_wrapper::deque_pop_back(const std::string & alias)
 
 utils::qdb_buffer utils::qdb_wrapper::deque_pop_front(const std::string & alias)
 {
-    const char * result;
+    const void * result;
     std::size_t result_size;
     CALL(qdb_deque_pop_front, alias.c_str(), &result, &result_size);
     return qdb_buffer(_handle, result, result_size);

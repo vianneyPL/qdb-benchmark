@@ -16,7 +16,7 @@ public:
     {
     }
 
-    qdb_buffer(qdb_handle_t h, const char * content, size_t content_size)
+    qdb_buffer(qdb_handle_t h, const void * content, size_t content_size)
         : _handle(h), _content(content), _content_size(content_size)
     {
     }
@@ -34,7 +34,7 @@ public:
         if (_content) qdb_free_buffer(_handle, _content);
     }
 
-    const char * data() const
+    const void * data() const
     {
         return _content;
     }
@@ -46,7 +46,7 @@ public:
 
 private:
     qdb_handle_t _handle;
-    const char * _content;
+    const void * _content;
     size_t _content_size;
 };
 
