@@ -30,6 +30,12 @@ void utils::teamcity::message(const std::string & text)
     std::cout << "##teamcity[message text='" << text << "']" << std::endl;
 }
 
+void utils::teamcity::message(const std::string & text, const std::string & error_details)
+{
+    std::cout << "##teamcity[message text='" << text << "' errorDetails='" << error_details
+              << "' status='ERROR']" << std::endl;
+}
+
 void utils::teamcity::progressMessage(const std::string & message)
 {
     std::cout << "##teamcity[progressMessage '" << message << "']" << std::endl;

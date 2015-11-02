@@ -49,6 +49,12 @@ public:
         return format(value, 1000, "");
     }
 
+    template <typename Integral>
+    static std::string none(Integral value)
+    {
+        return none(static_cast<double>(value));
+    }
+
     static std::string milliseconds(double value)
     {
         return format(value / 1000, 1000, "s");

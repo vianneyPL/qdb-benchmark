@@ -13,6 +13,7 @@ void build_problem(const std::string & text);
 void build_statistic(const std::string & name, double value);
 
 void message(const std::string & message);
+void message(const std::string & message, const std::string & error_details);
 void progressMessage(const std::string & message);
 
 void test_failed(const std::string & name, const std::string & message);

@@ -1,5 +1,5 @@
 @setlocal
-@cd ..
+@cd %~dp0\..
 @mkdir build
 cd build        || @exit /b 1 
 cmake -G "Visual Studio 12 2013 Win64" .. || @exit /b 1
