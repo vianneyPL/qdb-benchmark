@@ -33,12 +33,12 @@ public:
         _qdb.remove(alias(0));
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_int_add";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Each thread repeats qdb_int_add() on one entry";
     }

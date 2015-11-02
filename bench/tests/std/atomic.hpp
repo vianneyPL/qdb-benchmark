@@ -7,25 +7,27 @@ namespace bench
 {
 namespace tests
 {
-namespace std
+namespace std_
 {
 
 class atomic : public test_template<atomic>
 {
 public:
-    atomic(bench::test_config config) : test_template(config) {}
+    atomic(bench::test_config config) : test_template(config)
+    {
+    }
 
     void run_iteration(unsigned long iteration)
     {
         ++_value;
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "std_atomic";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Increment a shared std::atomic<int> by each thread.";
     }
@@ -37,11 +39,11 @@ public:
 
 private:
     // An atomic shared by all threads.
-    static ::std::atomic<int> _value;
+    static std::atomic<int> _value;
 };
 
-::std::atomic<int> atomic::_value{0};
+std::atomic<int> atomic::_value{0};
 
-} // namespace std
+} // namespace std_
 } // namespace tests
 } // namespace bench

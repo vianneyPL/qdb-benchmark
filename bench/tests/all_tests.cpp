@@ -55,10 +55,10 @@ bench::test_class_collection bench::tests::get_all_tests()
       new qdb::integer::update::test_class(),
       new qdb::stream::write::test_class(),
       // new qdb::tag_add_blob::test_class(),
-      new std::atomic::test_class(),
-      new std::fread::test_class(),
-      new std::fwrite::test_class(),
-      new std::mutex::test_class(),
+      new std_::atomic::test_class(),
+      new std_::fread::test_class(),
+      new std_::fwrite::test_class(),
+      new std_::mutex::test_class(),
     };
     // clang-format on
 }

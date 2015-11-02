@@ -29,12 +29,12 @@ public:
         _qdb.remove(alias(0));
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_deque_push_back";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Each thread repeats qdb_deque_push_back() on a queue";
     }
@@ -45,7 +45,7 @@ public:
     }
 
 private:
-    ::std::string _content;
+    std::string _content;
 };
 } // namespace deque
 } // namespace qdb

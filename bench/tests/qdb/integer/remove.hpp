@@ -32,12 +32,12 @@ public:
         _qdb.remove(alias(iteration));
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_int_remove";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Each thread repeats qdb_remove() on integer entries";
     }

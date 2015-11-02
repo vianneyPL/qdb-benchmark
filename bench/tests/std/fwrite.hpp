@@ -9,7 +9,7 @@ namespace bench
 {
 namespace tests
 {
-namespace std
+namespace std_
 {
 
 class fwrite : public test_template<fwrite>
@@ -23,28 +23,28 @@ public:
 
     void run_iteration(unsigned long iteration)
     {
-        auto fp = ::std::fopen(_filename.c_str(), "wb");
+        auto fp = std::fopen(_filename.c_str(), "wb");
         if (fp == nullptr) throw create_file_exception(_filename, errno);
 
-        ::std::fwrite(const_cast<char *>(_content.c_str()), _content.size(), 1, fp);
-        auto err = ::std::ferror(fp);
+        std::fwrite(const_cast<char *>(_content.c_str()), _content.size(), 1, fp);
+        auto err = std::ferror(fp);
 
-        ::std::fclose(fp);
+        std::fclose(fp);
 
         if (err != 0) throw write_file_exception(_filename, err);
     }
 
     void cleanup() override
     {
-        ::std::remove(_filename.c_str());
+        std::remove(_filename.c_str());
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "std_fwrite";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Call fwrite() on one file.";
     }
@@ -55,10 +55,10 @@ public:
     }
 
 private:
-    ::std::string _filename;
-    ::std::string _content;
+    std::string _filename;
+    std::string _content;
 };
 
-} // namespace std
+} // namespace std_
 } // namespace tests
 } // namespace bench

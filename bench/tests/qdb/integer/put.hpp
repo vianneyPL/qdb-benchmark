@@ -30,12 +30,12 @@ public:
                      });
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_int_put";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Each thread repeats qdb_put() with new aliases";
     }

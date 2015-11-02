@@ -32,12 +32,12 @@ public:
                      });
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_blob_put";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Each thread repeats qdb_blob_put() with new aliases";
     }
@@ -48,7 +48,7 @@ public:
     }
 
 private:
-    ::std::string _content;
+    std::string _content;
 };
 } // namespace blob
 } // namespace qdb

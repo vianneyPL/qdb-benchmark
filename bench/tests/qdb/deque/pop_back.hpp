@@ -34,12 +34,12 @@ public:
         _qdb.deque_pop_back(alias(0));
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_deque_pop_back";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Each thread repeats qdb_deque_pop_back() on a queue.";
     }
@@ -50,7 +50,7 @@ public:
     }
 
 private:
-    ::std::string _content;
+    std::string _content;
 };
 } // namespace deque
 } // namespace qdb

@@ -28,7 +28,7 @@ public:
     void run_iteration(unsigned long iteration)
     {
         auto content = _qdb.blob_get(alias(0));
-        if (content.size() != _content.size()) throw ::std::exception();
+        if (content.size() != _content.size()) throw std::exception();
     }
 
     void cleanup() override
@@ -36,12 +36,12 @@ public:
         _qdb.remove(alias(0));
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_blob_get";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Each thread repeats qdb_blob_get() on one entry";
     }
@@ -52,7 +52,7 @@ public:
     }
 
 private:
-    ::std::string _content;
+    std::string _content;
 };
 } // namespace blob
 } // namespace qdb

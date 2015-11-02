@@ -24,7 +24,7 @@ static std::vector<size_t> parse_size(const std::string & s)
 }
 
 static bench::test_class_collection get_tests_by_name(const bench::test_class_collection & tests,
-                                                      const ::std::string & name)
+                                                      const std::string & name)
 {
     // All tests chosen.
     if (name == "*") return tests;
@@ -43,7 +43,7 @@ static bench::test_class_collection get_tests_by_name(const bench::test_class_co
             {
                 assert(name.size() >= 2);
                 auto name_part = name.substr(1, name.size() - 2);
-                if (test->name.find(name_part) != ::std::string::npos) chosen = true;
+                if (test->name.find(name_part) != std::string::npos) chosen = true;
             }
             else if (name.front() == '*')
             {
@@ -88,8 +88,10 @@ void bench::app::command_line::parse(int argc, const char ** argv)
     _settings.content_sizes =
         parser.get_values<std::size_t>("", "--sizes", "Set contents sizes", "1,1K,1M", parse_size);
     _settings.tests = parser.get_values<const test_class *>(
-        "", "--tests", "Select the tests to run (default=all)", "",
-        [this](const std::string & name) { return get_tests_by_name(_test_pool, name); });
+        "", "--tests", "Select the tests to run (default=all)", "", [this](const std::string & name)
+        {
+            return get_tests_by_name(_test_pool, name);
+        });
     parser.check_unknown();
 
     if (_settings.tests.empty()) _settings.tests = _test_pool; // all test by default

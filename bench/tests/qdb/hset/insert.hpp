@@ -30,12 +30,12 @@ public:
         _qdb.remove(alias(0));
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_hset_insert";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Call qdb_hset_insert() on one entry";
     }
@@ -46,7 +46,7 @@ public:
     }
 
 private:
-    ::std::string _content;
+    std::string _content;
 };
 } // namespace hset
 } // namespace qdb

@@ -82,3 +82,5 @@ Each thread will have its own instance of `mytest`.
 
 However, you may want to use difference database keys to avoid conflicts.
 You can use `utils::unique_alias` to help you.
+
+When you're ready, add your test in `bench/tests/all_tests.cpp`

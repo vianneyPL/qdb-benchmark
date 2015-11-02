@@ -41,12 +41,12 @@ public:
         _qdb.remove(alias(0));
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_hset_contains";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Each thread repeats qdb_hset_contains() on one entry";
     }
@@ -57,7 +57,7 @@ public:
     }
 
 private:
-    ::std::string _content;
+    std::string _content;
 };
 } // namespace hset
 } // namespace qdb

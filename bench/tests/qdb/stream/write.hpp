@@ -36,12 +36,12 @@ public:
         _qdb.stream_remove(alias(0));
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_stream_write";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Each thread repeats qdb_stream_write() on one entry";
     }
@@ -52,7 +52,7 @@ public:
     }
 
 private:
-    ::std::string _content;
+    std::string _content;
     utils::qdb_stream_wrapper _stream;
 };
 } // namespace stream

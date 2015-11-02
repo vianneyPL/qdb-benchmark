@@ -29,12 +29,12 @@ public:
         _qdb.remove(alias(0));
     }
 
-    static ::std::string name()
+    static std::string name()
     {
         return "qdb_blob_update";
     }
 
-    static ::std::string description()
+    static std::string description()
     {
         return "Each thread repeats qdb_blob_update() on one entry";
     }
@@ -45,7 +45,7 @@ public:
     }
 
 private:
-    ::std::string _content;
+    std::string _content;
 };
 } // namespace blob
 } // namespace qdb
