@@ -53,7 +53,7 @@ public:
 
 private:
     std::string _content;
-    utils::qdb_stream_wrapper _stream;
+    utils::qdb_stream_facade _stream;
 };
 } // namespace stream
 } // namespace qdb

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bench/core/probe.hpp>
-#include <bench/tests/qdb/qdb_wrapper.hpp>
+#include <bench/tests/qdb/quasardb_facade.hpp>
 #include <rapidjson/document.h>
 
 #include <algorithm>
@@ -109,7 +109,7 @@ private:
     }
 
     std::string _cluster_uri;
-    utils::qdb_wrapper _qdb;
+    utils::quasardb_facade _qdb;
     std::vector<std::string> _node_uris;
 };
 

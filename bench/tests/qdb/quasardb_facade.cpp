@@ -1,4 +1,4 @@
-#include <bench/tests/qdb/qdb_wrapper.hpp>
+#include <bench/tests/qdb/quasardb_facade.hpp>
 
 #include <qdb/blob.h>
 #include <qdb/deque.h>
@@ -31,27 +31,27 @@ static qdb_error_t wrap_call(std::string name, Handle handle, Function function,
     return err;
 }
 
-utils::qdb_wrapper::qdb_wrapper()
+utils::quasardb_facade::quasardb_facade()
 {
     _handle = qdb_open_tcp();
 }
 
-utils::qdb_wrapper::~qdb_wrapper()
+utils::quasardb_facade::~quasardb_facade()
 {
     CALL(qdb_close);
 }
 
-void utils::qdb_wrapper::connect(const std::string & cluster_uri)
+void utils::quasardb_facade::connect(const std::string & cluster_uri)
 {
     CALL(qdb_connect, cluster_uri.c_str());
 }
 
-void utils::qdb_wrapper::free_buffer(const char * buffer)
+void utils::quasardb_facade::free_buffer(const char * buffer)
 {
     qdb_free_buffer(_handle, buffer);
 }
 
-utils::qdb_buffer utils::qdb_wrapper::node_status(const std::string & node_uri) const
+utils::qdb_buffer utils::quasardb_facade::node_status(const std::string & node_uri) const
 {
     const char * content;
     size_t content_size;
@@ -59,7 +59,7 @@ utils::qdb_buffer utils::qdb_wrapper::node_status(const std::string & node_uri) 
     return qdb_buffer(_handle, content, content_size);
 }
 
-utils::qdb_buffer utils::qdb_wrapper::node_topology(const std::string & node_uri) const
+utils::qdb_buffer utils::quasardb_facade::node_topology(const std::string & node_uri) const
 {
     const char * content;
     size_t content_size;
@@ -67,17 +67,17 @@ utils::qdb_buffer utils::qdb_wrapper::node_topology(const std::string & node_uri
     return qdb_buffer(_handle, content, content_size);
 }
 
-void utils::qdb_wrapper::blob_put(const std::string & alias, const std::string & content)
+void utils::quasardb_facade::blob_put(const std::string & alias, const std::string & content)
 {
     CALL(qdb_blob_put, alias.c_str(), content.data(), content.size(), 0);
 }
 
-void utils::qdb_wrapper::blob_update(const std::string & alias, const std::string & content)
+void utils::quasardb_facade::blob_update(const std::string & alias, const std::string & content)
 {
     CALL(qdb_blob_update, alias.c_str(), content.data(), content.size(), 0);
 }
 
-utils::qdb_buffer utils::qdb_wrapper::blob_get(const std::string & alias)
+utils::qdb_buffer utils::quasardb_facade::blob_get(const std::string & alias)
 {
     const void * result;
     std::size_t result_size;
@@ -85,19 +85,19 @@ utils::qdb_buffer utils::qdb_wrapper::blob_get(const std::string & alias)
     return qdb_buffer(_handle, result, result_size);
 }
 
-void utils::qdb_wrapper::blob_get_noalloc(const std::string & alias, std::string & content)
+void utils::quasardb_facade::blob_get_noalloc(const std::string & alias, std::string & content)
 {
     std::size_t result_size = content.capacity();
     CALL(qdb_blob_get_noalloc, alias.c_str(), const_cast<char *>(content.data()), &result_size);
     content.resize(result_size);
 }
 
-void utils::qdb_wrapper::remove(const std::string & alias)
+void utils::quasardb_facade::remove(const std::string & alias)
 {
     CALL(qdb_remove, alias.c_str());
 }
 
-utils::qdb_buffer utils::qdb_wrapper::deque_pop_back(const std::string & alias)
+utils::qdb_buffer utils::quasardb_facade::deque_pop_back(const std::string & alias)
 {
     const void * result;
     std::size_t result_size;
@@ -105,7 +105,7 @@ utils::qdb_buffer utils::qdb_wrapper::deque_pop_back(const std::string & alias)
     return qdb_buffer(_handle, result, result_size);
 }
 
-utils::qdb_buffer utils::qdb_wrapper::deque_pop_front(const std::string & alias)
+utils::qdb_buffer utils::quasardb_facade::deque_pop_front(const std::string & alias)
 {
     const void * result;
     std::size_t result_size;
@@ -113,81 +113,82 @@ utils::qdb_buffer utils::qdb_wrapper::deque_pop_front(const std::string & alias)
     return qdb_buffer(_handle, result, result_size);
 }
 
-void utils::qdb_wrapper::deque_push_back(const std::string & alias, const std::string & content)
+void utils::quasardb_facade::deque_push_back(const std::string & alias, const std::string & content)
 {
     CALL(qdb_deque_push_back, alias.c_str(), content.data(), content.size());
 }
 
-void utils::qdb_wrapper::deque_push_front(const std::string & alias, const std::string & content)
+void utils::quasardb_facade::deque_push_front(const std::string & alias,
+                                              const std::string & content)
 {
     CALL(qdb_deque_push_front, alias.c_str(), content.data(), content.size());
 }
 
-std::int64_t utils::qdb_wrapper::int_add(const std::string & alias, std::int64_t value)
+std::int64_t utils::quasardb_facade::int_add(const std::string & alias, std::int64_t value)
 {
     std::int64_t total;
     CALL(qdb_int_add, alias.c_str(), 1, &total);
     return total;
 }
 
-void utils::qdb_wrapper::int_put(const std::string & alias, std::int64_t value)
+void utils::quasardb_facade::int_put(const std::string & alias, std::int64_t value)
 {
     CALL(qdb_int_put, alias.c_str(), value, 0);
 }
 
-void utils::qdb_wrapper::int_update(const std::string & alias, std::int64_t value)
+void utils::quasardb_facade::int_update(const std::string & alias, std::int64_t value)
 {
     CALL(qdb_int_update, alias.c_str(), value, 0);
 }
 
-std::int64_t utils::qdb_wrapper::int_get(const std::string & alias)
+std::int64_t utils::quasardb_facade::int_get(const std::string & alias)
 {
     std::int64_t value;
     CALL(qdb_int_get, alias.c_str(), &value);
     return value;
 }
 
-bool utils::qdb_wrapper::hset_contains(const std::string & alias, const std::string & content)
+bool utils::quasardb_facade::hset_contains(const std::string & alias, const std::string & content)
 {
     return CALL(qdb_hset_contains, alias.c_str(), content.data(), content.size())
            == qdb_e_element_already_exists;
 }
 
-bool utils::qdb_wrapper::hset_erase(const std::string & alias, const std::string & content)
+bool utils::quasardb_facade::hset_erase(const std::string & alias, const std::string & content)
 {
     return CALL(qdb_hset_contains, alias.c_str(), content.data(), content.size())
            != qdb_e_element_not_found;
 }
 
-bool utils::qdb_wrapper::hset_insert(const std::string & alias, const std::string & content)
+bool utils::quasardb_facade::hset_insert(const std::string & alias, const std::string & content)
 {
     return CALL(qdb_hset_insert, alias.c_str(), content.data(), content.size())
            != qdb_e_element_already_exists;
 }
 
-void utils::qdb_wrapper::add_tag(const std::string & alias, const std::string & tag)
+void utils::quasardb_facade::add_tag(const std::string & alias, const std::string & tag)
 {
     CALL(qdb_add_tag, alias.c_str(), tag.c_str());
 }
 
-qdb_stream_t utils::qdb_wrapper::stream_open(const std::string & alias, qdb_stream_mode_t mode)
+qdb_stream_t utils::quasardb_facade::stream_open(const std::string & alias, qdb_stream_mode_t mode)
 {
     qdb_stream_t stream;
     CALL(qdb_stream_open, alias.c_str(), mode, &stream);
     return stream;
 }
 
-void utils::qdb_stream_wrapper::close()
+void utils::qdb_stream_facade::close()
 {
     CALL(qdb_stream_close);
 }
 
-void utils::qdb_stream_wrapper::write(const std::string & content)
+void utils::qdb_stream_facade::write(const std::string & content)
 {
     CALL(qdb_stream_write, content.data(), content.size());
 }
 
-void utils::qdb_wrapper::stream_remove(const std::string & alias)
+void utils::quasardb_facade::stream_remove(const std::string & alias)
 {
     CALL(qdb_stream_remove, alias.c_str());
 }

@@ -42,8 +42,8 @@ if(IS_DIRECTORY ${QDB_API_INCLUDE_DIR})
         qdb/integer/update.hpp
         qdb/node_status.hpp
         qdb/qdb_test_template.hpp
-        qdb/qdb_wrapper.hpp
-        qdb/qdb_wrapper.cpp
+        qdb/quasardb_facade.hpp
+        qdb/quasardb_facade.cpp
         qdb/stream/write.hpp
         qdb/tag/add_blob.hpp
     )
@@ -71,7 +71,7 @@ if(IS_DIRECTORY ${MONGOCLIENT_INCLUDE_DIR})
         mongodb/blob/update.hpp
         mongodb/integer/add.hpp
         mongodb/mongodb_test_template.hpp
-        mongodb/mongodb_wrapper.hpp
+        mongodb/mongodb_facade.hpp
     )
 
     list(APPEND INCLUDES

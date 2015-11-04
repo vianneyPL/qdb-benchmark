@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/tests/mongodb/mongodb_wrapper.hpp>
+#include <bench/tests/mongodb/mongodb_facade.hpp>
 #include <bench/tests/test_template.hpp>
 #include <utils/random.hpp>
 #include <utils/unique_alias.hpp>
@@ -25,7 +25,7 @@ public:
     }
 
 protected:
-    utils::mongodb_wrapper _mongodb;
+    utils::mongodb_facade _mongodb;
 
     const std::string & alias(unsigned long iteration) const
     {

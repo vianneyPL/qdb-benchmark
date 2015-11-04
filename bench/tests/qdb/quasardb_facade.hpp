@@ -50,10 +50,10 @@ private:
     size_t _content_size;
 };
 
-class qdb_stream_wrapper
+class qdb_stream_facade
 {
 public:
-    qdb_stream_wrapper(qdb_stream_t h = nullptr) : _handle(h)
+    qdb_stream_facade(qdb_stream_t h = nullptr) : _handle(h)
     {
     }
 
@@ -64,11 +64,11 @@ private:
     qdb_stream_t _handle;
 };
 
-class qdb_wrapper
+class quasardb_facade
 {
 public:
-    qdb_wrapper();
-    ~qdb_wrapper();
+    quasardb_facade();
+    ~quasardb_facade();
 
     void connect(const std::string & cluster_uri);
     qdb_buffer node_status(const std::string & node_uri) const;

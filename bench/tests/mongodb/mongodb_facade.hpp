@@ -4,11 +4,11 @@
 
 namespace utils
 {
-class mongodb_wrapper
+class mongodb_facade
 {
 public:
-    mongodb_wrapper();
-    ~mongodb_wrapper();
+    mongodb_facade();
+    ~mongodb_facade();
 
     void remove(const std::string & alias);
 
@@ -22,7 +22,6 @@ public:
     std::int64_t int_get(const std::string & alias);
 
 private:
-
     mongo::DBClientConnection _conn;
 };
 }

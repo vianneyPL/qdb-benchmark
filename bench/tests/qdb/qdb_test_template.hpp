@@ -2,7 +2,7 @@
 
 #include <bench/tests/test_template.hpp>
 #include <bench/tests/qdb/node_status.hpp>
-#include <bench/tests/qdb/qdb_wrapper.hpp>
+#include <bench/tests/qdb/quasardb_facade.hpp>
 #include <utils/random.hpp>
 #include <utils/unique_alias.hpp>
 
@@ -46,7 +46,7 @@ public:
     }
 
 protected:
-    utils::qdb_wrapper _qdb;
+    utils::quasardb_facade _qdb;
 
     const std::string & alias(unsigned long iteration) const
     {
