@@ -21,6 +21,11 @@ add_library(bench-tests
     qdb/qdb_test_template.hpp
     qdb/stream/write.hpp
     qdb/tag/add_blob.hpp
+    mongodb/blob/put.hpp
+    mongodb/blob/get.hpp
+    mongodb/blob/update.hpp
+    mongodb/integer/add.hpp
+    mongodb/mongodb_test_template.hpp
     std/atomic.hpp
     std/fread.hpp
     std/fwrite.hpp
@@ -43,8 +48,13 @@ target_link_libraries(bench-tests
 target_include_directories(bench-tests
     PRIVATE 
     ${QDB_API_INCLUDE_DIR}
+    ${MONGOCLIENT_INCLUDE_DIR}
 )
 
 target_link_libraries(bench-tests
     ${QDB_API}
+    ${MONGOCLIENT}
+    ${BOOST_SYSTEM}
+    ${BOOST_THREAD}
+    ${BOOST_REGEX}
 )

@@ -22,6 +22,10 @@
 #include <bench/tests/qdb/integer/update.hpp>
 #include <bench/tests/qdb/stream/write.hpp>
 #include <bench/tests/qdb/tag/add_blob.hpp>
+#include <bench/tests/mongodb/integer/add.hpp>
+#include <bench/tests/mongodb/blob/put.hpp>
+#include <bench/tests/mongodb/blob/get.hpp>
+#include <bench/tests/mongodb/blob/update.hpp>
 #include <bench/tests/std/atomic.hpp>
 #include <bench/tests/std/fread.hpp>
 #include <bench/tests/std/fwrite.hpp>
@@ -55,6 +59,10 @@ bench::test_class_collection bench::tests::get_all_tests()
       new qdb::integer::update::test_class(),
       new qdb::stream::write::test_class(),
       // new qdb::tag_add_blob::test_class(),
+      new mongodb::integer::add::test_class(),
+      new mongodb::blob::put::test_class(),
+      new mongodb::blob::get::test_class(),
+      new mongodb::blob::update::test_class(),
       new std_::atomic::test_class(),
       new std_::fread::test_class(),
       new std_::fwrite::test_class(),
