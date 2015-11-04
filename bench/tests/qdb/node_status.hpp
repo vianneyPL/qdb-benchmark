@@ -71,7 +71,7 @@ private:
     rapidjson::Document get_node_status(const std::string & node_uri) const
     {
         rapidjson::Document doc;
-        utils::qdb_buffer json = _qdb.node_status(node_uri);
+        qdb_buffer json = _qdb.node_status(node_uri);
         doc.Parse(static_cast<const char *>(json.data()));
         return doc;
     }
@@ -79,7 +79,7 @@ private:
     rapidjson::Document get_node_topology(const std::string & node_uri) const
     {
         rapidjson::Document doc;
-        utils::qdb_buffer json = _qdb.node_topology(node_uri);
+        qdb_buffer json = _qdb.node_topology(node_uri);
         doc.Parse(static_cast<const char *>(json.data()));
         return doc;
     }
@@ -109,7 +109,7 @@ private:
     }
 
     std::string _cluster_uri;
-    utils::quasardb_facade _qdb;
+    quasardb_facade _qdb;
     std::vector<std::string> _node_uris;
 };
 

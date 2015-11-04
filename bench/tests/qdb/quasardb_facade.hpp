@@ -7,7 +7,11 @@
 #include <stdexcept>
 #include <cstdint>
 
-namespace utils
+namespace bench
+{
+namespace tests
+{
+namespace qdb
 {
 class qdb_buffer
 {
@@ -104,4 +108,7 @@ public:
 private:
     qdb_handle_t _handle;
 };
-}
+
+} // namespace qdb
+} // namespace tests
+} // namespace bench

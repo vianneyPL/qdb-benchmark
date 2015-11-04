@@ -25,7 +25,7 @@ public:
     }
 
 protected:
-    utils::mongodb_facade _mongodb;
+    mongodb_facade _mongodb;
 
     const std::string & alias(unsigned long iteration) const
     {

@@ -2,7 +2,11 @@
 
 #include <mongo/client/dbclient.h>
 
-namespace utils
+namespace bench
+{
+namespace tests
+{
+namespace mongodb
 {
 class mongodb_facade
 {
@@ -24,4 +28,7 @@ public:
 private:
     mongo::DBClientConnection _conn;
 };
-}
+
+} // namespace mongodb
+} // namespace tests
+} // namespace bench

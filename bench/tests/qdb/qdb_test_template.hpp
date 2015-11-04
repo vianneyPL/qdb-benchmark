@@ -46,7 +46,7 @@ public:
     }
 
 protected:
-    utils::quasardb_facade _qdb;
+    quasardb_facade _qdb;
 
     const std::string & alias(unsigned long iteration) const
     {
