@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bench/tests/std/file_exception.hpp>
+#include <utils/random.hpp>
 
 #include <cstdio>
 #include <string>

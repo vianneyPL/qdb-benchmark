@@ -51,6 +51,6 @@ private:
     std::string _content;
 };
 } // namespace blob
-} // namespace qdb
+} // namespace mongodb
 } // namespace tests
 } // namespace bench

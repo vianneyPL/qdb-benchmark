@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bench/core/probe.hpp>
-#include <utils/qdb_wrapper.hpp>
+#include <bench/tests/qdb/qdb_wrapper.hpp>
 #include <rapidjson/document.h>
 
 #include <algorithm>

@@ -1,9 +1,9 @@
 #pragma once
 
+#include <bench/tests/mongodb/mongodb_wrapper.hpp>
 #include <bench/tests/test_template.hpp>
 #include <utils/random.hpp>
 #include <utils/unique_alias.hpp>
-#include <utils/mongodb_wrapper.hpp>
 
 namespace bench
 {
@@ -16,8 +16,7 @@ template <typename Derived>
 class mongodb_test_template : public test_template<Derived>
 {
 public:
-    mongodb_test_template(test_config config)
-        : test_template<Derived>(config)
+    mongodb_test_template(test_config config) : test_template<Derived>(config)
     {
     }
 

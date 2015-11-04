@@ -16,7 +16,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR} ${QDB_API_INCLUDE_DIR} ${MONGOCLIENT_INCLUDE_DIR} ${BOOST_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/thirdparty)
+include_directories(${CMAKE_SOURCE_DIR})
 add_subdirectory(bench/app)
 add_subdirectory(bench/core)
 add_subdirectory(bench/framework)
@@ -43,7 +43,7 @@ target_link_libraries(qdb-benchmark
 add_test(help qdb-benchmark --help)
 add_test(run qdb-benchmark --tests qdb_stream_write -d 30 --sizes 1M)
 
-if(WIN32)
+if(EXISTS ${QDB_API_DLL})
     add_custom_command(TARGET qdb-benchmark POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different 
         ${QDB_API_DLL}
@@ -59,8 +59,14 @@ install(TARGETS qdb-benchmark
     ARCHIVE DESTINATION lib
 )
 
-if(WIN32)
+if(EXISTS ${QDB_API_DLL})
     install(FILES ${QDB_API_DLL} DESTINATION bin)
-else()
-    install(FILES ${QDB_API} ${MONGOCLIENT} DESTINATION lib)
+endif()
+
+if(EXISTS ${QDB_API})
+    install(FILES ${QDB_API} DESTINATION lib)
+endif()
+
+if(EXISTS ${MONGOCLIENT})
+    install(FILES ${MONGOCLIENT} DESTINATION lib)
 endif()

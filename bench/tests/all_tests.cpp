@@ -2,6 +2,12 @@
 #include <bench/tests/dummy/cleanup_fail.hpp>
 #include <bench/tests/dummy/setup_fail.hpp>
 #include <bench/tests/dummy/test_fail.hpp>
+#include <bench/tests/std/atomic.hpp>
+#include <bench/tests/std/fread.hpp>
+#include <bench/tests/std/fwrite.hpp>
+#include <bench/tests/std/mutex.hpp>
+
+#if BENCHMARK_QUASARDB
 #include <bench/tests/qdb/blob/add_tag.hpp>
 #include <bench/tests/qdb/blob/get.hpp>
 #include <bench/tests/qdb/blob/get_noalloc.hpp>
@@ -22,14 +28,14 @@
 #include <bench/tests/qdb/integer/update.hpp>
 #include <bench/tests/qdb/stream/write.hpp>
 #include <bench/tests/qdb/tag/add_blob.hpp>
+#endif
+
+#if BENCHMARK_MONGODB
 #include <bench/tests/mongodb/integer/add.hpp>
 #include <bench/tests/mongodb/blob/put.hpp>
 #include <bench/tests/mongodb/blob/get.hpp>
 #include <bench/tests/mongodb/blob/update.hpp>
-#include <bench/tests/std/atomic.hpp>
-#include <bench/tests/std/fread.hpp>
-#include <bench/tests/std/fwrite.hpp>
-#include <bench/tests/std/mutex.hpp>
+#endif
 
 bench::test_class_collection bench::tests::get_all_tests()
 {
@@ -39,6 +45,8 @@ bench::test_class_collection bench::tests::get_all_tests()
       // new dummy::setup_fail::test_class(),
       // new dummy::test_fail::test_class(),
       // new dummy::cleanup_fail::test_class(),
+
+      #if BENCHMARK_QUASARDB
       new qdb::blob::add_tag::test_class(),
       new qdb::blob::get::test_class(),
       new qdb::blob::get_noalloc::test_class(),
@@ -59,10 +67,15 @@ bench::test_class_collection bench::tests::get_all_tests()
       new qdb::integer::update::test_class(),
       new qdb::stream::write::test_class(),
       // new qdb::tag_add_blob::test_class(),
+      #endif
+
+      #if BENCHMARK_MONGODB
       new mongodb::integer::add::test_class(),
       new mongodb::blob::put::test_class(),
       new mongodb::blob::get::test_class(),
       new mongodb::blob::update::test_class(),
+      #endif
+      
       new std_::atomic::test_class(),
       new std_::fread::test_class(),
       new std_::fwrite::test_class(),

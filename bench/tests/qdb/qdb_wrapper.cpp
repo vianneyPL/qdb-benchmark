@@ -1,4 +1,4 @@
-#include <utils/qdb_wrapper.hpp>
+#include <bench/tests/qdb/qdb_wrapper.hpp>
 
 #include <qdb/blob.h>
 #include <qdb/deque.h>

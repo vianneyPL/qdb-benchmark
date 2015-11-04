@@ -1,8 +1,4 @@
 add_library(utils
-    qdb_wrapper.cpp
-    qdb_wrapper.hpp
-    mongodb_wrapper.cpp
-    mongodb_wrapper.hpp
     command_line.hpp
     memory.hpp
     random.cpp

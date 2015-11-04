@@ -2,7 +2,7 @@
 
 #include <bench/tests/test_template.hpp>
 #include <bench/tests/qdb/node_status.hpp>
-#include <utils/qdb_wrapper.hpp>
+#include <bench/tests/qdb/qdb_wrapper.hpp>
 #include <utils/random.hpp>
 #include <utils/unique_alias.hpp>
 
