@@ -71,6 +71,7 @@ if(IS_DIRECTORY ${MONGOCLIENT_INCLUDE_DIR})
         mongodb/blob/update.hpp
         mongodb/integer/add.hpp
         mongodb/mongodb_test_template.hpp
+        mongodb/mongodb_facade.cpp
         mongodb/mongodb_facade.hpp
     )
 
