@@ -6,3 +6,6 @@
 
 # OS X
 .DS_Store
+
+# SublimeText
+sftp-config.json
