@@ -1,12 +1,6 @@
 # CMake out of source build folder
 /build*/
 
-# quasardb binary files
-/qdb/
-
-# mongodb binary files
-/mongodb/
-
 # Useful during development
 /html_report/*.jsonp
 

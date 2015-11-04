@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.2)
 project(qdb-benchmark)
 enable_testing()
-include(qdb_api.cmake)
-include(mongoclient.cmake)
-include(boost.cmake)
+include(thirdparty/quasardb/quasardb.cmake)
+include(thirdparty/mongodb/mongodb.cmake)
 
 set(CMAKE_CXX_STANDARD 11)
 
