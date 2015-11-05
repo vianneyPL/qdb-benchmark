@@ -57,7 +57,7 @@ if(IS_DIRECTORY ${QDB_API_INCLUDE_DIR})
         ${QDB_API}
     )
 else()
-    message(STATUS "quasardb client API not found, tests will not be build")
+    message(STATUS "Not building quasardb tests")
 endif()
 
 if(IS_DIRECTORY ${MONGOCLIENT_INCLUDE_DIR})
@@ -77,16 +77,17 @@ if(IS_DIRECTORY ${MONGOCLIENT_INCLUDE_DIR})
 
     list(APPEND INCLUDES
         ${MONGOCLIENT_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
     )
 
     list(APPEND LIBRARIES
         ${MONGOCLIENT}
-        ${BOOST_SYSTEM}
-        ${BOOST_THREAD}
-        ${BOOST_REGEX}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_THREAD_LIBRARY}
+        ${Boost_REGEX_LIBRARY}
     )
 else()
-    message(STATUS "mongodb client API not found, tests will not be build")
+    message(STATUS "Not building mongodb tests")
 endif()
 
 add_library(bench-tests ${FILES})
