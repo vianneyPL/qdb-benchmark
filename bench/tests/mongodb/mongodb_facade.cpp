@@ -23,12 +23,15 @@ using namespace bench::tests::mongodb;
 
 mongodb_facade::mongodb_facade()
 {
-    // :TODO: make runtime configurable
-    _conn.connect("localhost");
 }
 
 mongodb_facade::~mongodb_facade()
 {
+}
+
+void
+mongodb_facade::connect(const std::string & cluster_uri) {
+    _conn.connect(cluster_uri);    
 }
 
 void mongodb_facade::remove(const std::string & alias)

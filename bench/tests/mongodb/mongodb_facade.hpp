@@ -14,6 +14,8 @@ public:
     mongodb_facade();
     ~mongodb_facade();
 
+    void connect(const std::string & cluster_uri);
+
     void remove(const std::string & alias);
 
     void blob_put(const std::string & alias, const std::string & content);

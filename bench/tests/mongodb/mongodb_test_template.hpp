@@ -16,12 +16,13 @@ template <typename Derived>
 class mongodb_test_template : public test_template<Derived>
 {
 public:
-    mongodb_test_template(test_config config) : test_template<Derived>(config)
+    mongodb_test_template(test_config config) : test_template<Derived>(config), _cluster_uri(config.cluster_uri)
     {
     }
 
     void setup() override
     {
+        _mongodb.connect(_cluster_uri);
     }
 
 protected:
@@ -34,6 +35,7 @@ protected:
     }
 
 private:
+    std::string _cluster_uri;
     mutable utils::unique_alias _alias;
 };
 
