@@ -42,12 +42,6 @@ public:
         for (auto node : _node_uris) {
             auto node_status = mongodb_facade::node_status(node);
 
-            // This is a check that the node is not using mmap(), but
-            // rather the WiredTiger storage engine.
-            if (node_status["server"]["storageEngine"]["name"].String() != "wiredTiger") {
-                throw std::runtime_error("Benchmark requires mongodb's WiredTiger storage engine, not mmap()");
-            }
-
             vm_used.push_back(node_status::mb_to_bytes(node_status["server"]["mem"]["virtual"].Int()));
             resident_size.push_back(node_status::mb_to_bytes(node_status["server"]["mem"]["resident"].Int()));
             
