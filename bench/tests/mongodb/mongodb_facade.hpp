@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include <mongo/client/dbclient.h>
 
 namespace bench
@@ -15,6 +18,8 @@ public:
     ~mongodb_facade();
 
     void connect(const std::string & cluster_uri);
+    static mongo::BSONObj node_status(const std::string & node_uri);
+    static std::vector<std::string> resolve_topology(const std::string & node_uri);    
 
     void remove(const std::string & alias);
 
