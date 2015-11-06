@@ -4,7 +4,7 @@
 #include <bench/tests/qdb/node_status.hpp>
 #include <bench/tests/qdb/quasardb_facade.hpp>
 #include <utils/random.hpp>
-#include <utils/unique_alias.hpp>
+#include <utils/unique_alias_provider.hpp>
 
 namespace bench
 {
@@ -25,7 +25,7 @@ void set_watermark(std::string & str, unsigned long iteration)
 }
 
 template <typename Derived>
-class qdb_test_template : public test_template<Derived>
+class qdb_test_template : public test_template<Derived>, protected utils::unique_alias_provider
 {
 public:
     qdb_test_template(test_config config)
@@ -48,15 +48,8 @@ public:
 protected:
     quasardb_facade _qdb;
 
-    const std::string & alias(unsigned long iteration) const
-    {
-        _alias.set_watermark(iteration);
-        return _alias;
-    }
-
 private:
     std::string _cluster_uri;
-    mutable utils::unique_alias _alias;
 };
 
 } // namespace qdb

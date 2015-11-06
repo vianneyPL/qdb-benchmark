@@ -7,4 +7,5 @@ add_library(utils
     teamcity.hpp
     unique_alias.cpp
     unique_alias.hpp
+    unique_alias_provider.hpp
 )
