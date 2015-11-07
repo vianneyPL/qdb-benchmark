@@ -49,8 +49,8 @@ public:
 
         result["vm_used"].push_back({now, vm_used});
         result["resident_size"].push_back({now, resident_size});
-        result["storage_size"].push_back({now, storage_size});
-        result["objects"].push_back({now, objects});
+        result["server_storage_size"].push_back({now, storage_size});
+        result["server_objects"].push_back({now, objects});
     }
 
     void cleanup() override

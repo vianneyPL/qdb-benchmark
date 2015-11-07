@@ -34,8 +34,8 @@ public:
         storage_size.push_back(static_cast<std::int64_t>(db_status["storageSize"].Int()));
         objects.push_back(db_status["objects"].Int());
 
-        result["storage_size"].push_back({now, storage_size});
-        result["objects"].push_back({now, objects});
+        result["db_storage_size"].push_back({now, storage_size});
+        result["db_objects"].push_back({now, objects});
     }
 
     void cleanup() override
