@@ -1,7 +1,8 @@
 #pragma once
 
 #include <bench/tests/mongodb/mongodb_facade.hpp>
-#include <bench/tests/mongodb/node_status.hpp>
+#include <bench/tests/mongodb/server_probe.hpp>
+#include <bench/tests/mongodb/db_probe.hpp>
 #include <bench/tests/test_template.hpp>
 #include <utils/random.hpp>
 #include <utils/unique_alias_provider.hpp>
@@ -30,7 +31,8 @@ public:
     static probe_collection create_probes(test_config cfg)
     {
         probe_collection probes;
-        probes.emplace_back(new node_status(cfg.cluster_uri));
+        probes.emplace_back(new server_probe(cfg.cluster_uri));
+        probes.emplace_back(new db_probe(cfg.cluster_uri));
         return probes;
     }
 

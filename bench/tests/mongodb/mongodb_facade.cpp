@@ -35,7 +35,7 @@ mongodb_facade::connect(const std::string & cluster_uri) {
     _conn.connect(cluster_uri);    
 }
 
-/* static */ mongo::BSONObj mongodb_facade::node_status(const std::string & node_uri) {
+/* static */ mongo::BSONObj mongodb_facade::server_status(const std::string & node_uri) {
     mongo::DBClientConnection conn;
     conn.connect(node_uri);
 
@@ -45,13 +45,21 @@ mongodb_facade::connect(const std::string & cluster_uri) {
         throw std::runtime_error("node_status: serverStatus");
     }
 
+    return BSON("server" << serverStatus << "db" << mongodb_facade::db_status(node_uri));
+}
+
+/* static */ mongo::BSONObj mongodb_facade::db_status(const std::string & node_uri) {
+    mongo::DBClientConnection conn;
+    conn.connect(node_uri);
+
     mongo::BSONObj dbStats;
     if (!conn.runCommand("bench", BSON("dbStats" << 1), dbStats)) {
         throw std::runtime_error("node_status: dbStats");
     }
 
-    return BSON("server" << serverStatus << "db" << dbStats);
+    return dbStats;    
 }
+
 
 /* static */ std::vector<std::string> mongodb_facade::resolve_topology(const std::string & node_uri) {
     mongo::DBClientConnection conn;
