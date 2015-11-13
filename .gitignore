@@ -8,4 +8,4 @@
 .DS_Store
 
 # SublimeText
-sftp-config.json
+sftp-config*.json

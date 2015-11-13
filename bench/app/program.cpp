@@ -45,13 +45,17 @@ void bench::app::program::prepare_schedule()
 
 void bench::app::program::run_scheduled_tests()
 {
+    bench::framework::test_runner runner(_logger);
+#if BENCHMARK_SNMP
+    runner.set_snmp_peers(_settings.snmp_peers);
+#endif
+
     for (auto & test : _schedule)
     {
-        bench::framework::run_test(test, _logger);
+        runner.run(test);
+        _report.add_test(test);
 
         _logger.pause(_settings.pause);
         std::this_thread::sleep_for(_settings.pause);
-
-        _report.add_test(test);
     }
 }

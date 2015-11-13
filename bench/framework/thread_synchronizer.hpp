@@ -15,8 +15,15 @@ class thread_synchronizer
 public:
     typedef void (Thread::*action_type)(void);
 
-    thread_synchronizer(int worker_count) : _cycle(0), _workers(worker_count), _ready_workers(0)
+    thread_synchronizer() : _cycle(0), _workers(0), _ready_workers(0)
     {
+    }
+
+    void reset(int worker_count)
+    {
+        _cycle = 0;
+        _workers = worker_count;
+        _ready_workers = 0;
     }
 
     void send_order(action_type order)

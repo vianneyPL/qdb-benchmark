@@ -7,10 +7,10 @@ namespace bench
 {
 namespace framework
 {
-class test_iteration_probe : public probe
+class counter_probe : public probe
 {
 public:
-    test_iteration_probe(const test_thread_collection & thread) : _threads(thread)
+    counter_probe(const test_thread_collection & thread) : _threads(thread)
     {
     }
 

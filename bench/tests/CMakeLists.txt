@@ -13,7 +13,7 @@ set(FLAGS
 )
 
 set(INCLUDES)
-set(LIBRARIES bench-framework)
+set(LIBRARIES)
 
 
 if(IS_DIRECTORY ${QDB_API_INCLUDE_DIR})

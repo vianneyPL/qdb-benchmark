@@ -11,15 +11,19 @@ static std::vector<size_t> parse_size(const std::string & s)
     switch (s.back())
     {
     case 'K':
-    case 'k': return {size_t(std::stoi(s) << 10)};
+    case 'k':
+        return {size_t(std::stoi(s) << 10)};
 
     case 'M':
-    case 'm': return {size_t(std::stoi(s) << 20)};
+    case 'm':
+        return {size_t(std::stoi(s) << 20)};
 
     case 'G':
-    case 'g': return {size_t(std::stoi(s) << 30)};
+    case 'g':
+        return {size_t(std::stoi(s) << 30)};
 
-    default: return {size_t(std::stoi(s))};
+    default:
+        return {size_t(std::stoi(s))};
     }
 }
 
@@ -83,10 +87,13 @@ void bench::app::command_line::parse(int argc, const char ** argv)
         parser.get_integer("-p", "--pause", "Set the delay between each test, in seconds", "1"));
     _settings.duration = std::chrono::seconds(
         parser.get_integer("-d", "--duration", "Set the duration of each test, in seconds", "4"));
-    _settings.thread_counts =
-        parser.get_integers("", "--threads", "Set number of threads", "1,2,4");
     _settings.content_sizes =
         parser.get_values<std::size_t>("", "--sizes", "Set contents sizes", "1,1K,1M", parse_size);
+#if BENCHMARK_SNMP
+    _settings.snmp_peers = parser.get_strings("", "--snmp", "Set SNMP peer names", "");
+#endif
+    _settings.thread_counts =
+        parser.get_integers("", "--threads", "Set number of threads", "1,2,4");
     _settings.tests = parser.get_values<const test_class *>(
         "", "--tests", "Select the tests to run (default=all)", "", [this](const std::string & name)
         {

@@ -3,10 +3,13 @@ if(WIN32)
         qdb_api.dll
         HINTS ${CMAKE_CURRENT_LIST_DIR}/bin
     )
-endif()
 
-if(EXISTS ${QDB_API_DLL})
-    message(STATUS "Found qdb_api.dll: ${QDB_API_DLL}")
+    if(EXISTS ${QDB_API_DLL})
+        message(STATUS "Found qdb_api.dll: ${QDB_API_DLL}")
+    else()
+        message(STATUS "Could NOT find qdb_api.dll")
+        return()
+    endif()
 endif()
 
 find_library(QDB_API

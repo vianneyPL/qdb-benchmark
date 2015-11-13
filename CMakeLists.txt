@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.2)
 project(qdb-benchmark)
 enable_testing()
+find_package(Threads)
 include(thirdparty/quasardb/quasardb.cmake)
 include(thirdparty/mongodb/mongodb.cmake)
+include(thirdparty/netsnmp/netsnmp.cmake)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -23,6 +25,10 @@ add_subdirectory(bench/log)
 add_subdirectory(bench/tests)
 add_subdirectory(utils)
 
+if (${NETSNMP_FOUND})
+    add_subdirectory(snmp)
+endif()
+
 add_executable(qdb-benchmark
     main.cpp
 )
@@ -40,7 +46,6 @@ target_link_libraries(qdb-benchmark
 )
 
 add_test(help qdb-benchmark --help)
-add_test(run qdb-benchmark --tests qdb_stream_write -d 30 --sizes 1M)
 
 if(EXISTS ${QDB_API_DLL})
     add_custom_command(TARGET qdb-benchmark POST_BUILD
@@ -62,10 +67,10 @@ if(EXISTS ${QDB_API_DLL})
     install(FILES ${QDB_API_DLL} DESTINATION bin)
 endif()
 
-if(EXISTS ${QDB_API})
-    install(FILES ${QDB_API} DESTINATION lib)
+if(EXISTS ${NETSNMP_DLL})
+    install(FILES ${NETSNMP_DLL} DESTINATION bin)
 endif()
 
-if(EXISTS ${MONGOCLIENT})
-    install(FILES ${MONGOCLIENT} DESTINATION lib)
+if(EXISTS ${QDB_API})
+    install(FILES ${QDB_API} DESTINATION lib)
 endif()

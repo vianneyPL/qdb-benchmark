@@ -5,7 +5,6 @@ BasedOnStyle: LLVM
 AccessModifierOffset: -4
 AlignEscapedNewlinesLeft: true
 AllowShortBlocksOnASingleLine: false
-AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: false

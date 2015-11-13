@@ -100,5 +100,20 @@ var lineSeries = [
         "name": "Resident count",
         "unit": unit.none,
         "lines": makeLineFunction("resident_count")
-    }
+    },
+    {
+        "name": "SNMP: Physical memory",
+        "unit": unit.byte,
+        "lines": makeLineFunction("snmp.physical_memory")
+    },
+    {
+        "name": "SNMP: Fixed disks",
+        "unit": unit.byte,
+        "lines": makeLineFunction("snmp.fixed_disks")
+    } ,
+    {
+        "name": "SNMP: Swap space",
+        "unit": unit.byte,
+        "lines": makeLineFunction("snmp.swap_space")
+    }    
 ];

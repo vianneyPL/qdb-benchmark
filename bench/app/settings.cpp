@@ -6,15 +6,19 @@ static size_t parse_size(const std::string & s)
     switch (s.back())
     {
     case 'K':
-    case 'k': return std::stoi(s) << 10;
+    case 'k':
+        return std::stoi(s) << 10;
 
     case 'M':
-    case 'm': return std::stoi(s) << 20;
+    case 'm':
+        return std::stoi(s) << 20;
 
     case 'G':
-    case 'g': return std::stoi(s) << 30;
+    case 'g':
+        return std::stoi(s) << 30;
 
-    default: return std::stoi(s);
+    default:
+        return std::stoi(s);
     }
 }
 
@@ -31,14 +35,14 @@ bench::app::settings bench::app::parse_command_line(int argc, const char ** argv
         cmd_line.get_integer("-p", "--pause", "Set the delay between each test, in seconds", "2"));
     s.duration = std::chrono::seconds(
         cmd_line.get_integer("-d", "--duration", "Set the duration of each test, in seconds", "2"));
+    s.snmp_peers = cmd_line.get_strings("-s", "--snmp", "Set SNMP peers");
     s.thread_counts =
         cmd_line.get_integers("", "--threads", "Set number of threads", "1,2,4,8,16,32");
     s.content_sizes = cmd_line.get_values<std::size_t>("", "--sizes", "Set contents sizes",
                                                        "1,10,100,1K,10K,100K,1M,10M", parse_size);
     s.tests = cmd_line.get_strings("", "--tests", "Select the tests to run (default=all)");
 
-    if (version)
-        std::exit(0);
+    if (version) std::exit(0);
     if (help)
     {
         show_help();
@@ -50,8 +54,7 @@ bench::app::settings bench::app::parse_command_line(int argc, const char ** argv
 
 bool bench::app::program::should_run_test(std::string id) const
 {
-    if (_settings.tests.empty())
-        return true;
+    if (_settings.tests.empty()) return true;
 
     return std::find(_settings.tests.begin(), _settings.tests.end(), id) != _settings.tests.end();
 }
@@ -64,8 +67,7 @@ void bench::app::program::prepare_schedule()
 
     for (auto & test_class : _test_pool)
     {
-        if (!should_run_test(test_class->id))
-            continue;
+        if (!should_run_test(test_class->id)) continue;
 
         for (int thread_count : _settings.thread_counts)
         {
