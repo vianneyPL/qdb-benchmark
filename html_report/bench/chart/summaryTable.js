@@ -5,6 +5,16 @@ bench.chart.overview = function() {
     var dispatch = d3.dispatch("checked");
 
     function chart(container) {
+        var scalars = {};
+
+        data.forEach(function(tests) {
+            tests.forEach(function(test) {
+                for (var key in test.scalars) {
+                    scalars[key] = test.scalars[key].name;
+                }
+            });
+        });
+
         var table = container.append("table");
 
         var head = table.append("thead").append("tr");
@@ -22,9 +32,9 @@ bench.chart.overview = function() {
                 });
             });
         head.append("th").text("Test");
-        bench.series.overview.forEach(function(serie) {
+        d3.values(scalars).forEach(function(name) {
             head.append("th")
-                .text(serie.name);
+                .text(name);
         });
 
         var tbody = table.append("tbody");
@@ -46,11 +56,13 @@ bench.chart.overview = function() {
 
                 row.append("td").append("label").text(tests[0].name);
 
-                 bench.series.overview.forEach(function(serie) {
-                    var value = serie.value(tests);
-                    var text = isNaN(value) ? "N/A" : serie.unit(value);
+                d3.keys(scalars).forEach(function(key){
+                    var value = d3.max(tests, function(d) {
+                        return d.scalars[key].value;
+                    });
+                    var text = isNaN(value) ? "N/A" : bench.units[tests[0].scalars[key].unit](value);
                     row.append("td").text(text);
-                 });
+                });
             });
     }
 

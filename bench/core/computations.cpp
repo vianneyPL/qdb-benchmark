@@ -10,7 +10,7 @@ static double sum_values(const bench::sample & sample)
 
 double bench::compute_average_frequency(const bench::test_instance & test)
 {
-    const sample & last_sample = test.result.at("iterations").back();
+    const sample & last_sample = test.result.at("test.iterations").samples.back();
 
     auto iterations = sum_values(last_sample);
 
@@ -28,6 +28,5 @@ double bench::compute_average_throughput(const bench::test_instance & test)
 
 long long bench::compute_iteration_count(const bench::test_instance & test)
 {
-    auto & serie = test.result.at("iterations");
-    return (long long)sum_values(serie.back());
+    return (long long)sum_values(test.result.at("test.iterations").samples.back());
 }

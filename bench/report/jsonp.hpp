@@ -37,17 +37,35 @@ public:
             _file << ",\"error\":\"" << test.error << "\"";
         }
 
-        for (auto & kvp : test.result)
-        {
-            _file << ",\"" << kvp.first << "\":";
-            write_time_series(kvp.second, test.start_time);
-        }
-
+        _file << ",\"series\":";
+        write_time_series(test.result, test.start_time);
         _file << "});" << std::endl;
     }
 
 private:
-    void write_time_series(const time_series & samples, time_point start_time)
+    void write_time_series(const time_series_collection & series, time_point start_time)
+    {
+        _file << "{";
+
+        bool need_comma = false;
+        for (auto & serie : series)
+        {
+            if (need_comma) _file << ",";
+
+            _file << "\"" << serie.first << "\":{"
+                  << "\"name\":\"" << serie.second.name << "\","
+                  << "\"unit\":\"" << unit_name(serie.second.unit) << "\","
+                  << "\"samples\":";
+
+            write_samples(serie.second.samples, start_time);
+
+            _file << "}";
+            need_comma = true;
+        }
+        _file << "}";
+    }
+
+    void write_samples(const std::vector<bench::sample> & samples, time_point start_time)
     {
         _file << "[";
 
@@ -73,6 +91,21 @@ private:
     {
         duration elapsed = to - from;
         return std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
+    }
+
+    static const char * unit_name(bench::unit unit)
+    {
+        switch (unit)
+        {
+        case bench::unit::none:
+            return "none";
+        case bench::unit::bytes:
+            return "bytes";
+        case bench::unit::bytes_per_second:
+            return "bytes/second";
+        default:
+            return "undefined";
+        }
     }
 
     std::ofstream _file;

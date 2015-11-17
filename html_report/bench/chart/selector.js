@@ -1,3 +1,4 @@
+if (typeof bench == "undefined") bench = {};
 if (!bench.chart) bench.chart = {};
 
 bench.chart.selector = function(data) {
@@ -33,15 +34,12 @@ bench.chart.selector = function(data) {
                 dispatch.select(selectedSeries);
             });
 
-        var options = select.selectAll("option")
+        select.selectAll("option")
             .data(data)
             .enter()
-            .append("option");
-        var v = 0;
-        options.text(function (d) {
-            return d.name;
-        })
-            .attr("value", function (d) { return v++; });
+            .append("option")
+                .text(function (d) {return d;})
+                .attr("value", function (d,idx) { return idx; });
     }
 
     chart.text = function(value, key) {
@@ -50,8 +48,9 @@ bench.chart.selector = function(data) {
         return chart;
     }
 
-    chart.selected = function() {
-        selectedSeries = selectedSeries % data.length;
+    chart.selected = function(value) {
+        if (value === undefined) value = selectedSeries;      
+        selectedSeries = value % data.length;
         return selectedSeries;
     }
 

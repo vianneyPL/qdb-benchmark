@@ -1,20 +1,22 @@
 if (!bench.chart) bench.chart = {};
 
-bench.chart.horizontal = function() {
+bench.chart.horizontalBarChart = function() {
     var width = 600;
     var height = 600;
     var padding = 70;
     var dispatch = d3.dispatch("select");
     var data;
-    var svg, graph, header;
-    var testSeries = d3.values(bench.series.tests);
+    var svg, graph, selector;
 
     function chart(container) {
 
-        header = bench.chart
-            .selector(testSeries)
+        var names = d3.values(data[0].scalars).map(function(d){return d.name;});
+
+        selector = bench.chart
+            .selector(names)
             .on("select", function(idx) { update(); });
-        header(container);
+        selector(container);
+        selector.selected(d3.keys(data[0].scalars).indexOf("test.iterations"));
 
         svg = container
             .append("svg")
@@ -40,15 +42,20 @@ bench.chart.horizontal = function() {
     }
 
     function update() {
-        var serie = testSeries[header.selected()];
-        header.text(header.selected(), serie.name);
+        var key = d3.keys(data[0].scalars)[selector.selected()];
+        var unit = bench.units[data[0].scalars[key].unit]
+        selector.text(selector.selected(), data[0].scalars[key].name);
+
+        var getValue = function (test) {
+            return test.scalars[key].value;
+        }
 
         var threadsScale = d3.scale.ordinal()
-            .domain(bench.getThreadCounts(data))
+            .domain(bench.computations.getThreadCounts(data))
             .rangeBands([padding,height-padding], 0.5);
 
         var valueScale = d3.scale.linear()
-            .domain(bench.getValueExtent(data, serie))
+            .domain(d3.extent(data, getValue))
             .range([padding,width-padding]);
 
         var bars = graph
@@ -73,7 +80,7 @@ bench.chart.horizontal = function() {
         bars
             .transition()
             .attr("width", function(d) {
-                return valueScale(serie.value(d))
+                return valueScale(getValue(d))
             });
 
         var labels = graph
@@ -91,9 +98,9 @@ bench.chart.horizontal = function() {
             });
 
         labels
-            .text(function(d) { return serie.unit(serie.value(d)); })
+            .text(function(d) { return unit(getValue(d)); })
             .transition()
-            .attr("x", function(d) {return valueScale(serie.value(d)) - 10})
+            .attr("x", function(d) {return valueScale(getValue(d)) - 10})
 
         var threadsAxis = d3.svg.axis().scale(threadsScale).orient("left").tickFormat(function(d) { return d + "t"; });
         svg.selectAll(".left-axis").call(threadsAxis);

@@ -25,20 +25,28 @@ public:
         {
             peer.connect();
         }
+
+        // clang-format off
+        define_measurement<snmp::sys_info::physical_memory>("snmp.physical_memory", "SNMP: Physical Memory", unit::bytes);
+        define_measurement<snmp::sys_info::virtual_memory> ("snmp.virtual_memory",  "SNMP: Virtual Memory",  unit::bytes);
+        define_measurement<snmp::sys_info::cached_memory>  ("snmp.cached_memory",   "SNMP: Cached Memory",   unit::bytes);
+        define_measurement<snmp::sys_info::swap_space>     ("snmp.swap_space",      "SNMP: Swap Space",      unit::bytes);
+        define_measurement<snmp::sys_info::fixed_disks>    ("snmp.fixed_disks",     "SNMP: Fixed Disks",     unit::bytes);
+        // clang-format on
     }
 
-    void take_sample(time_point now, result_type & result) override
+    void take_sample() override
     {
         for (auto & peer : _peers)
         {
             peer.update();
         }
 
-        take_sample<snmp::sys_info::physical_memory>(now, result, "snmp.physical_memory");
-        take_sample<snmp::sys_info::virtual_memory>(now, result, "snmp.virtual_memory");
-        take_sample<snmp::sys_info::cached_memory>(now, result, "snmp.cached_memory");
-        take_sample<snmp::sys_info::swap_space>(now, result, "snmp.swap_space");
-        take_sample<snmp::sys_info::fixed_disks>(now, result, "snmp.fixed_disks");
+        take_sample<snmp::sys_info::physical_memory>("snmp.physical_memory");
+        take_sample<snmp::sys_info::virtual_memory>("snmp.virtual_memory");
+        take_sample<snmp::sys_info::cached_memory>("snmp.cached_memory");
+        take_sample<snmp::sys_info::swap_space>("snmp.swap_space");
+        take_sample<snmp::sys_info::fixed_disks>("snmp.fixed_disks");
     }
 
     void cleanup() override
@@ -51,21 +59,28 @@ public:
 
 private:
     template <typename InformationType>
-    void take_sample(time_point now, result_type & result, const char * key)
+    void define_measurement(std::string id, std::string name, bench::unit unit)
     {
-        std::vector<std::int64_t> values;
-
         for (auto & peer : _peers)
         {
             if (peer.supports<InformationType>())
             {
-                values.push_back(peer.get<InformationType>());
+                probe::define_measurement(id, name, unit, _peers.size());
             }
         }
+    }
 
-        if (!values.empty())
+    template <typename InformationType>
+    void take_sample(const std::string & id)
+    {
+        std::vector<std::int64_t> values;
+
+        for (std::size_t i = 0; i < _peers.size(); i++)
         {
-            result[key].push_back({now, values});
+            if (_peers[i].supports<InformationType>())
+            {
+                set_measured_value(id, i, _peers[i].get<InformationType>());
+            }
         }
     }
 

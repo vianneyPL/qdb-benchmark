@@ -1,19 +1,4 @@
 var renderTimeout;
-var tests_by_class = {};
-var test_by_id = [];
-
-function addTestResult(test) {
-    test.id = test_by_id.length;
-    test_by_id.push(test);
-
-    if (tests_by_class[test.name] != undefined)
-        tests_by_class[test.name].push(test);
-    else 
-        tests_by_class[test.name] = [test];
-
-    clearTimeout(renderTimeout);
-    renderTimeout = setTimeout(render);
-}
 
 var content = d3.select("#content");
 
@@ -26,34 +11,32 @@ function add_charts_for_test_class(test_name) {
     div.append("h2").text(test_name);
     div.append("p").text(test[0].description);
 
-    var columnCount = bench.getContentSizes(test).length;
-    var rowCount = bench.getThreadCounts(test).length;
+    var columnCount = bench.computations.getContentSizes(test).length;
+    var rowCount = bench.computations.getThreadCounts(test).length;
 
     if (columnCount > 1 || rowCount > 1) {
-        var summaryDiv = div.append("div").classed("summary", true);
-        var summaryChart;
+        var multiTestChart;
 
         if (columnCount == 1) {
-            summaryChart = bench.chart.horizontal();
+            multiTestChart = bench.chart.horizontalBarChart();
         } else if (rowCount == 1) {
-            summaryChart = bench.chart.vertical();
+            multiTestChart = bench.chart.verticalBarChart();
         } else {
-            summaryChart = bench.chart.bubble();
+            multiTestChart = bench.chart.bubbleChart();
         } 
 
-        summaryChart.data(test);     
-        summaryChart(summaryDiv);
-        summaryChart.on("select", function(id){
+        multiTestChart.data(test);     
+        multiTestChart(div.append("div").classed("summary", true));
+        multiTestChart.on("select", function(id){
             console.log("test "+id);   
-            detailChart.data(test_by_id[id]);  
-            detailChart.update();      
+            singleTestChart.data(test_by_id[id]);  
+            singleTestChart.update();      
         });
     }
     
-    var detailDiv = div.append("div").classed("detail", true);
-    var detailChart = bench.chart.lineChart();
-    detailChart.data(test[0]);
-    detailChart(detailDiv);
+    var singleTestChart = bench.chart.lineChart();
+    singleTestChart.data(test[0]);
+    singleTestChart(div.append("div").classed("detail", true));
 }
 
 function render()

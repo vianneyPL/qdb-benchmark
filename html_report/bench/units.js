@@ -1,4 +1,6 @@
-var unit = (function(){
+if (typeof bench == "undefined") bench = {};
+
+bench.units = (function(){
 
     function formatValue(value, div, unit) {
         value = parseFloat(value);
@@ -14,31 +16,31 @@ var unit = (function(){
     }
 
     return {
-        none: function(x) {
+        "none": function(x) {
             return formatValue(x, 1000, "")
         },
 
-        byte: function(x) {
+        "bytes": function(x) {
             return formatValue(x, 1024, "B")
         },
 
-        byte_per_second: function(x) {
+        "bytes/second": function(x) {
             return formatValue(x, 1024, "B/s");
         },
 
-        kilobyte_per_second: function(x) {
+        "kilobytes/second": function(x) {
             return formatValue(x*1000, 1024, "B/s");
         },
 
-        hertz: function(x) {
+        "hertz": function(x) {
             return formatValue(x, 1000, "Hz");
         },
 
-        kilohertz: function(x) {
+        "kilohertz": function(x) {
             return formatValue(x*1000, 1000, "Hz");
         },
 
-        millisecond: function(x) {
+        "millisecond": function(x) {
             return formatValue(x/1000.0, 1000, "s")
         }
     }

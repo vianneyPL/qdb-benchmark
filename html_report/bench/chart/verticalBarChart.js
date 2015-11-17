@@ -1,20 +1,19 @@
 if (!bench.chart) bench.chart = {};
 
-bench.chart.vertical = function() {
+bench.chart.verticalBarChart = function() {
     var width = 600;
     var height = 600;
     var padding = 30;
     var dispatch = d3.dispatch("select");
     var data;
-    var svg, graph, header;
-    var testSeries = d3.values(bench.series.tests);
+    var svg, graph, selector;
 
     function chart(container) {
-        console.log("chart(container)");
-        header = bench.chart
-            .selector(testSeries)
+        selector = bench.chart
+            .selector(d3.values(data[0].scalars).map(function(d){return d.name;}))
             .on("select", function(idx) { update(); });
-        header(container);
+        selector(container);
+        selector.selected(d3.keys(data[0].scalars).indexOf("test.iterations"));
 
         svg = container
             .append("svg")
@@ -39,15 +38,20 @@ bench.chart.vertical = function() {
     }
 
     function update() {
-        var serie = testSeries[header.selected()];
-        header.text(header.selected(), serie.name);
+        var key = d3.keys(data[0].scalars)[selector.selected()];
+        var unit = bench.units[data[0].scalars[key].unit]
+        selector.text(selector.selected(), data[0].scalars[key].name);
+
+        var getValue = function (test) {
+            return test.scalars[key].value;
+        }
 
         var xScale = d3.scale.ordinal()
-            .domain(bench.getContentSizes(data))
+            .domain(bench.computations.getContentSizes(data))
             .rangeBands([padding,width-padding], 0.5);
 
         var valueScale = d3.scale.linear()
-            .domain(bench.getValueExtent(data, serie))
+            .domain(d3.extent(data, getValue))
             .range([padding,width-padding]);
 
         var bars = graph
@@ -68,8 +72,8 @@ bench.chart.vertical = function() {
 
         bars
             .transition()
-            .attr("y", function(d) { return height-padding-valueScale(serie.value(d)); })
-            .attr("height", function(d) { return valueScale(serie.value(d)); });
+            .attr("y", function(d) { return height-padding-valueScale(getValue(d)); })
+            .attr("height", function(d) { return valueScale(getValue(d)); });
 
         var labels = graph
             .selectAll("text")
@@ -77,7 +81,7 @@ bench.chart.vertical = function() {
 
         function labelTranform(d) {
             var x = xScale(d.content_size) + xScale.rangeBand() / 2;
-            var y = height-padding-valueScale(serie.value(d))+15;
+            var y = height-padding-valueScale(getValue(d))+15;
             return "translate("+x+","+y+")rotate(-90)";
         }
 
@@ -93,7 +97,7 @@ bench.chart.vertical = function() {
             });
 
         labels
-            .text(function(d) { return serie.unit(serie.value(d)); })
+            .text(function(d) { return unit(getValue(d)); })
             .transition()
             .attr("transform", labelTranform)
 
@@ -101,7 +105,7 @@ bench.chart.vertical = function() {
             .scale(xScale)
             .orient("bottom")
             .tickFormat(function(content_size) {
-                return unit.byte(content_size);
+                return bench.units.bytes(content_size);
             });
 
         svg.selectAll("g.bottom-axis").call(xAxis);

@@ -46,6 +46,7 @@ target_link_libraries(qdb-benchmark
 )
 
 add_test(help qdb-benchmark --help)
+add_test(help qdb-benchmark --tests std_fwrite --sizes 1M)
 
 if(EXISTS ${QDB_API_DLL})
     add_custom_command(TARGET qdb-benchmark POST_BUILD

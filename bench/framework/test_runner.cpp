@@ -142,6 +142,18 @@ void test_runner::step3_cleanup()
     }
 }
 
+void test_runner::init_test_results()
+{
+    for (bench::probe * probe : _all_probes)
+    {
+        for (auto & m : probe->measurements())
+        {
+            _test->result[m.first].name = m.second.name;
+            _test->result[m.first].unit = m.second.unit;
+        }
+    }
+}
+
 void test_runner::setup_probes()
 {
     for (bench::probe * probe : _all_probes)
@@ -180,7 +192,12 @@ void test_runner::sample_probes()
     {
         try
         {
-            probe->take_sample(now, _test->result);
+            probe->take_sample();
+
+            for (auto & m : probe->measurements())
+            {
+                _test->result[m.first].samples.push_back({now, m.second.value});
+            }
         }
         catch (...)
         {

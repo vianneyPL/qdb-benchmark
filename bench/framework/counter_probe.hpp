@@ -10,23 +10,19 @@ namespace framework
 class counter_probe : public probe
 {
 public:
-    counter_probe(const test_thread_collection & thread) : _threads(thread)
+    counter_probe(const test_thread_collection & threads) : _threads(threads)
     {
+        define_measurement("test.iterations", "Test Loop Iterations", unit::none, threads.size());
     }
 
     void setup() override
     {
     }
 
-    void take_sample(time_point now, result_type & result) override
+    void take_sample() override
     {
-        sample sample;
-        sample.time = now;
-        for (auto & thread : _threads)
-        {
-            sample.values.push_back(thread->iterations());
-        }
-        result["iterations"].emplace_back(sample);
+        for (std::size_t i = 0; i < _threads.size(); i++)
+            set_measured_value("test.iterations", i, _threads[i]->iterations());
     }
 
     void cleanup() override

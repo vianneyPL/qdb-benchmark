@@ -1,31 +1,26 @@
 # http://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 BasedOnStyle: LLVM
-
+ColumnLimit: 120
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+AllowShortIfStatementsOnASingleLine: true
+---
+Language: Cpp
 AccessModifierOffset: -4
 AlignEscapedNewlinesLeft: true
 AllowShortBlocksOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Empty
-AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: true
-
 BinPackArguments: true
 BinPackParameters: false
-
 BreakBeforeBraces: Allman
-
 BreakBeforeBinaryOperators: NonAssignment
-
-ColumnLimit: 100
-IndentWidth: 4
-# KeepEmptyLinesAtTheStartOfBlocks: true
-
 NamespaceIndentation: None
-
 PointerAlignment: Middle
-# SpaceBeforeOperators: true
 SpacesInAngles: false
+---
+Language: JavaScript
 
-TabWidth: 4
-UseTab: Never

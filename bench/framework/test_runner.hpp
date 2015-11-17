@@ -27,6 +27,7 @@ public:
 
         if (step1_setup())
         {
+            init_test_results();
             step2_test();
         }
         step3_cleanup();
@@ -39,15 +40,18 @@ private:
     void create_threads();
     void destroy_threads();
 
+    void init_test_results();
+
     bool step1_setup();
     void step2_test();
     void step3_cleanup();
 
     void create_probes();
+    void destroy_probes();
+
     void setup_probes();
     void sample_probes();
     void cleanup_probes();
-    void destroy_probes();
 
     void log_progress()
     {

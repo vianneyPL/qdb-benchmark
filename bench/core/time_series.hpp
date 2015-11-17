@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bench/core/clock.hpp>
+#include <bench/core/unit.hpp>
 
 #include <cstdint>
 #include <vector>
@@ -13,5 +14,11 @@ struct sample
     std::vector<std::int64_t> values;
 };
 
-using time_series = std::vector<sample>;
+struct time_series
+{
+    std::string id;
+    std::string name;
+    bench::unit unit;
+    std::vector<sample> samples;
+};
 }

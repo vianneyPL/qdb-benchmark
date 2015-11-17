@@ -9,7 +9,7 @@
 
 namespace bench
 {
-using test_result = std::map<std::string, time_series>;
+using time_series_collection = std::map<std::string, time_series>;
 
 class test_instance
 {
@@ -20,7 +20,7 @@ public:
 
     const test_class & tclass;
     test_config config;
-    test_result result;
+    time_series_collection result;
     time_point start_time;
     duration setup_duration;
     duration test_duration;
