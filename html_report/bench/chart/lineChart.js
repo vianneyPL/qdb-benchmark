@@ -63,6 +63,9 @@ bench.chart.lineChart = function() {
     chart.update = update;
     function update() {
         var serie = d3.values(data.series)[selector.selected()];
+
+        if (serie === undefined) return;
+
         selector.text(selector.selected(), serie.name);
 
         var unit = bench.units[serie.unit];

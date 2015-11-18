@@ -58,7 +58,7 @@ bench.chart.overview = function() {
 
                 d3.keys(scalars).forEach(function(key){
                     var value = d3.max(tests, function(d) {
-                        return d.scalars[key].value;
+                        return key in d.scalars ? d.scalars[key].value : NaN;
                     });
                     var text = isNaN(value) ? "N/A" : bench.units[tests[0].scalars[key].unit](value);
                     row.append("td").text(text);

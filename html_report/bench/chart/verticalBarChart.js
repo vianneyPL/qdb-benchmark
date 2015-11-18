@@ -5,15 +5,17 @@ bench.chart.verticalBarChart = function() {
     var height = 600;
     var padding = 30;
     var dispatch = d3.dispatch("select");
-    var data;
+    var data, scalars;
     var svg, graph, selector;
 
     function chart(container) {
+        scalars = data[0].scalars;
+
         selector = bench.chart
-            .selector(d3.values(data[0].scalars).map(function(d){return d.name;}))
+            .selector(d3.values(scalars).map(function(d){return d.name;}))
             .on("select", function(idx) { update(); });
         selector(container);
-        selector.selected(d3.keys(data[0].scalars).indexOf("test.iterations"));
+        selector.selected(d3.keys(scalars).indexOf("test.iterations"));
 
         svg = container
             .append("svg")
@@ -38,12 +40,18 @@ bench.chart.verticalBarChart = function() {
     }
 
     function update() {
-        var key = d3.keys(data[0].scalars)[selector.selected()];
-        var unit = bench.units[data[0].scalars[key].unit]
-        selector.text(selector.selected(), data[0].scalars[key].name);
+        var getValue, getText;
 
-        var getValue = function (test) {
-            return test.scalars[key].value;
+        var key = d3.keys(scalars)[selector.selected()];
+
+        if (key != undefined) {
+            var unit = bench.units[scalars[key].unit];
+            selector.text(selector.selected(), scalars[key].name);
+            getValue = function(test) { return key in test.scalars ? test.scalars[key].value : NaN; }
+            getText = function(test) { return test.error ? test.error : unit(getValue(test)); }
+        } else {
+            getValue = function(test) {return NaN;}
+            getText = function(test) { return test.error ? test.error : "No Data"; }
         }
 
         var xScale = d3.scale.ordinal()
@@ -53,6 +61,11 @@ bench.chart.verticalBarChart = function() {
         var valueScale = d3.scale.linear()
             .domain(d3.extent(data, getValue))
             .range([padding,width-padding]);
+
+        var getBarSize = function(test) {
+            var size = valueScale(getValue(test));
+            return isNaN(size) ? width / 2 : size;
+        }
 
         var bars = graph
             .selectAll("rect")
@@ -71,9 +84,10 @@ bench.chart.verticalBarChart = function() {
                 });
 
         bars
+            .classed("error", function(d) {return !!d.error})
             .transition()
-            .attr("y", function(d) { return height-padding-valueScale(getValue(d)); })
-            .attr("height", function(d) { return valueScale(getValue(d)); });
+            .attr("y", function(d) { return height-padding-getBarSize(d); })
+            .attr("height", function(d) { return getBarSize(d); });
 
         var labels = graph
             .selectAll("text")
@@ -81,7 +95,7 @@ bench.chart.verticalBarChart = function() {
 
         function labelTranform(d) {
             var x = xScale(d.content_size) + xScale.rangeBand() / 2;
-            var y = height-padding-valueScale(getValue(d))+15;
+            var y = height-padding-getBarSize(d)+15;
             return "translate("+x+","+y+")rotate(-90)";
         }
 
@@ -97,7 +111,7 @@ bench.chart.verticalBarChart = function() {
             });
 
         labels
-            .text(function(d) { return unit(getValue(d)); })
+            .text(function(d) { return getText(d); })
             .transition()
             .attr("transform", labelTranform)
 

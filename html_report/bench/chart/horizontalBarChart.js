@@ -6,17 +6,17 @@ bench.chart.horizontalBarChart = function() {
     var padding = 70;
     var dispatch = d3.dispatch("select");
     var data;
+    var scalars;
     var svg, graph, selector;
 
     function chart(container) {
-
-        var names = d3.values(data[0].scalars).map(function(d){return d.name;});
+        scalars = data[0].scalars;
 
         selector = bench.chart
-            .selector(names)
+            .selector(d3.values(scalars).map(function(d) { return d.name; }))
             .on("select", function(idx) { update(); });
         selector(container);
-        selector.selected(d3.keys(data[0].scalars).indexOf("test.iterations"));
+        selector.selected(d3.keys(scalars).indexOf("test.iterations"));    
 
         svg = container
             .append("svg")
@@ -41,13 +41,19 @@ bench.chart.horizontalBarChart = function() {
         update();
     }
 
-    function update() {
-        var key = d3.keys(data[0].scalars)[selector.selected()];
-        var unit = bench.units[data[0].scalars[key].unit]
-        selector.text(selector.selected(), data[0].scalars[key].name);
+    function update() {        
+        var getValue, getText;
 
-        var getValue = function (test) {
-            return test.scalars[key].value;
+        var key = d3.keys(scalars)[selector.selected()];
+
+        if (key != undefined) {            
+            var unit = bench.units[scalars[key].unit];
+            selector.text(selector.selected(), scalars[key].name);
+            getValue = function(test) { return key in test.scalars ? test.scalars[key].value : NaN; }
+            getText = function(test) { return test.error ? test.error : unit(getValue(test)); }
+        } else {
+            getValue = function(test) {return NaN;}
+            getText = function(test) { return test.error ? test.error : "No Data"; }
         }
 
         var threadsScale = d3.scale.ordinal()
@@ -57,6 +63,11 @@ bench.chart.horizontalBarChart = function() {
         var valueScale = d3.scale.linear()
             .domain(d3.extent(data, getValue))
             .range([padding,width-padding]);
+
+        var getBarSize = function(test) {
+            var size = valueScale(getValue(test));
+            return isNaN(size) ? width / 2 : size;
+        }
 
         var bars = graph
             .selectAll("rect")
@@ -78,10 +89,9 @@ bench.chart.horizontalBarChart = function() {
                 });
 
         bars
+        .classed("error", function(d) {return !!d.error})
             .transition()
-            .attr("width", function(d) {
-                return valueScale(getValue(d))
-            });
+            .attr("width", getBarSize);
 
         var labels = graph
             .selectAll("text")
@@ -98,9 +108,9 @@ bench.chart.horizontalBarChart = function() {
             });
 
         labels
-            .text(function(d) { return unit(getValue(d)); })
+            .text(function(d) { return getText(d); })
             .transition()
-            .attr("x", function(d) {return valueScale(getValue(d)) - 10})
+            .attr("x", function(d) {return getBarSize(d) - 10})
 
         var threadsAxis = d3.svg.axis().scale(threadsScale).orient("left").tickFormat(function(d) { return d + "t"; });
         svg.selectAll(".left-axis").call(threadsAxis);

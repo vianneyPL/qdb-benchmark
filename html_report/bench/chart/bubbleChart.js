@@ -5,17 +5,17 @@ bench.chart.bubbleChart = function() {
     var height = 600;
     var padding = 30;
     var dispatch = d3.dispatch("select");
-    var data;
+    var data, scalars;
     var svg, selector, graph;
 
     function chart(container) {
-        var names = d3.values(data[0].scalars).map(function(d){return d.name;});
 
+        scalars = data[0].scalars;
         selector = bench.chart
-            .selector(names)
+            .selector(d3.values(scalars).map(function(d){return d.name;}))
             .on("select", function(idx) { update(); });
         selector(container);
-        selector.selected(d3.keys(data[0].scalars).indexOf("test.iterations"));
+        selector.selected(d3.keys(scalars).indexOf("test.iterations"));
 
         svg = container.append("svg")
             .classed("bubble-chart", true)
@@ -42,9 +42,19 @@ bench.chart.bubbleChart = function() {
     }
 
     function update() {
-        var key = d3.keys(data[0].scalars)[selector.selected()];
-        var unit = bench.units[data[0].scalars[key].unit];
-        selector.text(selector.selected(), data[0].scalars[key].name);
+        var getValue, getText;
+
+        var key = d3.keys(scalars)[selector.selected()];
+
+        if (key != undefined) {
+            var unit = bench.units[scalars[key].unit];
+            selector.text(selector.selected(), scalars[key].name);
+            getValue = function(test) { return key in test.scalars ? test.scalars[key].value : NaN; }
+            getText = function(test) { return test.error ? test.error : unit(getValue(test)); }
+        } else {
+            getValue = function(test) {return NaN;}
+            getText = function(test) { return test.error ? test.error : "No Data"; }
+        }
 
         var sizeValues = bench.computations.getContentSizes(data);
         var threadsValues = bench.computations.getThreadCounts(data);
@@ -54,10 +64,6 @@ bench.chart.bubbleChart = function() {
 
         var sizeScale = d3.scale.ordinal().domain(sizeValues).rangePoints([maxRadius+padding,width-maxRadius-padding]);
         var threadsScale = d3.scale.ordinal().domain(threadsValues).rangePoints([maxRadius+padding,height-maxRadius-padding]);
-
-        var getValue = function (test) {
-            return test.scalars[key].value;
-        }
 
         var valueScale = d3.scale.log()
             .domain(d3.extent(data, getValue))
@@ -70,11 +76,6 @@ bench.chart.bubbleChart = function() {
 
         var getBubbleRadius = function(test) {
             return valueScale(getValue(test))/2 || maxDiameter/4;
-        }
-
-        var getBubbleText = function(test) {
-            var value = getValue(test);
-            return value != undefined ? unit(value) : "N/A";
         }
 
         bubbles
@@ -120,7 +121,7 @@ bench.chart.bubbleChart = function() {
         labels
             .attr("opacity",0)
             .attr("font-size", function(d) {return getBubbleRadius(d)/2.5 + "px"})
-            .text(getBubbleText)
+            .text(getText)
             .transition()
             .attr("opacity",1)
 
