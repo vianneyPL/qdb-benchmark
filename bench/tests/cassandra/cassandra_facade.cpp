@@ -21,8 +21,7 @@ cassandra_facade::~cassandra_facade()
 
 void
 cassandra_facade::connect(const std::string & cluster_uri) {
-    CassError rc = CASS_OK;
-    CassFuture* connect_future = NULL;
+
     cass_cluster_set_contact_points(_cluster, cluster_uri.c_str());
     cass_cluster_set_queue_size_io(_cluster, 10000);
     cass_cluster_set_pending_requests_low_water_mark(_cluster, 5000);
@@ -31,10 +30,10 @@ cassandra_facade::connect(const std::string & cluster_uri) {
     cass_cluster_set_max_connections_per_host(_cluster, 2);
     cass_cluster_set_max_requests_per_flush(_cluster, 10000);
 
-    connect_future = cass_session_connect(_session, _cluster);
+    CassFuture * connect_future = cass_session_connect(_session, _cluster);
     
     cass_future_wait(connect_future);
-    rc = cass_future_error_code(connect_future);
+    CassError rc = cass_future_error_code(connect_future);
     if (rc != CASS_OK) 
         throw std::runtime_error("Unable to connect: " + cluster_uri);
 
@@ -46,24 +45,20 @@ cassandra_facade::connect(const std::string & cluster_uri) {
 
 void cassandra_facade::remove(const std::string & alias)
 {
-    CassStatement * statement = NULL;
     char const * delete_query = "DELETE FROM " NAMESPACE " WHERE id = ?";
-    
-    statement = cass_statement_new(delete_query, 1);
+    CassStatement * statement = cass_statement_new(delete_query, 1);
+
     cass_statement_bind_string(statement, 0, alias.c_str());
 
     cass_future_free(
         execute(statement));
-
     cass_statement_free(statement);
 }
 
 void cassandra_facade::blob_put(const std::string & alias, const std::string & content)
 {
-    CassStatement * statement = NULL;
-    char const * insert_query = "INSERT INTO " NAMESPACE " (id, content) VALUES (?, ?)";
-    
-    statement = cass_statement_new(insert_query, 2);
+    char const * insert_query = "INSERT INTO " NAMESPACE " (id, content) VALUES (?, ?)";    
+    CassStatement * statement = cass_statement_new(insert_query, 2);
 
     cass_statement_bind_string(statement, 0, alias.c_str());
     cass_statement_bind_bytes(statement, 1, reinterpret_cast<const cass_byte_t *>(content.c_str()), content.length());
@@ -75,25 +70,20 @@ void cassandra_facade::blob_put(const std::string & alias, const std::string & c
 
 void cassandra_facade::blob_update(const std::string & alias, const std::string & content)
 {
-    CassStatement * statement = NULL;
     char const * update_query = "UPDATE " NAMESPACE " SET content = ? WHERE id = ?";
-    
-    statement = cass_statement_new(update_query, 2);
+    CassStatement * statement = cass_statement_new(update_query, 2);
     cass_statement_bind_bytes(statement, 0, reinterpret_cast<const cass_byte_t *>(content.c_str()), content.length());
     cass_statement_bind_string(statement, 1, alias.c_str());
 
     cass_future_free(
         execute(statement));
-
     cass_statement_free(statement);
 }
 
 std::string cassandra_facade::blob_get(const std::string & alias)
 {
-    CassStatement * statement = NULL;
-    char const * select_query = "SELECT content FROM bench.objects WHERE id = ?";
-    
-    statement = cass_statement_new(select_query, 1);
+    char const * select_query = "SELECT content FROM bench.objects WHERE id = ?";    
+    CassStatement * statement = cass_statement_new(select_query, 1);
     cass_statement_bind_string(statement, 0, alias.c_str());
 
     CassFuture * future = execute(statement);
@@ -103,8 +93,8 @@ std::string cassandra_facade::blob_get(const std::string & alias)
     if (!cass_iterator_next(iterator))
         throw std::runtime_error("object not found: " + alias);
 
-    const CassRow* row = cass_iterator_get_row(iterator);
-    const CassValue* value = cass_row_get_column_by_name(row, "content");
+    const CassRow * row = cass_iterator_get_row(iterator);
+    const CassValue * value = cass_row_get_column_by_name(row, "content");
 
     const cass_byte_t * content;
     size_t content_length;
