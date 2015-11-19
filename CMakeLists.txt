@@ -3,6 +3,7 @@ project(qdb-benchmark)
 enable_testing()
 find_package(Threads)
 include(thirdparty/quasardb/quasardb.cmake)
+include(thirdparty/cassandra/cassandra.cmake)
 include(thirdparty/mongodb/mongodb.cmake)
 include(thirdparty/netsnmp/netsnmp.cmake)
 
