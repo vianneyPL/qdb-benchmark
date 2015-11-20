@@ -4,14 +4,16 @@ enable_testing()
 
 set(CMAKE_CXX_STANDARD 11)
 
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost COMPONENTS regex system thread)
 find_package(Threads)
-include(thirdparty/cppformat/cppformat.cmake)
-include(thirdparty/quasardb/quasardb.cmake)
-include(thirdparty/cassandra/cassandra.cmake)
-include(thirdparty/mongodb/mongodb.cmake)
-include(thirdparty/netsnmp/netsnmp.cmake)
-include(thirdparty/quasardb/quasardb.cmake)
+
 add_subdirectory(thirdparty/ArduinoJson/src)
+add_subdirectory(thirdparty/cassandra)
+add_subdirectory(thirdparty/cppformat)
+add_subdirectory(thirdparty/mongodb)
+add_subdirectory(thirdparty/netsnmp)
+add_subdirectory(thirdparty/quasardb)
 
 if(NOT MSVC)
     add_compile_options(-Wall -pedantic)
@@ -31,7 +33,7 @@ add_subdirectory(bench/report)
 add_subdirectory(bench/tests)
 add_subdirectory(utils)
 
-if (${NETSNMP_FOUND})
+if (TARGET netsnmp)
     add_subdirectory(snmp)
 endif()
 

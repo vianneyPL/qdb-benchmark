@@ -8,23 +8,24 @@ set(FILES
     thread_synchronizer.hpp
 )
 
-set(INCLUDES)
-
 set(LIBRARIES
     utils
     ${CMAKE_THREAD_LIBS_INIT}
 )
 
-if(${NETSNMP_FOUND})
+set(DEFINITIONS)
+
+if(TARGET netsnmp)
     list(APPEND FILES snmp_probe.hpp)
     list(APPEND LIBRARIES snmp)
+    list(APPEND DEFINITIONS -DBENCHMARK_SNMP=1)
 else()
     message(STATUS "Not building SNMP probe")
 endif()
 
 add_library(bench-framework ${FILES})
-target_include_directories(bench-framework PRIVATE ${INCLUDES})
 target_link_libraries(bench-framework ${LIBRARIES})
+target_compile_definitions(bench-framework PUBLIC ${DEFINITIONS})
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(bench-framework

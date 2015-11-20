@@ -4,34 +4,39 @@ if(WIN32)
         HINTS ${CMAKE_CURRENT_LIST_DIR}/bin
     )
 
-    if(EXISTS ${QDB_API_DLL})
-        message(STATUS "Found qdb_api.dll: ${QDB_API_DLL}")
-    else()
+    if(NOT EXISTS ${QDB_API_DLL})
         message(STATUS "Could NOT find qdb_api.dll")
         return()
     endif()
+
+    message(STATUS "Found qdb_api.dll: ${QDB_API_DLL}")
 endif()
 
-find_library(QDB_API
+find_library(QDB_API_LIBRARY
 	qdb_api
 	HINTS ${CMAKE_CURRENT_LIST_DIR}/lib
 )
 
-if(EXISTS ${QDB_API})
-    message(STATUS "Found qdb_api library: ${QDB_API}")
-else()
+if(NOT EXISTS ${QDB_API_LIBRARY})
     message(STATUS "Could NOT find qdb_api library")
     return()
 endif()
 
-find_path(QDB_API_INCLUDE_DIR 
+message(STATUS "Found qdb_api library: ${QDB_API_LIBRARY}")
+
+find_path(QDB_API_INCLUDE 
     qdb/client.h
     HINTS ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
-if(IS_DIRECTORY ${QDB_API_INCLUDE_DIR})
-    message(STATUS "Found qdb_api include directory: ${QDB_API_INCLUDE_DIR}")
-else()
+if(NOT IS_DIRECTORY ${QDB_API_INCLUDE})
     message(STATUS "Could NOT find qdb_api include directory")
     return()
 endif()
+
+add_library(qdb_api SHARED IMPORTED GLOBAL)
+set_target_properties(qdb_api 
+    PROPERTIES 
+    IMPORTED_LOCATION ${QDB_API_LIBRARY}
+    INTERFACE_INCLUDE_DIRECTORIES ${QDB_API_INCLUDE}
+)

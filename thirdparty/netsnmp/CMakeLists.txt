@@ -14,30 +14,29 @@ endif()
 
 find_library(NETSNMP_LIBRARY
     netsnmp
-    HINTS ${CMAKE_CURRENT_LIST_DIR}/lib C:/usr/lib
+    HINTS ${CMAKE_CURRENT_LIST_DIR}/lib
 )
 
-if(EXISTS ${NETSNMP_LIBRARY})
-    message(STATUS "Found netsnmp library: ${NETSNMP_LIBRARY}")
-else()
+if(NOT EXISTS ${NETSNMP_LIBRARY})
     message(STATUS "Could NOT find netsnmp library")
     return()
 endif()
 
-find_path(NETSNMP_INCLUDE_DIR 
+message(STATUS "Found netsnmp library: ${NETSNMP_LIBRARY}")
+
+find_path(NETSNMP_INCLUDE 
     net-snmp/version.h
-    HINTS ${CMAKE_CURRENT_LIST_DIR}/include C:/usr/include
+    HINTS ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
-if(IS_DIRECTORY ${NETSNMP_INCLUDE_DIR})
-    message(STATUS "Found netsnmp include directory: ${NETSNMP_INCLUDE_DIR}")
-else()
+if(NOT IS_DIRECTORY ${NETSNMP_INCLUDE})
     message(STATUS "Could NOT find netsnmp include directory")
     return()
 endif()
 
-add_compile_options(
-    -DBENCHMARK_SNMP=1
+add_library(netsnmp SHARED IMPORTED GLOBAL)
+set_target_properties(netsnmp 
+    PROPERTIES 
+    IMPORTED_LOCATION ${NETSNMP_LIBRARY}
+    INTERFACE_INCLUDE_DIRECTORIES ${NETSNMP_INCLUDE}
 )
-
-set(NETSNMP_FOUND TRUE)

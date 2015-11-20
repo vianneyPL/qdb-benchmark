@@ -12,15 +12,12 @@ set(FLAGS
     -D_CRT_SECURE_NO_WARNINGS
 )
 
-set(INCLUDES)
 set(LIBRARIES utils)
 
-
-if(IS_DIRECTORY ${QDB_API_INCLUDE_DIR})
+if(TARGET qdb_api)
     list(APPEND FLAGS
         -DBENCHMARK_QUASARDB=1
     )
-
     list(APPEND FILES
         qdb/blob/add_tag.hpp
         qdb/blob/get.hpp
@@ -47,24 +44,18 @@ if(IS_DIRECTORY ${QDB_API_INCLUDE_DIR})
         qdb/stream/write.hpp
         qdb/tag/add_blob.hpp
     )
-
-    list(APPEND INCLUDES
-        ${QDB_API_INCLUDE_DIR}
-    )
-
     list(APPEND LIBRARIES
-        ${QDB_API}
+        qdb_api
         ArduinoJson
     )
 else()
     message(STATUS "Not building quasardb tests")
 endif()
 
-if(IS_DIRECTORY ${MONGOCLIENT_INCLUDE_DIR})
+if(TARGET mongoclient)
     list(APPEND FLAGS
         -DBENCHMARK_MONGODB=1
     )
-
     list(APPEND FILES
         mongodb/blob/get.hpp
         mongodb/blob/put.hpp
@@ -74,44 +65,26 @@ if(IS_DIRECTORY ${MONGOCLIENT_INCLUDE_DIR})
         mongodb/mongodb_facade.cpp
         mongodb/mongodb_facade.hpp
     )
-
-    list(APPEND INCLUDES
-        ${MONGOCLIENT_INCLUDE_DIR}
-        ${Boost_INCLUDE_DIRS}        
-    )
-
-    list(APPEND LIBRARIES
-        ${MONGOCLIENT}
-        ${Boost_SYSTEM_LIBRARY}
-        ${Boost_THREAD_LIBRARY}
-        ${Boost_REGEX_LIBRARY}  
-    )
+    list(APPEND LIBRARIES mongoclient)
 else()
     message(STATUS "Not building mongodb tests")
 endif()
 
-if(IS_DIRECTORY ${CASSANDRA_INCLUDE_DIR})
+if(TARGET cassandra)
     list(APPEND FLAGS
         -DBENCHMARK_CASSANDRA=1
     )
-
     list(APPEND FILES
         cassandra/blob/get.hpp
         cassandra/cassandra_test_template.hpp
         cassandra/cassandra_facade.cpp
         cassandra/cassandra_facade.hpp
     )
-
-    list(APPEND INCLUDES ${CASSANDRA_INCLUDE_DIR})
-    list(APPEND LIBRARIES ${CASSANDRA})
+    list(APPEND LIBRARIES cassandra)
 else()
     message(STATUS "Not building cassandra tests")
 endif()
 
-
-
-
 add_library(bench-tests ${FILES})
 target_compile_options(bench-tests PRIVATE ${FLAGS})
-target_include_directories(bench-tests PRIVATE ${INCLUDES})
 target_link_libraries(bench-tests ${LIBRARIES})

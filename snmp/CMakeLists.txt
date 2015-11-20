@@ -9,8 +9,7 @@ add_library(snmp
     variant.hpp
 )
 
-target_include_directories(snmp PUBLIC ${NETSNMP_INCLUDE_DIR})
-target_link_libraries(snmp ${NETSNMP_LIBRARY})
+target_link_libraries(snmp netsnmp)
 
 add_executable(snmp-example
     example.cpp
