@@ -84,7 +84,7 @@ bench.chart.verticalBarChart = function() {
                 });
 
         bars
-            .classed("error", function(d) {return !!d.error})
+            .classed("error", function(d) {return d.errors.length>0})
             .transition()
             .attr("y", function(d) { return height-padding-getBarSize(d); })
             .attr("height", function(d) { return getBarSize(d); });

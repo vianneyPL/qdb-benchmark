@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bench/core/test_class.hpp>
+#include <bench/core/test_error.hpp>
 #include <bench/core/test_loop.hpp>
 #include <bench/core/time_series.hpp>
 
@@ -25,7 +26,7 @@ public:
     duration setup_duration;
     duration test_duration;
     duration cleanup_duration;
-    std::string error;
+    std::vector<test_error> errors;
 };
 
 using test_instance_collection = std::vector<test_instance>;

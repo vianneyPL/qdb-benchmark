@@ -2,7 +2,8 @@
 
 #include <bench/core/probe.hpp>
 #include <bench/tests/qdb/quasardb_facade.hpp>
-#include <rapidjson/document.h>
+
+#include <ArduinoJson.h>
 
 #include <algorithm>
 #include <cstdint>
@@ -49,7 +50,10 @@ public:
     {
         for (int i = 0; i < _node_uris.size(); i++)
         {
-            auto node_status = get_node_status(_node_uris[i]);
+            std::string json = _quasardb.node_status(_node_uris[i]);
+
+            DynamicJsonBuffer jsonBuffer;
+            JsonObject & node_status = jsonBuffer.parseObject(json.c_str());
 
             // clang-format off
             set_measured_value("quasardb.node.physmem_used",    i, node_status["memory"]["physmem"]["used"]);
@@ -70,27 +74,6 @@ public:
     }
 
 private:
-    rapidjson::Document get_node_status(const std::string & node_uri) const
-    {
-        rapidjson::Document doc;
-        qdb_buffer json = _quasardb.node_status(node_uri);
-        doc.Parse(static_cast<const char *>(json.data()));
-        return doc;
-    }
-
-    rapidjson::Document get_node_topology(const std::string & node_uri) const
-    {
-        rapidjson::Document doc;
-        qdb_buffer json = _quasardb.node_topology(node_uri);
-        doc.Parse(static_cast<const char *>(json.data()));
-        return doc;
-    }
-
-    void set_measured_value(const std::string & id, size_t column, const rapidjson::Value & value)
-    {
-        probe::set_measured_value(id, column, value.GetInt64());
-    }
-
     void add_node(const std::string & node_uri)
     {
         _node_uris.push_back(node_uri);
@@ -110,8 +93,10 @@ private:
 
     std::string get_successor(const std::string & node_uri) const
     {
-        auto topology = get_node_topology(node_uri);
-        std::string endpoint = topology["successor"]["endpoint"].GetString();
+        DynamicJsonBuffer jsonBuffer;
+        std::string json = _quasardb.node_topology(node_uri);
+        JsonObject & topology = jsonBuffer.parseObject(json.c_str());
+        std::string endpoint = topology["successor"]["endpoint"];
         return "qdb://" + endpoint;
     }
 

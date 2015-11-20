@@ -4,8 +4,9 @@
 #include <bench/log/unit.hpp>
 #include <bench/core/computations.hpp>
 
+#include <cppformat/format.h>
+
 #include <chrono>
-#include <iostream>
 
 namespace bench
 {
@@ -16,26 +17,25 @@ class console_logger : public logger
 public:
     void fatal_error(const std::string & message) override
     {
-        std::cerr << "ERROR: " << message << std::endl;
+        fmt::print("ERROR: {}\n", message);
     }
 
     void pause(std::chrono::duration<int> duration) override
     {
-        std::cout << std::endl << "Wait " << duration_to_string(duration) << std::endl << std::endl;
+        fmt::print("\nWait {}\n\n", duration_to_string(duration));
     }
 
     void schedule(const std::vector<test_instance> & tests) override
     {
-        std::cout << "The following test will be performed: " << std::endl;
+        fmt::print("The following test will be performed:");
         for (unsigned i = 0; i < tests.size(); i++)
         {
             auto & test = tests[i];
-            std::cout << "  " << (i + 1) << ". " << test.tclass.name;
-            std::cout << ", threads=" << test.config.thread_count;
-            if (test.tclass.size_dependent) std::cout << ", size=" << test.config.content_size;
-            std::cout << std::endl;
+            fmt::print("\n  {}. {}", i + 1, test.tclass.name);
+            fmt::print(", threads={}", test.config.thread_count);
+            if (test.tclass.size_dependent) fmt::print(", size={}", test.config.content_size);
         }
-        std::cout << std::endl;
+        fmt::print("\n\n");
 
         _test_count = tests.size();
         _test_num = 0;
@@ -47,94 +47,97 @@ public:
     {
         _test_num++;
 
-        std::cout << "Now running test " << _test_num << "/" << _test_count << ":" << std::endl;
-        std::cout << "  - test = " << test.tclass.name << " (" << test.tclass.description << ")"
-                  << std::endl;
-        std::cout << "  - thread count = " << test.config.thread_count << std::endl;
-        if (test.tclass.size_dependent)
-            std::cout << "  - content size = "
-                      << unit::byte(static_cast<double>(test.config.content_size)) << std::endl;
+        _header = fmt::format("{}/{}  ", _test_num, _test_count);
 
-        std::cout << "Setting up test... " << std::endl;
+        fmt::print("{}Now running \"{}\"", _header, test.tclass.name);
+        if (test.config.thread_count > 1)
+            fmt::print(", on {} threads", test.config.thread_count);
+        else
+            fmt::print(", on a single thread");
+
+        if (test.tclass.size_dependent)
+        {
+            fmt::print(", with a payload of {}", unit::byte(static_cast<double>(test.config.content_size)));
+        }
+
+        fmt::print("\n{}Setting up test... \n", _header);
     }
 
-    void setup_failed(const test_instance & test, const std::string & error) override
+    void setup_failed(const test_instance & test) override
     {
-        std::cout << "Setting up test... FAILED (" << error << ")" << std::endl;
+        fmt::print("{}Setting up test... FAILED\n", _header);
+        fmt::print("{}Error = {}\n", _header, test.errors.back().message);
+        fmt::print("{}Details = {}\n", _header, test.errors.back().details);
     }
 
     void setup_finished(const test_instance & test) override
     {
-        std::cout << "Setting up test... OK (" << duration_to_string(test.setup_duration) << ")"
-                  << std::endl;
+        fmt::print("{}Setting up test... OK ({})\n", _header, duration_to_string(test.setup_duration));
     }
 
     // Test
 
     void test_started(const test_instance & test) override
     {
-        std::cout << "Executing test... " << std::flush;
+        fmt::print("{}Executing test... ", _header);
     }
 
     void test_progress(const test_instance & test) override
     {
         auto elapsed = clock::now() - test.start_time;
         auto iterations = compute_iteration_count(test);
-        std::cout << "\rExecuting test... " << unit::none(iterations) << "iterations ("
-                  << duration_to_string(elapsed) << ")      " << std::flush;
+        fmt::print("\r{}Executing test... {}iterations ({})    ", _header, unit::none(iterations),
+                   duration_to_string(elapsed));
     }
 
-    void test_failed(const test_instance & test, const std::string & error) override
+    void test_failed(const test_instance & test) override
     {
-        std::cout << "\nExecuting test... FAILED (" << error << ")" << std::endl;
-        std::cout << "  - total iterations = " << unit::none(compute_iteration_count(test))
-                  << std::endl;
+        fmt::print("\n{}Executing test... FAILED\n", _header);
+        fmt::print("{}Error = {}\n", _header, test.errors.back().message);
+        fmt::print("{}Details = {}\n", _header, test.errors.back().details);
+        fmt::print("{}Total iterations = {}\n", _header, unit::none(compute_iteration_count(test)));
     }
 
     void test_finished(const test_instance & test) override
     {
-        std::cout << "\nExecuting test... OK (" << duration_to_string(test.test_duration) << ")"
-                  << std::endl;
+        fmt::print("\n{}Executing test... OK ({})\n", _header, duration_to_string(test.test_duration));
 
         if (test.tclass.size_dependent)
         {
-            std::cout << "  - average throughput = "
-                      << unit::byte_per_second(compute_average_throughput(test)) << std::endl;
+            fmt::print("{}Average throughput = {}\n", _header, unit::byte_per_second(compute_average_throughput(test)));
         }
 
-        std::cout << "  - average frequency = " << unit::hertz(compute_average_frequency(test))
-                  << std::endl;
-
-        std::cout << "  - total iterations = " << unit::none(compute_iteration_count(test))
-                  << std::endl;
+        fmt::print("{}Average frequency = {}\n", _header, unit::hertz(compute_average_frequency(test)));
+        fmt::print("{}Total iterations = {}\n", _header, unit::none(compute_iteration_count(test)));
     }
 
     // Test cleanup
 
     void cleanup_started(const test_instance & test) override
     {
-        std::cout << "Cleaning up... " << std::endl;
+        fmt::print("{}Cleaning up... \n", _header);
     }
 
-    void cleanup_failed(const test_instance & test, const std::string & error) override
+    void cleanup_failed(const test_instance & test) override
     {
-        std::cout << "Cleaning up... FAILED (" << error << ")" << std::endl;
+        fmt::print("{}Cleaning up... FAILED\n", _header);
+        fmt::print("{}Error = {}\n", _header, test.errors.back().message);
+        fmt::print("{}Details = {}\n", _header, test.errors.back().details);
     }
 
     void cleanup_finished(const test_instance & test) override
     {
-        std::cout << "Cleaning up... OK (" << duration_to_string(test.cleanup_duration) << ")"
-                  << std::endl;
+        fmt::print("{}Cleaning up... OK ({})\n", _header, duration_to_string(test.cleanup_duration));
     }
 
 private:
     size_t _test_count;
     size_t _test_num;
+    std::string _header;
 
     std::string duration_to_string(duration duration)
     {
-        return unit::milliseconds(
-            (double)std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
+        return unit::milliseconds((double)std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
     }
 };
 }

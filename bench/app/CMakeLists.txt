@@ -8,4 +8,5 @@ add_library(bench-app
 
 target_link_libraries(bench-app
     bench-framework
+    bench-report
 )

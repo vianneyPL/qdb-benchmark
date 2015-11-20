@@ -13,7 +13,7 @@ set(FLAGS
 )
 
 set(INCLUDES)
-set(LIBRARIES)
+set(LIBRARIES utils)
 
 
 if(IS_DIRECTORY ${QDB_API_INCLUDE_DIR})
@@ -50,11 +50,11 @@ if(IS_DIRECTORY ${QDB_API_INCLUDE_DIR})
 
     list(APPEND INCLUDES
         ${QDB_API_INCLUDE_DIR}
-        ${CMAKE_SOURCE_DIR}/thirdparty # for rapidjson
     )
 
     list(APPEND LIBRARIES
         ${QDB_API}
+        ArduinoJson
     )
 else()
     message(STATUS "Not building quasardb tests")
@@ -77,15 +77,14 @@ if(IS_DIRECTORY ${MONGOCLIENT_INCLUDE_DIR})
 
     list(APPEND INCLUDES
         ${MONGOCLIENT_INCLUDE_DIR}
-        ${Boost_INCLUDE_DIRS}
-        ${CMAKE_SOURCE_DIR}/thirdparty # for rapidjson
+        ${Boost_INCLUDE_DIRS}        
     )
 
     list(APPEND LIBRARIES
         ${MONGOCLIENT}
         ${Boost_SYSTEM_LIBRARY}
         ${Boost_THREAD_LIBRARY}
-        ${Boost_REGEX_LIBRARY}        
+        ${Boost_REGEX_LIBRARY}  
     )
 else()
     message(STATUS "Not building mongodb tests")

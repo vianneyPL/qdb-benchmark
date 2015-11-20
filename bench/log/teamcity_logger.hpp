@@ -18,8 +18,7 @@ public:
     void pause(std::chrono::duration<int> duration) override
     {
         auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
-        utils::teamcity::message("Wait " + std::to_string(seconds)
-                                 + (seconds > 1 ? " seconds" : " second"));
+        utils::teamcity::message("Wait " + std::to_string(seconds) + (seconds > 1 ? " seconds" : " second"));
     }
 
     void schedule(const std::vector<test_instance> &) override
@@ -33,9 +32,9 @@ public:
         utils::teamcity::block_opened("setup");
     }
 
-    void setup_failed(const test_instance & test, const std::string & error) override
+    void setup_failed(const test_instance & test) override
     {
-        utils::teamcity::message("setup failed", error);
+        utils::teamcity::message(test.errors.back().message, test.errors.back().details);
         utils::teamcity::block_closed("setup");
     }
 
@@ -53,13 +52,12 @@ public:
 
     void test_progress(const test_instance & test) override
     {
-        utils::teamcity::progressMessage(std::to_string(compute_iteration_count(test))
-                                         + " iterations");
+        utils::teamcity::progressMessage(std::to_string(compute_iteration_count(test)) + " iterations");
     }
 
-    void test_failed(const test_instance & test, const std::string & error) override
+    void test_failed(const test_instance & test) override
     {
-        utils::teamcity::message("test failed", error);
+        utils::teamcity::message(test.errors.back().message, test.errors.back().details);
         utils::teamcity::block_closed("test");
     }
 
@@ -69,11 +67,9 @@ public:
 
         if (test.config.content_size)
         {
-            utils::teamcity::build_statistic(test_name + ".throughput.average",
-                                             compute_average_throughput(test));
+            utils::teamcity::build_statistic(test_name + ".throughput.average", compute_average_throughput(test));
         }
-        utils::teamcity::build_statistic(test_name + ".frequency.average",
-                                         compute_average_frequency(test));
+        utils::teamcity::build_statistic(test_name + ".frequency.average", compute_average_frequency(test));
 
         utils::teamcity::block_closed("test");
     }
@@ -85,11 +81,11 @@ public:
         utils::teamcity::block_opened("cleanup");
     }
 
-    void cleanup_failed(const test_instance & test, const std::string & error) override
+    void cleanup_failed(const test_instance & test) override
     {
-        utils::teamcity::message("cleanup failed", error);
+        utils::teamcity::message(test.errors.back().message, test.errors.back().details);
         utils::teamcity::block_closed("cleanup");
-        utils::teamcity::test_failed(make_test_name(test), test.error);
+        utils::teamcity::test_failed(make_test_name(test), test.errors.front().message, test.errors.front().details);
         utils::teamcity::test_finished(make_test_name(test));
     }
 
@@ -97,9 +93,10 @@ public:
     {
         utils::teamcity::block_closed("cleanup");
 
-        if (test.error.size() > 0)
+        if (test.errors.size() > 0)
         {
-            utils::teamcity::test_failed(make_test_name(test), test.error);
+            utils::teamcity::test_failed(make_test_name(test), test.errors.front().message,
+                                         test.errors.front().details);
         }
         utils::teamcity::test_finished(make_test_name(test));
     }

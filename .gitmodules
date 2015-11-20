@@ -1,0 +1,3 @@
+[submodule "thirdparty/ArduinoJson"]
+	path = thirdparty/ArduinoJson
+	url = git@github.com:bblanchon/ArduinoJson.git

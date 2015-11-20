@@ -150,3 +150,7 @@ div.detail > svg {
 .header > select::-ms-expand {
     display: none;
 }
+
+.error {
+    color: red;
+}

@@ -1,12 +1,15 @@
 cmake_minimum_required(VERSION 3.2)
 project(qdb-benchmark)
 enable_testing()
-find_package(Threads)
-include(thirdparty/quasardb/quasardb.cmake)
-include(thirdparty/mongodb/mongodb.cmake)
-include(thirdparty/netsnmp/netsnmp.cmake)
 
 set(CMAKE_CXX_STANDARD 11)
+
+find_package(Threads)
+include(thirdparty/cppformat/cppformat.cmake)
+include(thirdparty/mongodb/mongodb.cmake)
+include(thirdparty/netsnmp/netsnmp.cmake)
+include(thirdparty/quasardb/quasardb.cmake)
+add_subdirectory(thirdparty/ArduinoJson/src)
 
 if(NOT MSVC)
     add_compile_options(-Wall -pedantic)
@@ -22,6 +25,7 @@ add_subdirectory(bench/app)
 add_subdirectory(bench/core)
 add_subdirectory(bench/framework)
 add_subdirectory(bench/log)
+add_subdirectory(bench/report)
 add_subdirectory(bench/tests)
 add_subdirectory(utils)
 
@@ -46,7 +50,7 @@ target_link_libraries(qdb-benchmark
 )
 
 add_test(help qdb-benchmark --help)
-add_test(help qdb-benchmark --tests std_fwrite --sizes 1M)
+add_test(help qdb-benchmark --tests qdb_blob_put --sizes 1M)
 
 if(EXISTS ${QDB_API_DLL})
     add_custom_command(TARGET qdb-benchmark POST_BUILD

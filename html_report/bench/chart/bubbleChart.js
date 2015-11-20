@@ -92,7 +92,7 @@ bench.chart.bubbleChart = function() {
                 "cy": function(d) { return threadsScale(d.thread_count) },
                 "r": getBubbleRadius
             })
-            .classed("error", function(d) {return !!d.error})
+            .classed("error", function(d) {return d.errors.length>0})
             .on("click", function(d) {
                 graph.selectAll("circle").classed("selected", false);
                 d3.select(this).classed("selected", true);

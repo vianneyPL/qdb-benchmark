@@ -89,7 +89,7 @@ bench.chart.horizontalBarChart = function() {
                 });
 
         bars
-        .classed("error", function(d) {return !!d.error})
+        .classed("error", function(d) {return d.errors.length>0})
             .transition()
             .attr("width", getBarSize);
 

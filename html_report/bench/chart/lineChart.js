@@ -10,6 +10,7 @@ bench.chart.lineChart = function() {
     var svg, selector;
     var stacked = false;
     var stackLabel;
+    var errorContainer;
 
     var headerHeight = 30;
     var headerWidth = 300;
@@ -28,6 +29,8 @@ bench.chart.lineChart = function() {
                 stacked = this.checked;
                 update();
             });
+
+        errorContainer = container.append("div").classed("error", true);
 
         svg = container.append("svg")
             .classed("line-chart", true)
@@ -62,10 +65,26 @@ bench.chart.lineChart = function() {
 
     chart.update = update;
     function update() {
+        
+        var errors = errorContainer.data(data.errors);
+
+        errors
+            .enter()
+            .append("p");
+
+        errors            
+            .html(function(d){
+                return d.message+"<br>"+d.details;
+            });
+                
+        errors
+            .exit()
+            .remove();
+
         var serie = d3.values(data.series)[selector.selected()];
 
         if (serie === undefined) return;
-
+    
         selector.text(selector.selected(), serie.name);
 
         var unit = bench.units[serie.unit];

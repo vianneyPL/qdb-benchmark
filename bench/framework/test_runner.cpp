@@ -8,6 +8,7 @@
 #include <bench/log/logger.hpp>
 #include <utils/memory.hpp>
 #include <utils/for_each.hpp>
+#include <utils/detailed_error.hpp>
 
 #if BENCHMARK_SNMP
 #include <bench/framework/snmp_probe.hpp>
@@ -80,10 +81,16 @@ bool test_runner::step1_setup()
         _logger.setup_finished(*_test);
         return true;
     }
+    catch (utils::detailed_error & e)
+    {
+        _test->errors.push_back({e.message(), e.invocation()});
+        _logger.setup_failed(*_test);
+        return false;
+    }
     catch (std::exception & e)
     {
-        _test->error = std::string("Setup error: ") + e.what();
-        _logger.setup_failed(*_test, e.what());
+        _test->errors.push_back({e.what(), "Error happened during test setup"});
+        _logger.setup_failed(*_test);
         return false;
     }
 }
@@ -111,10 +118,15 @@ void test_runner::step2_test()
 
         _logger.test_finished(*_test);
     }
+    catch (utils::detailed_error & e)
+    {
+        _test->errors.push_back({e.message(), e.invocation()});
+        _logger.test_failed(*_test);
+    }
     catch (std::exception & e)
     {
-        _test->error = e.what();
-        _logger.test_failed(*_test, e.what());
+        _test->errors.push_back({e.what(), "Error happened during test execution"});
+        _logger.test_failed(*_test);
     }
 }
 
@@ -135,10 +147,15 @@ void test_runner::step3_cleanup()
 
         _logger.cleanup_finished(*_test);
     }
+    catch (utils::detailed_error & e)
+    {
+        _test->errors.push_back({e.message(), e.invocation()});
+        _logger.cleanup_failed(*_test);
+    }
     catch (std::exception & e)
     {
-        _test->error = std::string("Cleanup error: ") + e.what();
-        _logger.cleanup_failed(*_test, e.what());
+        _test->errors.push_back({e.what(), "Error happened during tset cleanup"});
+        _logger.cleanup_failed(*_test);
     }
 }
 
