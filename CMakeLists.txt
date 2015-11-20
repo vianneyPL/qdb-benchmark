@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 11)
 
 find_package(Threads)
 include(thirdparty/cppformat/cppformat.cmake)
+include(thirdparty/quasardb/quasardb.cmake)
+include(thirdparty/cassandra/cassandra.cmake)
 include(thirdparty/mongodb/mongodb.cmake)
 include(thirdparty/netsnmp/netsnmp.cmake)
 include(thirdparty/quasardb/quasardb.cmake)

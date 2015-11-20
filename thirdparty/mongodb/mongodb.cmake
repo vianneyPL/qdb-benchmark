@@ -15,6 +15,7 @@ if(EXISTS ${MONGOCLIENT})
     message(STATUS "Found mongoclient library: ${MONGOCLIENT}")
 else()
     message(STATUS "Could NOT find mongoclient library")
+    return()
 endif()
 
 find_path(MONGOCLIENT_INCLUDE_DIR 

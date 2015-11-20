@@ -37,6 +37,12 @@
 #include <bench/tests/mongodb/blob/update.hpp>
 #endif
 
+#if BENCHMARK_CASSANDRA
+#include <bench/tests/cassandra/blob/put.hpp>
+#include <bench/tests/cassandra/blob/get.hpp>
+#include <bench/tests/cassandra/blob/update.hpp>
+#endif
+
 bench::test_class_collection bench::tests::get_all_tests()
 {
     // clang-format off
@@ -74,6 +80,12 @@ bench::test_class_collection bench::tests::get_all_tests()
       new mongodb::blob::put::test_class(),
       new mongodb::blob::get::test_class(),
       new mongodb::blob::update::test_class(),
+      #endif
+
+      #if BENCHMARK_CASSANDRA
+      new cassandra::blob::put::test_class(),
+      new cassandra::blob::get::test_class(),
+      new cassandra::blob::update::test_class(),
       #endif
       
       new std_::atomic::test_class(),

@@ -90,6 +90,37 @@ else()
     message(STATUS "Not building mongodb tests")
 endif()
 
+if(IS_DIRECTORY ${CASSANDRA_INCLUDE_DIR})
+    list(APPEND FLAGS
+        -DBENCHMARK_CASSANDRA=1
+    )
+
+    list(APPEND FILES
+        cassandra/blob/get.hpp
+        cassandra/cassandra_test_template.hpp
+        cassandra/cassandra_facade.cpp
+        cassandra/cassandra_facade.hpp
+    )
+
+    list(APPEND INCLUDES
+        ${CASSANDRA_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS}
+        ${CMAKE_SOURCE_DIR}/thirdparty # for rapidjson
+    )
+
+    list(APPEND LIBRARIES
+        ${CASSANDRA}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_THREAD_LIBRARY}
+        ${Boost_REGEX_LIBRARY}        
+    )
+else()
+    message(STATUS "Not building cassandra tests")
+endif()
+
+
+
+
 add_library(bench-tests ${FILES})
 target_compile_options(bench-tests PRIVATE ${FLAGS})
 target_include_directories(bench-tests PRIVATE ${INCLUDES})
