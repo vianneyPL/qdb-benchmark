@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bench/tests/cassandra/cassandra_facade.hpp>
+#include <bench/tests/cassandra/server_probe.hpp>
 #include <bench/tests/test_template.hpp>
 #include <utils/random.hpp>
 #include <utils/unique_alias_provider.hpp>
@@ -29,6 +30,7 @@ public:
     static probe_collection create_probes(test_config cfg)
     {
         probe_collection probes;
+        probes.emplace_back(new server_probe(cfg.cluster_uri));
         return probes;
     }
 

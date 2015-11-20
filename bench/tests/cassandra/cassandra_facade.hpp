@@ -28,8 +28,8 @@ public:
 
 private:
 
-    CassFuture *
-    execute(CassStatement * statement);    
+    static CassFuture *
+    execute(CassSession * session, CassStatement * statement);    
 
 private:
     CassCluster * _cluster;
