@@ -1,11 +1,3 @@
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS regex system thread)
-
-if(NOT Boost_FOUND)
-    message(STATUS "Boost libraries not found, disabling cassandra")
-    return()
-endif()
-
 find_library(CASSANDRA
 	cassandra
 	HINTS ${CMAKE_CURRENT_LIST_DIR}/lib

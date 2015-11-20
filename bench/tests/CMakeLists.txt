@@ -102,18 +102,8 @@ if(IS_DIRECTORY ${CASSANDRA_INCLUDE_DIR})
         cassandra/cassandra_facade.hpp
     )
 
-    list(APPEND INCLUDES
-        ${CASSANDRA_INCLUDE_DIR}
-        ${Boost_INCLUDE_DIRS}
-        ${CMAKE_SOURCE_DIR}/thirdparty # for rapidjson
-    )
-
-    list(APPEND LIBRARIES
-        ${CASSANDRA}
-        ${Boost_SYSTEM_LIBRARY}
-        ${Boost_THREAD_LIBRARY}
-        ${Boost_REGEX_LIBRARY}        
-    )
+    list(APPEND INCLUDES ${CASSANDRA_INCLUDE_DIR})
+    list(APPEND LIBRARIES ${CASSANDRA})
 else()
     message(STATUS "Not building cassandra tests")
 endif()
