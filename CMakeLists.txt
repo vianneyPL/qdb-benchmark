@@ -30,7 +30,11 @@ add_subdirectory(bench/core)
 add_subdirectory(bench/framework)
 add_subdirectory(bench/log)
 add_subdirectory(bench/report)
-add_subdirectory(bench/tests)
+add_subdirectory(bench/tests/dummy)
+add_subdirectory(bench/tests/cassandra)
+add_subdirectory(bench/tests/mongodb)
+add_subdirectory(bench/tests/qdb)
+add_subdirectory(bench/tests/std)
 add_subdirectory(utils)
 
 if (TARGET netsnmp)
@@ -50,8 +54,18 @@ target_link_libraries(qdb-benchmark
     bench-app
     bench-core
     bench-log
-    bench-tests
+    bench-tests-dummy
+    bench-tests-std
 )
+if (TARGET bench-tests-cassandra)
+    target_link_libraries(qdb-benchmark bench-tests-cassandra)
+endif()
+if (TARGET bench-tests-mongodb)
+    target_link_libraries(qdb-benchmark bench-tests-mongodb)
+endif()
+if (TARGET bench-tests-quasardb)
+    target_link_libraries(qdb-benchmark bench-tests-quasardb)
+endif()
 
 add_test(help qdb-benchmark --help)
 add_test(help qdb-benchmark --tests qdb_blob_put --sizes 1M)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bench/tests/common/test_template.hpp>
 #include <bench/tests/std/file_exception.hpp>
 
 #include <cstdio>

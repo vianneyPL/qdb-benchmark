@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bench/tests/common/test_template.hpp>
+
 #include <atomic>
 #include <string>
 

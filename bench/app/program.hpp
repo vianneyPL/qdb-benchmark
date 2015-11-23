@@ -13,8 +13,7 @@ namespace app
 class program
 {
 public:
-    program(log::logger & logger, test_class_collection & test_pool)
-        : _logger(logger), _test_pool(test_pool)
+    program(log::logger & logger, test_class_collection test_pool) : _logger(logger), _test_pool(test_pool)
     {
     }
 
@@ -33,7 +32,7 @@ private:
 
     settings _settings;
     log::logger & _logger;
-    test_class_collection & _test_pool;
+    test_class_collection _test_pool;
     test_instance_collection _schedule;
     report::jsonp _report;
 };

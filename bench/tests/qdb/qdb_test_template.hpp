@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/tests/test_template.hpp>
+#include <bench/tests/common/test_template.hpp>
 #include <bench/tests/qdb/node_status.hpp>
 #include <bench/tests/qdb/quasardb_facade.hpp>
 #include <utils/random.hpp>
@@ -28,8 +28,7 @@ template <typename Derived>
 class qdb_test_template : public test_template<Derived>, protected utils::unique_alias_provider
 {
 public:
-    qdb_test_template(test_config config)
-        : test_template<Derived>(config), _cluster_uri(config.cluster_uri)
+    qdb_test_template(test_config config) : test_template<Derived>(config), _cluster_uri(config.cluster_uri)
     {
     }
 

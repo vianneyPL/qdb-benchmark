@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/tests/test_template.hpp>
+#include <bench/tests/common/test_template.hpp>
 
 #include <thread>
 

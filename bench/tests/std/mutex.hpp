@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bench/tests/common/test_template.hpp>
 #include <mutex>
 #include <string>
 
