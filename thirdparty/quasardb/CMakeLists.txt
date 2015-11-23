@@ -34,7 +34,12 @@ if(NOT IS_DIRECTORY ${QDB_API_INCLUDE})
     return()
 endif()
 
-add_library(qdb_api SHARED IMPORTED GLOBAL)
+if (WIN32)
+    add_library(qdb_api STATIC IMPORTED GLOBAL)
+else()
+    add_library(qdb_api SHARED IMPORTED GLOBAL)
+endif()
+
 set_target_properties(qdb_api 
     PROPERTIES 
     IMPORTED_LOCATION ${QDB_API_LIBRARY}
