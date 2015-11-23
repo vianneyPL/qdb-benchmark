@@ -45,3 +45,11 @@ set_target_properties(qdb_api
     IMPORTED_LOCATION ${QDB_API_LIBRARY}
     INTERFACE_INCLUDE_DIRECTORIES ${QDB_API_INCLUDE}
 )
+
+if(EXISTS ${QDB_API_DLL})
+    install(FILES ${QDB_API_DLL} DESTINATION bin)
+endif()
+
+if(EXISTS ${QDB_API})
+    install(FILES ${QDB_API} DESTINATION lib)
+endif()

@@ -71,15 +71,6 @@ install(TARGETS qdb-benchmark
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
-
-if(EXISTS ${QDB_API_DLL})
-    install(FILES ${QDB_API_DLL} DESTINATION bin)
-endif()
-
-if(EXISTS ${NETSNMP_DLL})
-    install(FILES ${NETSNMP_DLL} DESTINATION bin)
-endif()
-
-if(EXISTS ${QDB_API})
-    install(FILES ${QDB_API} DESTINATION lib)
-endif()
+install(DIRECTORY html_report
+    DESTINATION share/qdb-benchmark
+)
