@@ -49,7 +49,8 @@ static qdb_error_t named_invoke(const char * name, Function function, Args &&...
     {
         std::string message = qdb_error(err);
         std::string details =
-            fmt::format("{} returned 0x{:08X}", utils::make_invocation_string(name, std::forward<Args>(args)...), err);
+            fmt::format("{} returned {:#08x}", utils::make_invocation_string(name, std::forward<Args>(args)...),
+                        std::uint32_t(err));
 
         if (err == qdb_e_system)
         {
