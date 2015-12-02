@@ -22,7 +22,7 @@ public:
     void setup() override
     {
         qdb_test_template::setup();
-        _stream = _qdb.stream_open(alias(0), qdb_stream_mode_write);
+        _stream = _qdb.stream_open(alias(0), qdb_stream_mode_append);
     }
 
     void run_iteration(unsigned long iteration)
