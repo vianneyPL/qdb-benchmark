@@ -16,7 +16,7 @@ namespace qdb
 void set_watermark(std::string & str, unsigned long iteration)
 {
     // print decimal representation in reverse order
-    for (int digit = 0; digit < 10; digit++)
+    for (std::size_t digit = 0; digit < 10; digit++)
     {
         if (digit >= str.size()) break;
         str[digit] = iteration % 10;

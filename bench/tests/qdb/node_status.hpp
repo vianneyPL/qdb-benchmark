@@ -48,7 +48,7 @@ public:
 
     void take_sample() override
     {
-        for (int i = 0; i < _node_uris.size(); i++)
+        for (std::size_t i = 0; i < _node_uris.size(); i++)
         {
             std::string json = _quasardb.node_status(_node_uris[i]);
 
