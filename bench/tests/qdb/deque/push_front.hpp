@@ -27,6 +27,7 @@ public:
     void cleanup() override
     {
         _qdb.remove(alias(0));
+        qdb_test_template::cleanup();
     }
 
     static std::string name()

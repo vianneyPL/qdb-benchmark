@@ -75,6 +75,9 @@ public:
     ~quasardb_facade();
 
     void connect(const std::string & cluster_uri);
+    void close();
+    void trim_all();
+
     std::string node_status(const std::string & node_uri) const;
     std::string node_topology(const std::string & node_uri) const;
     void free_buffer(const char * buffer);

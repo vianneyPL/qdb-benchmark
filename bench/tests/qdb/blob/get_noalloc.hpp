@@ -14,8 +14,7 @@ namespace blob
 class get_noalloc : public qdb_test_template<get_noalloc>
 {
 public:
-    get_noalloc(bench::test_config config)
-        : qdb_test_template(config), _buffer(config.content_size, 0)
+    get_noalloc(bench::test_config config) : qdb_test_template(config), _buffer(config.content_size, 0)
     {
         _content = utils::create_random_string(config.content_size);
     }
@@ -35,6 +34,7 @@ public:
     void cleanup() override
     {
         _qdb.remove(alias(0));
+        qdb_test_template::cleanup();
     }
 
     static std::string name()

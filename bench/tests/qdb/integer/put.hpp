@@ -28,6 +28,7 @@ public:
                      {
                          _qdb.remove(alias(iteration));
                      });
+        qdb_test_template::cleanup();
     }
 
     static std::string name()

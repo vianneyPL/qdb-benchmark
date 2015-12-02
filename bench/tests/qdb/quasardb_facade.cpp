@@ -84,6 +84,16 @@ void quasardb_facade::connect(const std::string & cluster_uri)
     INVOKE(qdb_connect, _handle, cluster_uri.c_str());
 }
 
+void quasardb_facade::close()
+{
+    INVOKE(qdb_close, _handle);
+}
+
+void quasardb_facade::trim_all()
+{
+    INVOKE(qdb_trim_all, _handle);
+}
+
 void quasardb_facade::free_buffer(const char * buffer)
 {
     qdb_free_buffer(_handle, buffer);

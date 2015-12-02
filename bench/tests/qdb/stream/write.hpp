@@ -34,6 +34,7 @@ public:
     {
         _stream.close();
         _qdb.stream_remove(alias(0));
+        qdb_test_template::cleanup();
     }
 
     static std::string name()

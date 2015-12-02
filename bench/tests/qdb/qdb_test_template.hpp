@@ -37,6 +37,12 @@ public:
         _qdb.connect(_cluster_uri);
     }
 
+    void cleanup() override
+    {
+        // _qdb.trim_all(); <- times out
+        _qdb.close();
+    }
+
     static probe_collection create_probes(test_config cfg)
     {
         probe_collection probes;
