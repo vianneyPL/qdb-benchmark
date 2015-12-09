@@ -52,7 +52,7 @@ static qdb_error_t named_invoke(const char * name, Function function, Args &&...
             fmt::format("{} returned {:#08x}", utils::make_invocation_string(name, std::forward<Args>(args)...),
                         std::uint32_t(err));
 
-        if (err == qdb_e_system)
+        if ((err == qdb_e_system_local) || (err == qdb_e_system_remote))
         {
 #ifdef WIN32
             std::uint32_t lastError = utils::win32::get_last_error();
