@@ -49,7 +49,7 @@ void get_tests(OutputIt it)
     *it++ = new qdb::integer::remove::test_class();
     *it++ = new qdb::integer::update::test_class();
     *it++ = new qdb::stream::write::test_class();
-    // *it++ = new qdb::tag_add_blob::test_class();
+    *it++ = new qdb::tag::add_blob::test_class();
 }
 }
 }
