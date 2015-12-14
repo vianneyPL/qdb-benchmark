@@ -33,7 +33,7 @@ public:
     void cleanup() override
     {
         _stream.close();
-        _qdb.stream_remove(alias(0));
+        _qdb.remove(alias(0));
         qdb_test_template::cleanup();
     }
 

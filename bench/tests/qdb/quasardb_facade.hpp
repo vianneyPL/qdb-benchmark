@@ -106,7 +106,6 @@ public:
     void add_tag(const std::string & alias, const std::string & tag);
 
     qdb_stream_t stream_open(const std::string & alias, qdb_stream_mode_t mode);
-    void stream_remove(const std::string & alias);
 
 private:
     qdb_handle_t _handle;

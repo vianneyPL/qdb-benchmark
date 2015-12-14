@@ -237,8 +237,3 @@ void qdb_stream_facade::write(const std::string & content)
 {
     INVOKE(qdb_stream_write, _handle, content.data(), content.size());
 }
-
-void quasardb_facade::stream_remove(const std::string & alias)
-{
-    INVOKE(qdb_stream_remove, _handle, alias.c_str());
-}
