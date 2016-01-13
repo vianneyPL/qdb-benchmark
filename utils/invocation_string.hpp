@@ -21,7 +21,15 @@ std::string get_argument_string(const Arg & arg)
 
 std::string get_argument_string(const char * arg)
 {
-    return fmt::format("\"{}\"", arg);
+    size_t len = strlen(arg);
+    if (len > 40)
+    {
+        return fmt::format("\"{:.35s}...\"[len={}]", arg, len);
+    }
+    else
+    {
+        return fmt::format("\"{}\"", arg);
+    }
 }
 
 template <typename... Args>
