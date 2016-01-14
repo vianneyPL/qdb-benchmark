@@ -19,7 +19,7 @@ class qdb_test_template : public test_template<Derived>,
 {
 public:
     qdb_test_template(test_config config)
-        : test_template<Derived>(config), _cluster_uri(config.cluster_uri), unique_content_provider(config.content_size)
+        : test_template<Derived>(config), unique_content_provider(config.content_size), _cluster_uri(config.cluster_uri)
     {
     }
 

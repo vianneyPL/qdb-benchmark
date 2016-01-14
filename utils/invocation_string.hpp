@@ -2,6 +2,7 @@
 
 #include <cppformat/format.h>
 
+#include <cstring>
 #include <string>
 #include <vector>
 
@@ -21,7 +22,7 @@ std::string get_argument_string(const Arg & arg)
 
 std::string get_argument_string(const char * arg)
 {
-    size_t len = strlen(arg);
+    size_t len = std::strlen(arg);
     if (len > 40)
     {
         return fmt::format("\"{:.35s}...\"[len={}]", arg, len);

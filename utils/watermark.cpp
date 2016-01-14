@@ -5,7 +5,7 @@ static const char __base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv
 void utils::watermark::replace_end(std::string & s, unsigned long id)
 {
     size_t index = s.size();
-    for (std::size_t digit = 0; digit < watermark::length; digit++)
+    for (std::size_t digit = 0; digit < watermark::length && index>0; digit++)
     {
         s[--index] = __base64[id & 63];
         id /= 64;

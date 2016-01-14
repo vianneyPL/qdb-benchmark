@@ -7,8 +7,6 @@
 
 static std::atomic<int> __counter(0);
 
-static const char __base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
 utils::unique_alias::unique_alias()
 {
     using namespace std::chrono;
