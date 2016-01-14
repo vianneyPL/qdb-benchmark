@@ -9,6 +9,11 @@ set(FILES
     unique_alias.cpp
     unique_alias.hpp
     unique_alias_provider.hpp
+    unique_content.cpp
+    unique_content.hpp
+    unique_content_provider.hpp
+    watermark.cpp
+    watermark.hpp
 )
 
 if (WIN32)

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/tests/mongodb/mongodb_test_template.hpp>
-#include <utils/random.hpp>
 
 namespace bench
 {
@@ -16,19 +15,17 @@ class get : public mongodb_test_template<get>
 public:
     explicit get(bench::test_config config) : mongodb_test_template(config)
     {
-        _content = utils::create_random_string(config.content_size);
     }
 
     void setup() override
     {
         mongodb_test_template::setup();
-        _mongodb.blob_put(alias(0), _content);
+        _mongodb.blob_put(alias(0), content(0));
     }
 
     void run_iteration(unsigned long iteration)
     {
-        std::string content = _mongodb.blob_get(alias(0));
-        if (content != _content) throw std::exception();
+        _mongodb.blob_get(alias(0));
     }
 
     void cleanup() override
@@ -50,9 +47,6 @@ public:
     {
         return true;
     }
-
-private:
-    std::string _content;
 };
 } // namespace blob
 } // namespace mongodb

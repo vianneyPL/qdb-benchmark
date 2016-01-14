@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/tests/qdb/qdb_test_template.hpp>
-#include <utils/random.hpp>
 
 namespace bench
 {
@@ -17,7 +16,6 @@ public:
     add_blob(bench::test_config config) : qdb_test_template(config)
     {
         _tag = alias(0) + "-tag";
-        _content = utils::create_random_string(16);
     }
 
     void setup() override
@@ -25,7 +23,7 @@ public:
         qdb_test_template::setup();
         setup_each([=](unsigned long iteration)
                    {
-                       _qdb.blob_put(alias(iteration), _content);
+                       _qdb.blob_put(alias(iteration), content(iteration));
                    });
     }
 
@@ -61,7 +59,6 @@ public:
 
 private:
     std::string _tag;
-    std::string _content;
 };
 } // namespace tag
 } // namespace qdb

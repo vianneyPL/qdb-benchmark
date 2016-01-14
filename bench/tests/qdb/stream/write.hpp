@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/tests/qdb/qdb_test_template.hpp>
-#include <utils/random.hpp>
 
 namespace bench
 {
@@ -16,7 +15,6 @@ class write : public qdb_test_template<write>
 public:
     explicit write(bench::test_config config) : qdb_test_template(config)
     {
-        _content = utils::create_random_string(config.content_size);
     }
 
     void setup() override
@@ -27,7 +25,7 @@ public:
 
     void run_iteration(unsigned long iteration)
     {
-        _stream.write(_content);
+        _stream.write(content(iteration));
     }
 
     void cleanup() override
@@ -53,7 +51,6 @@ public:
     }
 
 private:
-    std::string _content;
     qdb_stream_facade _stream;
 };
 } // namespace stream

@@ -2,6 +2,7 @@
 
 #include <bench/tests/common/test_template.hpp>
 #include <bench/tests/std/file_exception.hpp>
+#include <utils/random.hpp>
 
 #include <cstdio>
 #include <string>

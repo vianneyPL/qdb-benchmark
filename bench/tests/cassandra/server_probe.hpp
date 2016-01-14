@@ -25,7 +25,6 @@ public:
     void setup() override
     {
         _nodes = cassandra_facade::resolve_topology(server_probe::first_node(_cluster_uri));
-        std::size_t columns = _nodes.size();
 
         // Nothing yet
     }

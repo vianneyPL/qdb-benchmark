@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/tests/qdb/qdb_test_template.hpp>
-#include <utils/random.hpp>
 
 namespace bench
 {
@@ -22,7 +21,7 @@ public:
     void setup() override
     {
         qdb_test_template::setup();
-        _qdb.blob_put(_target_alias, utils::create_random_string(16));
+        _qdb.blob_put(_target_alias, "hello world!");
     }
 
     void run_iteration(unsigned long iteration)

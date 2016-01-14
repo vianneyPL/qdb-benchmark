@@ -4,8 +4,8 @@
 #include <bench/tests/mongodb/server_probe.hpp>
 #include <bench/tests/mongodb/db_probe.hpp>
 #include <bench/tests/common/test_template.hpp>
-#include <utils/random.hpp>
 #include <utils/unique_alias_provider.hpp>
+#include <utils/unique_content_provider.hpp>
 
 namespace bench
 {
@@ -15,10 +15,13 @@ namespace mongodb
 {
 
 template <typename Derived>
-class mongodb_test_template : public test_template<Derived>, protected utils::unique_alias_provider
+class mongodb_test_template : public test_template<Derived>,
+                              protected utils::unique_alias_provider,
+                              protected utils::unique_content_provider
 {
 public:
-    mongodb_test_template(test_config config) : test_template<Derived>(config), _cluster_uri(config.cluster_uri)
+    mongodb_test_template(test_config config)
+        : test_template<Derived>(config), unique_content_provider(config.content_size), _cluster_uri(config.cluster_uri)
     {
     }
 

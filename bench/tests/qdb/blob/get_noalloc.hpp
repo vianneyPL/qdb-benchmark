@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/tests/qdb/qdb_test_template.hpp>
-#include <utils/random.hpp>
 
 namespace bench
 {
@@ -16,19 +15,17 @@ class get_noalloc : public qdb_test_template<get_noalloc>
 public:
     get_noalloc(bench::test_config config) : qdb_test_template(config), _buffer(config.content_size, 0)
     {
-        _content = utils::create_random_string(config.content_size);
     }
 
     void setup() override
     {
         qdb_test_template::setup();
-        _qdb.blob_put(alias(0), _content);
+        _qdb.blob_put(alias(0), content(0));
     }
 
     void run_iteration(unsigned long iteration)
     {
         _qdb.blob_get_noalloc(alias(0), _buffer);
-        if (_content.size() != _buffer.size()) throw std::exception();
     }
 
     void cleanup() override
@@ -54,7 +51,6 @@ public:
 
 private:
     std::string _buffer;
-    std::string _content;
 };
 } // namespace blob
 } // namespace qdb

@@ -1,8 +1,6 @@
 #pragma once
 
-#include <iostream>
 #include <bench/tests/cassandra/cassandra_test_template.hpp>
-#include <utils/random.hpp>
 
 namespace bench
 {
@@ -17,21 +15,17 @@ class get : public cassandra_test_template<get>
 public:
     explicit get(bench::test_config config) : cassandra_test_template(config)
     {
-        _content = utils::create_random_string(config.content_size);
     }
 
     void setup() override
     {
         cassandra_test_template::setup();
-        _cassandra.blob_put(alias(0), _content);
+        _cassandra.blob_put(alias(0), content(0));
     }
 
     void run_iteration(unsigned long iteration)
     {
-        std::string content = _cassandra.blob_get(alias(0));
-
-        if (content != _content) 
-            throw std::runtime_error("content != _content");
+        _cassandra.blob_get(alias(0));
     }
 
     void cleanup() override
@@ -53,9 +47,6 @@ public:
     {
         return true;
     }
-
-private:
-    std::string _content;
 };
 } // namespace blob
 } // namespace cassandra

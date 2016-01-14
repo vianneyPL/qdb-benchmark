@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/tests/qdb/qdb_test_template.hpp>
-#include <utils/random.hpp>
 
 namespace bench
 {
@@ -16,12 +15,11 @@ class push_front : public qdb_test_template<push_front>
 public:
     explicit push_front(bench::test_config config) : qdb_test_template(config)
     {
-        _content = utils::create_random_string(config.content_size);
     }
 
     void run_iteration(unsigned long iteration)
     {
-        _qdb.deque_push_front(alias(0), _content);
+        _qdb.deque_push_front(alias(0), content(iteration));
     }
 
     void cleanup() override
@@ -44,9 +42,6 @@ public:
     {
         return true;
     }
-
-private:
-    std::string _content;
 };
 } // namespace deque
 } // namespace qdb
