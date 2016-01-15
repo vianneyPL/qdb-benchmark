@@ -23,7 +23,7 @@ public:
         qdb_test_template::setup();
         setup_each([=](unsigned long iteration)
                    {
-                       _qdb.blob_put(alias(iteration), content(iteration));
+                       _qdb.blob_put(alias(iteration), "hello world!");
                    });
     }
 
