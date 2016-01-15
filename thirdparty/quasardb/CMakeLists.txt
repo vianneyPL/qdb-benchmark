@@ -46,10 +46,8 @@ set_target_properties(qdb_api
     INTERFACE_INCLUDE_DIRECTORIES ${QDB_API_INCLUDE}
 )
 
-if(EXISTS ${QDB_API_DLL})
+if (WIN32)
     install(FILES ${QDB_API_DLL} DESTINATION bin)
-endif()
-
-if(EXISTS ${QDB_API})
-    install(FILES ${QDB_API} DESTINATION lib)
+else()
+    install(FILES ${QDB_API_LIBRARY} DESTINATION lib)
 endif()
