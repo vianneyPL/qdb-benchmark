@@ -1,6 +1,4 @@
 #include <bench/report/jsonp.hpp>
-
-#define ARDUINOJSON_ENABLE_STD_STREAM
 #include <ArduinoJson.h>
 
 #include <algorithm>
