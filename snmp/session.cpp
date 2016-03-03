@@ -46,8 +46,7 @@ static void save_variable(std::map<snmp::oid, snmp::variant> & variables, ::vari
     }
 }
 
-static std::unique_ptr<::snmp_pdu, pdu_deleter> perform_request(::snmp_session * session,
-                                                                ::snmp_pdu * request)
+static std::unique_ptr<::snmp_pdu, pdu_deleter> perform_request(::snmp_session * session, ::snmp_pdu * request)
 {
     struct snmp_pdu * unsafe_response;
     auto status = snmp_synch_response(session, request, &unsafe_response);
@@ -65,6 +64,7 @@ void snmp::session::open(const std::string & peername, const std::string & commu
     if (!_initialized)
     {
         init_snmp("snmpapp");
+        shutdown_snmp_logging();
         _initialized = true;
     }
 
