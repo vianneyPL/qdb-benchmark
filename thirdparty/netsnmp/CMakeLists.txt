@@ -11,10 +11,12 @@ set(NETSNMP_INCLUDE ${CMAKE_BINARY_DIR}/include)
 set(NETSNMP_LIBRARY ${CMAKE_BINARY_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}netsnmp${CMAKE_STATIC_LIBRARY_SUFFIX})
 set(NETSNMP_LINK_LIBRARIES)
 
-# clock_gettime is included in 2.17+, before it was in librt
-CHECK_FUNCTION_EXISTS(clock_gettime HAVE_CLOCK_GETTIME)
-if(NOT "${HAVE_CLOCK_GETTIME}")
-    list(APPEND NETSNMP_LINK_LIBRARIES rt)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    # clock_gettime is included in 2.17+, before it was in librt
+    CHECK_FUNCTION_EXISTS(clock_gettime HAVE_CLOCK_GETTIME)
+    if(NOT "${HAVE_CLOCK_GETTIME}")
+        list(APPEND NETSNMP_LINK_LIBRARIES rt)
+    endif()
 endif()
 
 ExternalProject_Add(netsnmp-sources
