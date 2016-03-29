@@ -17,6 +17,7 @@ add_library(bench-tests-quasardb
     hset/contains.hpp
     hset/erase.hpp
     hset/insert.hpp
+    hset/remove.hpp
     integer/add.hpp
     integer/get.hpp
     integer/put.hpp

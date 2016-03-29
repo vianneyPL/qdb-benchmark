@@ -13,6 +13,7 @@
 #include <bench/tests/qdb/hset/contains.hpp>
 #include <bench/tests/qdb/hset/erase.hpp>
 #include <bench/tests/qdb/hset/insert.hpp>
+#include <bench/tests/qdb/hset/remove.hpp>
 #include <bench/tests/qdb/integer/add.hpp>
 #include <bench/tests/qdb/integer/get.hpp>
 #include <bench/tests/qdb/integer/put.hpp>
@@ -27,6 +28,7 @@ namespace tests
 {
 namespace qdb
 {
+
 template <typename OutputIt>
 void get_tests(OutputIt it)
 {
@@ -43,6 +45,7 @@ void get_tests(OutputIt it)
     *it++ = new qdb::hset::contains::test_class();
     *it++ = new qdb::hset::erase::test_class();
     *it++ = new qdb::hset::insert::test_class();
+    *it++ = new qdb::hset::remove::test_class();
     *it++ = new qdb::integer::add::test_class();
     *it++ = new qdb::integer::get::test_class();
     *it++ = new qdb::integer::put::test_class();
@@ -51,6 +54,7 @@ void get_tests(OutputIt it)
     *it++ = new qdb::stream::write::test_class();
     *it++ = new qdb::tag::add_blob::test_class();
 }
-}
-}
-}
+
+} // namespace qdb
+} // namespace tests
+} // namespace bench
