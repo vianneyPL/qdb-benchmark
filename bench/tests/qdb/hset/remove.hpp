@@ -13,7 +13,8 @@ namespace hset
 class remove : public qdb_test_template<remove>
 {
 public:
-    explicit remove(bench::test_config config) : qdb_test_template(config), _content_count(config.content_count)
+    explicit remove(bench::test_config config)
+        : qdb_test_template(config), _content_count(config.content_count), _content(sizeof(std::uint64_t))
     {
     }
 
@@ -25,7 +26,8 @@ public:
             auto a = alias(iteration);
             for (auto i = 0u; i < _content_count; ++i)
             {
-                _qdb.hset_insert(a, content(i));
+                _content.set_watermark(i);
+                _qdb.hset_insert(a, _content);
             }
         });
     }
@@ -47,7 +49,7 @@ public:
 
     static bool size_dependent()
     {
-        return true;
+        return false;
     }
 
     static bool count_dependent()
@@ -57,6 +59,7 @@ public:
 
 private:
     std::size_t _content_count;
+    utils::unique_content _content;
 };
 
 } // namespace hset
