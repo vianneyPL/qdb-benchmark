@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace integer
 {
+
 class remove : public qdb_test_template<remove>
 {
 public:
@@ -21,10 +22,7 @@ public:
     {
         qdb_test_template::setup();
 
-        setup_each([=](unsigned long iteration)
-                   {
-                       _qdb.int_put(alias(iteration), 42);
-                   });
+        setup_each([=](unsigned long iteration) { _qdb.int_put(alias(iteration), 42); });
     }
 
     void run_iteration(unsigned long iteration)
@@ -46,7 +44,13 @@ public:
     {
         return false;
     }
+
+    static bool count_dependent()
+    {
+        return false;
+    }
 };
+
 } // namespace integer
 } // namespace qdb
 } // namespace tests

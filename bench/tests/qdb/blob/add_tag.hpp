@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace blob
 {
+
 class add_tag : public qdb_test_template<add_tag>
 {
 public:
@@ -33,10 +34,7 @@ public:
     {
         _qdb.remove(_target_alias);
 
-        cleanup_each([=](unsigned long iteration)
-                     {
-                         _qdb.remove(alias(iteration));
-                     });
+        cleanup_each([=](unsigned long iteration) { _qdb.remove(alias(iteration)); });
 
         qdb_test_template::cleanup();
     }
@@ -56,9 +54,15 @@ public:
         return false;
     }
 
+    static bool count_dependent()
+    {
+        return false;
+    }
+
 private:
     std::string _target_alias;
 };
+
 } // namespace blob
 } // namespace qdb
 } // namespace tests

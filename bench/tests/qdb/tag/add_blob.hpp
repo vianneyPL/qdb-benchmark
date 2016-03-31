@@ -57,6 +57,11 @@ public:
         return false;
     }
 
+    static bool count_dependent()
+    {
+        return false;
+    }
+
 private:
     std::string _tag;
 };

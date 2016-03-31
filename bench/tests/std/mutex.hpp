@@ -40,6 +40,11 @@ public:
         return false;
     }
 
+    static bool count_dependent()
+    {
+        return false;
+    }
+
 private:
     // A mutex shared by all threads.
     static std::mutex _mutex;

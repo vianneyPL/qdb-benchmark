@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace blob
 {
+
 class get_noalloc : public qdb_test_template<get_noalloc>
 {
 public:
@@ -49,9 +50,15 @@ public:
         return true;
     }
 
+    static bool count_dependent()
+    {
+        return false;
+    }
+
 private:
     std::string _buffer;
 };
+
 } // namespace blob
 } // namespace qdb
 } // namespace tests

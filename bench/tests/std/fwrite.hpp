@@ -56,6 +56,11 @@ public:
         return true;
     }
 
+    static bool count_dependent()
+    {
+        return false;
+    }
+
 private:
     std::string _filename;
     std::string _content;

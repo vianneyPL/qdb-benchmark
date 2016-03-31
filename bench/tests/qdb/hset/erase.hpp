@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace hset
 {
+
 class erase : public qdb_test_template<erase>
 {
 public:
@@ -52,7 +53,13 @@ public:
     {
         return true;
     }
+
+    static bool count_dependent()
+    {
+        return false;
+    }
 };
+
 } // namespace hset
 } // namespace qdb
 } // namespace tests

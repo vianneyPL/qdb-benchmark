@@ -39,6 +39,11 @@ public:
         return false;
     }
 
+    static bool count_dependent()
+    {
+        return false;
+    }
+
 private:
     // An atomic shared by all threads.
     static std::atomic<int> _value;

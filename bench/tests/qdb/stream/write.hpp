@@ -50,6 +50,11 @@ public:
         return true;
     }
 
+    static bool count_dependent()
+    {
+        return false;
+    }
+
 private:
     qdb_stream_facade _stream;
 };

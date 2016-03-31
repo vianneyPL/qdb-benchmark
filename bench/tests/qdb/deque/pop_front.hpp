@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace deque
 {
+
 class pop_front : public qdb_test_template<pop_front>
 {
 public:
@@ -21,10 +22,7 @@ public:
     {
         qdb_test_template::setup();
 
-        setup_each([&](unsigned long iteration)
-                   {
-                       _qdb.deque_push_front(alias(0), content(iteration));
-                   });
+        setup_each([&](unsigned long iteration) { _qdb.deque_push_front(alias(0), content(iteration)); });
     }
 
     void run_iteration(unsigned long iteration)
@@ -46,7 +44,13 @@ public:
     {
         return true;
     }
+
+    static bool count_dependent()
+    {
+        return false;
+    }
 };
+
 } // namespace deque
 } // namespace qdb
 } // namespace tests

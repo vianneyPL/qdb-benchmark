@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace deque
 {
+
 class push_front : public qdb_test_template<push_front>
 {
 public:
@@ -42,7 +43,13 @@ public:
     {
         return true;
     }
+
+    static bool count_dependent()
+    {
+        return false;
+    }
 };
+
 } // namespace deque
 } // namespace qdb
 } // namespace tests

@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace integer
 {
+
 class add : public qdb_test_template<add>
 {
 public:
@@ -48,7 +49,13 @@ public:
     {
         return false;
     }
+
+    static bool count_dependent()
+    {
+        return false;
+    }
 };
+
 } // namespace integer
 } // namespace qdb
 } // namespace tests

@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace blob
 {
+
 class update : public qdb_test_template<update>
 {
 public:
@@ -42,7 +43,13 @@ public:
     {
         return true;
     }
+
+    static bool count_dependent()
+    {
+        return false;
+    }
 };
+
 } // namespace blob
 } // namespace qdb
 } // namespace tests
