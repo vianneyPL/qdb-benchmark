@@ -1,6 +1,6 @@
 if (bench == undefined) bench = {};
 
-bench.computations = 
+bench.computations =
 {
     transformSamples: function(samples, operation) {
         var lines = [];
@@ -10,14 +10,14 @@ bench.computations =
             var t, t0;
             t = samples[i][0];
             if (i>0) t0 = samples[i-1][0];
-            
+
             lines.push([t]);
 
             for (var j=0;j<lineCount;j++)
             {
                 var x, x0;
                 x = samples[i][j+1];
-                if (i > 0) x0 = samples[i-1][j+1];            
+                if (i > 0) x0 = samples[i-1][j+1];
 
                 lines[i].push(operation(x, t, x0, t0));
             }
