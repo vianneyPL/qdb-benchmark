@@ -2,7 +2,7 @@ var renderTimeout;
 
 var content = d3.select("#content");
 
-function add_charts_for_test_class(test_name) {  
+function add_charts_for_test_class(test_name) {
 
     var div = d3.select(this);
     var test = tests_by_class[test_name];
@@ -23,17 +23,17 @@ function add_charts_for_test_class(test_name) {
             multiTestChart = bench.chart.verticalBarChart();
         } else {
             multiTestChart = bench.chart.bubbleChart();
-        } 
+        }
 
-        multiTestChart.data(test);     
+        multiTestChart.data(test);
         multiTestChart(div.append("div").classed("summary", true));
         multiTestChart.on("select", function(id){
-            console.log("test "+id);   
-            singleTestChart.data(test_by_id[id]);  
-            singleTestChart.update();      
+            console.log("test "+id);
+            singleTestChart.data(test_by_id[id]);
+            singleTestChart.update();
         });
     }
-    
+
     var singleTestChart = bench.chart.lineChart();
     singleTestChart.data(test[0]);
     singleTestChart(div.append("div").classed("detail", true));

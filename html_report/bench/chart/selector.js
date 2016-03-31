@@ -49,7 +49,7 @@ bench.chart.selector = function(data) {
     }
 
     chart.selected = function(value) {
-        if (value === undefined) value = selectedSeries;      
+        if (value === undefined) value = selectedSeries;
         selectedSeries = value % data.length;
         return selectedSeries;
     }
