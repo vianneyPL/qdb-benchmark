@@ -13,6 +13,10 @@ double bench::compute_average_frequency(const bench::test_instance & test)
     const sample & last_sample = test.result.at("test.iterations").samples.back();
 
     auto iterations = sum_values(last_sample);
+    if (test.tclass.count_dependent)
+    {
+        iterations *= test.config.content_count;
+    }
 
     time_point stop_time = last_sample.time;
     duration elapsed = stop_time - test.start_time;
