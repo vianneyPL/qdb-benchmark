@@ -41,5 +41,14 @@ bench.computations =
                     return test.content_size
                 })
             ).values();
+    },
+
+    getContentCounts: function(testCollection) {
+        return d3.set(
+            testCollection.map(
+                function(test) {
+                    return test.content_count
+                })
+            ).values();
     }
 }
