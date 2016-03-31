@@ -16,6 +16,7 @@ public:
     std::string name;
     std::string description;
     bool size_dependent;
+    bool count_dependent;
 
     virtual std::unique_ptr<test_loop> create_loop(test_config) const = 0;
     virtual probe_collection create_probes(test_config) const = 0;

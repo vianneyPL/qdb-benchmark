@@ -24,7 +24,21 @@ void bench::app::program::prepare_schedule()
         for (auto thread_count : _settings.thread_counts)
         {
             config.thread_count = thread_count;
-            if (test_class->size_dependent)
+            config.content_size = 0;
+            config.content_count = 0;
+            if (test_class->size_dependent && test_class->count_dependent)
+            {
+                for (auto content_size : _settings.content_sizes)
+                {
+                    config.content_size = content_size;
+                    for (auto content_count : _settings.content_counts)
+                    {
+                        config.content_count = content_count;
+                        _schedule.emplace_back(create_test_instance(*test_class, config));
+                    }
+                }
+            }
+            else if (test_class->size_dependent)
             {
                 for (auto content_size : _settings.content_sizes)
                 {
@@ -32,9 +46,16 @@ void bench::app::program::prepare_schedule()
                     _schedule.emplace_back(create_test_instance(*test_class, config));
                 }
             }
+            else if (test_class->count_dependent)
+            {
+                for (auto content_count : _settings.content_counts)
+                {
+                    config.content_count = content_count;
+                    _schedule.emplace_back(create_test_instance(*test_class, config));
+                }
+            }
             else
             {
-                config.content_size = 0;
                 _schedule.emplace_back(create_test_instance(*test_class, config));
             }
         }

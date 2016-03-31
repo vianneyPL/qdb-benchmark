@@ -21,6 +21,7 @@ public:
             name = Derived::name();
             description = Derived::description();
             size_dependent = Derived::size_dependent();
+            count_dependent = Derived::count_dependent();
         }
 
         std::unique_ptr<bench::test_loop> create_loop(bench::test_config config) const override

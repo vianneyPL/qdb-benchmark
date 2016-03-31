@@ -40,6 +40,8 @@ bench::app::settings bench::app::parse_command_line(int argc, const char ** argv
         cmd_line.get_integers("", "--threads", "Set number of threads", "1,2,4,8,16,32");
     s.content_sizes = cmd_line.get_values<std::size_t>("", "--sizes", "Set contents sizes",
                                                        "1,10,100,1K,10K,100K,1M,10M", parse_size);
+    s.content_counts = cmd_line.get_values<std::size_t>("", "--counts", "Set contents counts",
+                                                        "1,10,100,1K,10K,100K,1M,10M", parse_size);
     s.tests = cmd_line.get_strings("", "--tests", "Select the tests to run (default=all)");
 
     if (version) std::exit(0);
@@ -69,20 +71,41 @@ void bench::app::program::prepare_schedule()
     {
         if (!should_run_test(test_class->id)) continue;
 
-        for (int thread_count : _settings.thread_counts)
+        for (auto thread_count : _settings.thread_counts)
         {
             config.thread_count = thread_count;
-            if (test_class->size_dependent)
+            config.content_size = 0;
+            config.content_count = 0;
+            if (test_class->size_dependent && test_class->count_dependent)
             {
-                for (int content_size : _settings.content_sizes)
+                for (auto content_size : _settings.content_sizes)
+                {
+                    config.content_size = content_size;
+                    for (auto content_count : _settings.content_counts)
+                    {
+                        config.content_count = content_count;
+                        _schedule.emplace_back(create_test_instance(*test_class, config));
+                    }
+                }
+            }
+            else if (test_class->size_dependent)
+            {
+                for (auto content_size : _settings.content_sizes)
                 {
                     config.content_size = content_size;
                     _schedule.emplace_back(create_test_instance(*test_class, config));
                 }
             }
+            else if (test_class->count_dependent)
+            {
+                for (auto content_count : _settings.content_counts)
+                {
+                    config.content_count = content_count;
+                    _schedule.emplace_back(create_test_instance(*test_class, config));
+                }
+            }
             else
             {
-                config.content_size = 0;
                 _schedule.emplace_back(create_test_instance(*test_class, config));
             }
         }

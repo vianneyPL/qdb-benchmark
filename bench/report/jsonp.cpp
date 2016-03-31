@@ -70,6 +70,7 @@ void bench::report::jsonp::add_test(const bench::test_instance & test)
     root["name"] = test.tclass.name.c_str();
     root["description"] = test.tclass.description.c_str();
     root["content_size"] = test.config.content_size;
+    root["content_count"] = test.config.content_count;
     root["thread_count"] = test.config.thread_count;
 
     write_errors(root.createNestedArray("errors"), test.errors.begin(), test.errors.end());

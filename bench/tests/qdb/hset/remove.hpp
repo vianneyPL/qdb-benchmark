@@ -13,7 +13,7 @@ namespace hset
 class remove : public qdb_test_template<remove>
 {
 public:
-    explicit remove(bench::test_config config) : qdb_test_template(config)
+    explicit remove(bench::test_config config) : qdb_test_template(config), _content_count(config.content_count)
     {
     }
 
@@ -21,7 +21,13 @@ public:
     {
         qdb_test_template::setup();
 
-        setup_each([=](unsigned long iteration) { _qdb.hset_insert(alias(iteration), content(iteration)); });
+        setup_each([=](unsigned long iteration) {
+            auto a = alias(iteration);
+            for (auto i = 0u; i < _content_count; ++i)
+            {
+                _qdb.hset_insert(a, content(i));
+            }
+        });
     }
 
     void run_iteration(unsigned long iteration)
@@ -43,6 +49,14 @@ public:
     {
         return true;
     }
+
+    static bool count_dependent()
+    {
+        return true;
+    }
+
+private:
+    std::size_t _content_count;
 };
 
 } // namespace hset

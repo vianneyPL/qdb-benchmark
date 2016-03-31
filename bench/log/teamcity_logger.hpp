@@ -126,6 +126,7 @@ private:
         std::string s;
         s = test.tclass.name + "." + make_thread_string(test.config.thread_count);
         if (test.tclass.size_dependent) s += "." + make_size_string(test.config.content_size);
+        if (test.tclass.count_dependent) s += "." + make_size_string(test.config.content_count);
         return s;
     }
 };

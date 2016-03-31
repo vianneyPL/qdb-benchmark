@@ -34,6 +34,7 @@ public:
             fmt::print("\n  {}. {}", i + 1, test.tclass.name);
             fmt::print(", threads={}", test.config.thread_count);
             if (test.tclass.size_dependent) fmt::print(", size={}", test.config.content_size);
+            if (test.tclass.count_dependent) fmt::print(", count={}", test.config.content_count);
         }
         fmt::print("\n\n");
 
@@ -58,6 +59,11 @@ public:
         if (test.tclass.size_dependent)
         {
             fmt::print(", with a payload of {}", unit::byte(static_cast<double>(test.config.content_size)));
+        }
+
+        if (test.tclass.count_dependent)
+        {
+            fmt::print(", with a count of {}", unit::none(static_cast<double>(test.config.content_count)));
         }
 
         fmt::print("\n{}Setting up test... \n", _header);
