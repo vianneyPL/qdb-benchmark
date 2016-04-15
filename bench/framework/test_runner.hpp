@@ -30,7 +30,11 @@ public:
             init_test_results();
             step2_test();
         }
-        step3_cleanup();
+
+        if (!test.config.no_cleanup)
+        {
+            step3_cleanup();
+        }
 
         destroy_probes();
         destroy_threads();

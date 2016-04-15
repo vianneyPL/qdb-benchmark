@@ -89,6 +89,7 @@ void bench::app::command_line::parse(int argc, const char ** argv)
         parser.get_integer("-d", "--duration", "Set the duration of each test, in seconds", "4"));
     _settings.content_sizes =
         parser.get_values<std::size_t>("", "--sizes", "Set contents sizes", "1,1K,1M", parse_size);
+    _settings.no_cleanup = parser.get_flag("", "--no-cleanup", "Disable test cleanup");
 #if BENCHMARK_SNMP
     _settings.snmp_peers = parser.get_strings("", "--snmp", "Set SNMP peer names", "");
 #endif

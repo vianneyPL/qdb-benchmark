@@ -19,6 +19,8 @@ struct settings
     std::chrono::duration<int> pause;
     std::chrono::duration<int> duration;
 
+    bool no_cleanup;
+
 #if BENCHMARK_SNMP
     std::vector<std::string> snmp_peers;
 #endif
