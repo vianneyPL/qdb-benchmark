@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/core/test_instance.hpp>
-
 #include <fstream>
 
 namespace bench
@@ -27,5 +26,6 @@ public:
 private:
     std::ofstream _file;
 };
-}
-}
+
+} // namespace report
+} // namespace bench

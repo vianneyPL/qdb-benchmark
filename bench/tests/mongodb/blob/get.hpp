@@ -23,7 +23,7 @@ public:
         _mongodb.blob_put(alias(0), content(0));
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _mongodb.blob_get(alias(0));
     }

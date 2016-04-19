@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/tests/common/test_template.hpp>
-
 #include <atomic>
 #include <string>
 
@@ -19,7 +18,7 @@ public:
     {
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         ++_value;
     }
@@ -31,7 +30,7 @@ public:
 
     static std::string description()
     {
-        return "Increment a shared std::atomic<int> by each thread.";
+        return "Increment a shared std::atomic<std::uint32_t> by each thread.";
     }
 
     static bool size_dependent()
@@ -41,10 +40,10 @@ public:
 
 private:
     // An atomic shared by all threads.
-    static std::atomic<int> _value;
+    static std::atomic<std::uint32_t> _value;
 };
 
-std::atomic<int> atomic::_value{0};
+std::atomic<std::uint32_t> atomic::_value{0u};
 
 } // namespace std_
 } // namespace tests

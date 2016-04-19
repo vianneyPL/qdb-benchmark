@@ -8,6 +8,7 @@ namespace bench
 {
 namespace log
 {
+
 class logger
 {
 public:
@@ -31,5 +32,6 @@ public:
 
 logger & get_teamcity_logger();
 logger & get_console_logger();
-}
-}
+
+} // namespace log
+} // namespace bench

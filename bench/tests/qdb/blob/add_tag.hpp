@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace blob
 {
+
 class add_tag : public qdb_test_template<add_tag>
 {
 public:
@@ -24,7 +25,7 @@ public:
         _qdb.blob_put(_target_alias, "hello world!");
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _qdb.add_tag(_target_alias, alias(iteration));
     }
@@ -33,10 +34,7 @@ public:
     {
         _qdb.remove(_target_alias);
 
-        cleanup_each([=](unsigned long iteration)
-                     {
-                         _qdb.remove(alias(iteration));
-                     });
+        cleanup_each([=](std::uint32_t iteration) { _qdb.remove(alias(iteration)); });
 
         qdb_test_template::cleanup();
     }
@@ -59,6 +57,7 @@ public:
 private:
     std::string _target_alias;
 };
+
 } // namespace blob
 } // namespace qdb
 } // namespace tests

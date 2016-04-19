@@ -1,5 +1,5 @@
-#include <bench/core/test_instance.hpp>
 #include <bench/core/probe.hpp>
+#include <bench/core/test_instance.hpp>
 #include <bench/framework/test_thread.hpp>
 #include <bench/log/logger.hpp>
 
@@ -7,6 +7,7 @@ namespace bench
 {
 namespace framework
 {
+
 class test_runner
 {
 public:
@@ -75,5 +76,6 @@ private:
     probe_collection _custom_probes;
     std::vector<probe *> _all_probes;
 };
-}
-}
+
+} // namespace framework
+} // namespace bench

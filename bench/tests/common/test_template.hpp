@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/core/test_class.hpp>
-#include <bench/core/test_loop.hpp>
 #include <utils/memory.hpp>
 
 namespace bench
@@ -63,7 +62,7 @@ protected:
     template <typename Function>
     void cleanup_each(Function function)
     {
-        for (unsigned long i = 0; i < test_loop::iterations(); i++)
+        for (auto i = 0u; i < test_loop::iterations(); i++)
         {
             function(i);
         }
@@ -89,7 +88,7 @@ private:
         }
     }
 
-    void run_n_iterations(unsigned long count)
+    void run_n_iterations(std::uint32_t count)
     {
         while (iterations() < count)
         {
@@ -99,7 +98,7 @@ private:
     }
 
     test_config _config;
-    unsigned long _prepared_iterations;
+    std::uint32_t _prepared_iterations;
 };
 
 } // namespace tests

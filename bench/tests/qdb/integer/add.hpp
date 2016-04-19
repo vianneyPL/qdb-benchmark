@@ -23,7 +23,7 @@ public:
         _qdb.int_put(alias(0), 0);
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _qdb.int_add(alias(0), 1);
     }

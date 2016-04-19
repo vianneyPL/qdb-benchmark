@@ -3,11 +3,7 @@
 #include <bench/core/clock.hpp>
 #include <bench/core/test_instance.hpp>
 #include <bench/framework/thread_synchronizer.hpp>
-
-#include <chrono>
-#include <exception>
-#include <thread>
-
+#include <cstdint>
 #include <iostream>
 #include <thread>
 
@@ -15,6 +11,7 @@ namespace bench
 {
 namespace framework
 {
+
 class test_thread
 {
 public:
@@ -30,7 +27,7 @@ public:
         assert(_running == false);
     }
 
-    unsigned long iterations() const
+    std::uint32_t iterations() const
     {
         return _test_loop->iterations();
     }
@@ -79,5 +76,6 @@ private:
 };
 
 using test_thread_collection = std::vector<std::unique_ptr<test_thread>>;
-}
-}
+
+} // namespace framework
+} // namespace bench

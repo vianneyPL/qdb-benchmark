@@ -17,7 +17,7 @@ public:
     {
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _qdb.hset_insert(alias(0), content(iteration));
     }

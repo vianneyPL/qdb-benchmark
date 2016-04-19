@@ -5,6 +5,7 @@
 
 namespace bench
 {
+
 struct test_config
 {
     std::string cluster_uri;
@@ -13,4 +14,5 @@ struct test_config
     int thread_count;
     std::chrono::duration<int> duration;
 };
-}
+
+} // namespace bench

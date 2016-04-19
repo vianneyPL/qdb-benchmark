@@ -21,13 +21,10 @@ public:
     {
         qdb_test_template::setup();
 
-        setup_each([=](unsigned long iteration)
-                   {
-                       _qdb.hset_insert(alias(0), content(iteration));
-                   });
+        setup_each([=](std::uint32_t iteration) { _qdb.hset_insert(alias(0), content(iteration)); });
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _qdb.hset_contains(alias(0), content(iteration));
     }

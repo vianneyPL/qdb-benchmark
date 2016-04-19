@@ -9,6 +9,7 @@ namespace bench
 {
 namespace framework
 {
+
 template <typename Thread>
 class thread_synchronizer
 {
@@ -64,10 +65,7 @@ public:
         lock.unlock();
         _cv.notify_all();
         lock.lock();
-        _cv.wait(lock, [=]
-                 {
-                     return _cycle >= next_cycle;
-                 });
+        _cv.wait(lock, [=] { return _cycle >= next_cycle; });
         assert(_cycle == next_cycle);
         assert(_ready_workers <= _workers);
         return _order;
@@ -76,10 +74,7 @@ public:
     void wait_workers()
     {
         std::unique_lock<std::mutex> lock(_mutex);
-        _cv.wait(lock, [=]
-                 {
-                     return _ready_workers >= _workers;
-                 });
+        _cv.wait(lock, [=] { return _ready_workers >= _workers; });
         assert(_ready_workers == _workers);
     }
 
@@ -88,10 +83,7 @@ public:
     {
         std::unique_lock<std::mutex> lock(_mutex);
 
-        bool ok = _cv.wait_for(lock, rel_time, [=]
-                               {
-                                   return _ready_workers >= _workers;
-                               });
+        bool ok = _cv.wait_for(lock, rel_time, [=] { return _ready_workers >= _workers; });
         if (!ok)
         {
             assert(_ready_workers < _workers);
@@ -112,5 +104,6 @@ private:
     std::condition_variable _cv;
     std::exception_ptr _exception;
 };
-}
-}
+
+} // namespace framework
+} // namespace bench

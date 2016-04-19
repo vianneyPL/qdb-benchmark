@@ -17,17 +17,14 @@ public:
     {
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _mongodb.blob_put(alias(iteration), content(iteration));
     }
 
     void cleanup() override
     {
-        cleanup_each([=](unsigned long iteration)
-                     {
-                         _mongodb.remove(alias(iteration));
-                     });
+        cleanup_each([=](std::uint32_t iteration) { _mongodb.remove(alias(iteration)); });
     }
 
     static std::string name()

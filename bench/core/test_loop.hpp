@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bench/core/clock.hpp>
+#include <cstdint>
 
 namespace bench
 {
@@ -20,7 +21,7 @@ public:
     virtual void run() = 0;
     virtual void cleanup() = 0;
 
-    unsigned long iterations() const
+    std::uint32_t iterations() const
     {
         return _iterations;
     }
@@ -32,7 +33,7 @@ protected:
     }
 
 private:
-    volatile unsigned long _iterations;
+    volatile std::uint32_t _iterations;
 };
 
 } // namespace bench

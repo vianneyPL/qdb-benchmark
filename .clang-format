@@ -21,6 +21,21 @@ BreakBeforeBinaryOperators: NonAssignment
 NamespaceIndentation: None
 PointerAlignment: Middle
 SpacesInAngles: false
+IncludeCategories:
+  - Regex:      '^(<|")qdb/'
+    Priority:   3
+  - Regex:      '^(<|")(mach|linux|sys)/'
+    Priority:   7
+  - Regex:      '^(<|")windows'
+    Priority:   7
+  - Regex:      '^<experimental/'
+    Priority:   8
+  - Regex:      '^(<|")[-a-zA-Z0-9_]+/'
+    Priority:   5
+  - Regex:      '^<'
+    Priority:   9
+  - Regex:      '^"[^/]*'
+    Priority:   1
 ---
 Language: JavaScript
 

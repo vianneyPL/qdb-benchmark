@@ -2,12 +2,12 @@
 
 #include <bench/core/clock.hpp>
 #include <bench/core/unit.hpp>
-
 #include <cstdint>
 #include <vector>
 
 namespace bench
 {
+
 struct sample
 {
     time_point time;
@@ -21,4 +21,5 @@ struct time_series
     bench::unit unit;
     std::vector<sample> samples;
 };
-}
+
+} // namespace bench

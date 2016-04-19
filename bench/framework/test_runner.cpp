@@ -1,24 +1,23 @@
-#include <bench/framework/test_runner.hpp>
-
+#include "test_runner.hpp"
 #include <bench/core/clock.hpp>
-#include <bench/core/test_instance.hpp>
 #include <bench/core/probe.hpp>
-#include <bench/framework/test_thread.hpp>
+#include <bench/core/test_instance.hpp>
 #include <bench/framework/counter_probe.hpp>
-#include <bench/log/logger.hpp>
-#include <utils/memory.hpp>
-#include <utils/for_each.hpp>
-#include <utils/detailed_error.hpp>
-
 #if BENCHMARK_SNMP
 #include <bench/framework/snmp_probe.hpp>
 #endif
-
-#include <chrono>
+#include <bench/framework/test_thread.hpp>
+#include <bench/log/logger.hpp>
+#include <utils/detailed_error.hpp>
+#include <utils/for_each.hpp>
+#include <utils/memory.hpp>
 #include <algorithm>
+#include <chrono>
 
-using namespace bench;
-using namespace bench::framework;
+namespace bench
+{
+namespace framework
+{
 
 static duration compute_sampling_period(duration test_duration)
 {
@@ -31,8 +30,10 @@ void test_runner::create_threads()
 {
     _synchronizer.reset(_test->config.thread_count);
 
-    for (int i = 0; i < _test->config.thread_count; i++)
+    for (auto i = 0; i < _test->config.thread_count; i++)
+    {
         _threads.emplace_back(new test_thread(*_test, _synchronizer));
+    }
 
     _synchronizer.wait_workers();
 }
@@ -46,7 +47,7 @@ void test_runner::destroy_threads()
 void test_runner::create_probes()
 {
     _counter_probe.reset(new counter_probe(_threads));
-    _custom_probes = bench::create_test_probes(*_test);
+    _custom_probes = create_test_probes(*_test);
 
     // insert the iteration probe first  so it's not affected by the delay in other probes
     _all_probes.push_back(_counter_probe.get());
@@ -161,7 +162,7 @@ void test_runner::step3_cleanup()
 
 void test_runner::init_test_results()
 {
-    for (bench::probe * probe : _all_probes)
+    for (auto * probe : _all_probes)
     {
         for (auto & m : probe->measurements())
         {
@@ -173,7 +174,7 @@ void test_runner::init_test_results()
 
 void test_runner::setup_probes()
 {
-    for (bench::probe * probe : _all_probes)
+    for (auto * probe : _all_probes)
     {
         try
         {
@@ -188,7 +189,7 @@ void test_runner::setup_probes()
 
 void test_runner::cleanup_probes()
 {
-    for (bench::probe * probe : _all_probes)
+    for (auto * probe : _all_probes)
     {
         try
         {
@@ -205,7 +206,7 @@ void test_runner::sample_probes()
 {
     time_point now = clock::now();
 
-    for (bench::probe * probe : _all_probes)
+    for (auto * probe : _all_probes)
     {
         try
         {
@@ -229,3 +230,6 @@ void test_runner::set_snmp_peers(const std::vector<std::string> & snmp_peers)
     _snmp_probe.reset(new snmp_probe(snmp_peers));
 }
 #endif
+
+} // namespace framework
+} // namespace bench

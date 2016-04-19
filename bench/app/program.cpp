@@ -1,8 +1,7 @@
-#include <bench/app/program.hpp>
+#include "program.hpp"
 #include <bench/app/command_line.hpp>
 #include <bench/framework/test_runner.hpp>
 #include <bench/report/jsonp.hpp>
-
 #include <algorithm>
 #include <iostream>
 #include <thread>

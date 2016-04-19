@@ -1,8 +1,7 @@
-#include <iostream>
-
-#include <boost/algorithm/string.hpp>
 #include <bench/tests/mongodb/mongodb_facade.hpp>
+#include <boost/algorithm/string.hpp>
 #include <mongo/bson/bson.h>
+#include <iostream>
 
 #define NAMESPACE "bench.objects"
 
@@ -32,7 +31,7 @@ mongodb_facade::~mongodb_facade()
 
 void
 mongodb_facade::connect(const std::string & cluster_uri) {
-    _conn.connect(cluster_uri);    
+    _conn.connect(cluster_uri);
 }
 
 /* static */ mongo::BSONObj mongodb_facade::server_status(const std::string & node_uri) {
@@ -40,7 +39,7 @@ mongodb_facade::connect(const std::string & cluster_uri) {
     conn.connect(node_uri);
 
     mongo::BSONObj serverStatus;
-    
+
     if (!conn.runCommand("bench", BSON("serverStatus" << 1), serverStatus)) {
         throw std::runtime_error("node_status: serverStatus");
     }
@@ -57,7 +56,7 @@ mongodb_facade::connect(const std::string & cluster_uri) {
         throw std::runtime_error("node_status: dbStats");
     }
 
-    return dbStats;    
+    return dbStats;
 }
 
 
@@ -65,21 +64,21 @@ mongodb_facade::connect(const std::string & cluster_uri) {
     mongo::DBClientConnection conn;
     conn.connect(node_uri);
 
-    /* 
+    /*
        Our `node_uri` can be any of the following:
-       
+
        * an entry to a `mongos` instance, a sharded cluster;
        * an entry to a replica set;
        * a single node configuration.
-       
+
        We are going to probe for what kind of configuration we are
        dealing with by executing the relevant admin commands, and
        based on those responses resolve the entire topology.
     */
 
     mongo::BSONObj response;
-    
-    std::vector<std::string> result;    
+
+    std::vector<std::string> result;
 
     if (conn.runCommand("admin", BSON("listShards" << 1), response)) {
         // We are in sharded cluster.
@@ -95,19 +94,19 @@ mongodb_facade::connect(const std::string & cluster_uri) {
 
             if (tokens.size() == 1) {
                 // A regular host
-                result.push_back(tokens.at(0));                
+                result.push_back(tokens.at(0));
             } else if (tokens.size() == 2) {
                 std::vector<std::string> hosts;
 
                 boost::split(hosts, tokens.at(1), boost::is_any_of(","));
-                
-                std::copy(hosts.begin(), hosts.end(), 
-                          std::back_insert_iterator<std::vector<std::string>>(result));                
+
+                std::copy(hosts.begin(), hosts.end(),
+                          std::back_insert_iterator<std::vector<std::string>>(result));
             } else {
                 throw std::runtime_error("Invalid host: " + host);
             }
         }
-        
+
     } else if (conn.runCommand("admin", BSON("replSetGetStatus" << 1), response)) {
         // A replica set has been configured.
         for (mongo::BSONElement const & member : response["members"].Array()) {
@@ -116,10 +115,10 @@ mongodb_facade::connect(const std::string & cluster_uri) {
 
     } else {
         // Single node configuration.
-        result.push_back(node_uri);        
+        result.push_back(node_uri);
     }
 
-    return result;    
+    return result;
 }
 
 void mongodb_facade::remove(const std::string & alias)

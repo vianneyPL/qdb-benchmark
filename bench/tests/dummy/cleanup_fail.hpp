@@ -17,7 +17,7 @@ public:
     {
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }

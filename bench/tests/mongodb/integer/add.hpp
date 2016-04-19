@@ -16,33 +16,33 @@ public:
     explicit add(bench::test_config config) : mongodb_test_template(config)
     {
     }
-    
+
     void setup() override
     {
         mongodb_test_template::setup();
         _mongodb.int_put(alias(0), 0);
     }
-    
-    void run_iteration(unsigned long iteration)
+
+    void run_iteration(std::uint32_t iteration)
     {
         _mongodb.int_add(alias(0), 1);
     }
-    
+
     void cleanup() override
     {
         _mongodb.remove(alias(0));
     }
-    
+
     static std::string name()
     {
         return "mongodb_int_add";
     }
-    
+
     static std::string description()
     {
         return "Each thread increments an integer on one entry";
     }
-    
+
     static bool size_dependent()
     {
         return false;

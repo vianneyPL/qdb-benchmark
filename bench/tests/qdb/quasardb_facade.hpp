@@ -2,10 +2,9 @@
 
 #include <qdb/client.h>
 #include <qdb/stream.h>
-
-#include <string>
-#include <stdexcept>
 #include <cstdint>
+#include <stdexcept>
+#include <string>
 
 namespace bench
 {

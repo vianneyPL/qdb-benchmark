@@ -1,14 +1,15 @@
 #pragma once
 
 #include <bench/core/unit.hpp>
-
 #include <cstdint>
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace bench
 {
+
 struct measurement
 {
     std::string name;
@@ -51,4 +52,5 @@ private:
 };
 
 using probe_collection = std::vector<std::unique_ptr<probe>>;
-}
+
+} // namespace bench

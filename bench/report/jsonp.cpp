@@ -1,7 +1,7 @@
 #include <bench/report/jsonp.hpp>
 #include <ArduinoJson.h>
-
 #include <algorithm>
+#include <cstdint>
 #include <fstream>
 #include <sstream>
 
@@ -20,7 +20,7 @@ static const char * unit_name(bench::unit unit)
     }
 }
 
-static long long get_elapsed_millis(bench::time_point from, bench::time_point to)
+static std::int64_t get_elapsed_millis(bench::time_point from, bench::time_point to)
 {
     bench::duration elapsed = to - from;
     return std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();

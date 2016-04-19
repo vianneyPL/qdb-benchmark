@@ -2,12 +2,8 @@
 
 #include <bench/core/probe.hpp>
 #include <bench/tests/qdb/quasardb_facade.hpp>
-
 #include <ArduinoJson.h>
-
 #include <algorithm>
-#include <cstdint>
-#include <string>
 #include <vector>
 
 namespace bench

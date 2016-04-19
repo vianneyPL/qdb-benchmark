@@ -7,6 +7,7 @@ namespace bench
 {
 namespace log
 {
+
 class teamcity_logger : public logger
 {
 public:
@@ -129,5 +130,6 @@ private:
         return s;
     }
 };
-}
-}
+
+} // namespace log
+} // namespace bench

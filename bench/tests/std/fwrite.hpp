@@ -3,7 +3,6 @@
 #include <bench/tests/common/test_template.hpp>
 #include <bench/tests/std/file_exception.hpp>
 #include <utils/random.hpp>
-
 #include <cstdio>
 #include <string>
 
@@ -23,7 +22,7 @@ public:
         _content = utils::create_random_string(config.content_size);
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         auto fp = std::fopen(_filename.c_str(), "wb");
         if (fp == nullptr) throw create_file_exception(_filename, errno);

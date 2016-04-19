@@ -2,11 +2,7 @@
 
 #include <bench/core/probe.hpp>
 #include <bench/tests/mongodb/mongodb_facade.hpp>
-
 #include <algorithm>
-#include <cstdint>
-#include <string>
-#include <vector>
 
 namespace bench
 {

@@ -1,6 +1,5 @@
-#include <bench/app/command_line.hpp>
+#include "command_line.hpp"
 #include <utils/command_line.hpp>
-
 #include <algorithm>
 #include <cassert>
 #include <iomanip>
@@ -81,25 +80,21 @@ void bench::app::command_line::parse(int argc, const char ** argv)
 
     bool version = parser.get_flag("-v", "--version", "Display program version and exists");
     bool help = parser.get_flag("-h", "--help", "Display program help and exists");
-    _settings.cluster_uri =
-        parser.get_string("-c", "--cluster", "Set cluster URI", "qdb://127.0.0.1:2836");
-    _settings.pause = std::chrono::seconds(
-        parser.get_integer("-p", "--pause", "Set the delay between each test, in seconds", "1"));
-    _settings.duration = std::chrono::seconds(
-        parser.get_integer("-d", "--duration", "Set the duration of each test, in seconds", "4"));
+    _settings.cluster_uri = parser.get_string("-c", "--cluster", "Set cluster URI", "qdb://127.0.0.1:2836");
+    _settings.pause =
+        std::chrono::seconds(parser.get_integer("-p", "--pause", "Set the delay between each test, in seconds", "1"));
+    _settings.duration =
+        std::chrono::seconds(parser.get_integer("-d", "--duration", "Set the duration of each test, in seconds", "4"));
     _settings.content_sizes =
         parser.get_values<std::size_t>("", "--sizes", "Set contents sizes", "1,1K,1M", parse_size);
     _settings.no_cleanup = parser.get_flag("", "--no-cleanup", "Disable test cleanup");
 #if BENCHMARK_SNMP
     _settings.snmp_peers = parser.get_strings("", "--snmp", "Set SNMP peer names", "");
 #endif
-    _settings.thread_counts =
-        parser.get_integers("", "--threads", "Set number of threads", "1,2,4");
+    _settings.thread_counts = parser.get_integers("", "--threads", "Set number of threads", "1,2,4");
     _settings.tests = parser.get_values<const test_class *>(
-        "", "--tests", "Select the tests to run (default=all)", "", [this](const std::string & name)
-        {
-            return get_tests_by_name(_test_pool, name);
-        });
+        "", "--tests", "Select the tests to run (default=all)", "",
+        [this](const std::string & name) { return get_tests_by_name(_test_pool, name); });
     parser.check_unknown();
 
     if (_settings.tests.empty()) _settings.tests = _test_pool; // all test by default
@@ -112,8 +107,8 @@ void bench::app::command_line::parse(int argc, const char ** argv)
         std::cout << "Available tests:" << std::endl;
         for (auto & test_class : _test_pool)
         {
-            std::cout << "  " << std::left << std::setw(32) << test_class->name << " "
-                      << test_class->description << std::endl;
+            std::cout << "  " << std::left << std::setw(32) << test_class->name << " " << test_class->description
+                      << std::endl;
         }
 
         std::exit(0);

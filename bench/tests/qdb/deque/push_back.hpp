@@ -17,7 +17,7 @@ public:
     {
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _qdb.deque_push_back(alias(0), content(iteration));
     }

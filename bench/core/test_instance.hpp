@@ -4,7 +4,6 @@
 #include <bench/core/test_error.hpp>
 #include <bench/core/test_loop.hpp>
 #include <bench/core/time_series.hpp>
-
 #include <map>
 #include <string>
 

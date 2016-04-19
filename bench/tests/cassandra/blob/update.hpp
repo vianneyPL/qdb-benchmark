@@ -23,7 +23,7 @@ public:
         _cassandra.blob_put(alias(0), content(0));
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _cassandra.blob_update(alias(0), content(iteration));
     }

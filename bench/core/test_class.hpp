@@ -1,9 +1,8 @@
 #pragma once
 
+#include <bench/core/probe.hpp>
 #include <bench/core/test_config.hpp>
 #include <bench/core/test_loop.hpp>
-#include <bench/core/probe.hpp>
-
 #include <memory>
 #include <vector>
 

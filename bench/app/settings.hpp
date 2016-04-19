@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/core/test_class.hpp>
-
 #include <chrono>
 #include <string>
 #include <vector>
@@ -10,6 +9,7 @@ namespace bench
 {
 namespace app
 {
+
 struct settings
 {
     std::string cluster_uri;
@@ -25,5 +25,6 @@ struct settings
     std::vector<std::string> snmp_peers;
 #endif
 };
-}
-}
+
+} // namespace app
+} // namespace bench

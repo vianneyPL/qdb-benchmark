@@ -36,7 +36,7 @@ public:
         if (err != 0) throw write_file_exception(_filename, err);
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         auto fp = std::fopen(_filename.c_str(), "rb");
         if (fp == nullptr) throw create_file_exception(_filename, errno);

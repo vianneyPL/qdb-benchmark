@@ -10,6 +10,7 @@ namespace bench
 {
 namespace app
 {
+
 class program
 {
 public:
@@ -36,5 +37,6 @@ private:
     test_instance_collection _schedule;
     report::jsonp _report;
 };
-}
-}
+
+} // namespace app
+} // namespace bench

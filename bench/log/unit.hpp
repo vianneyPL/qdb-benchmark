@@ -1,12 +1,13 @@
 #pragma once
 
-#include <sstream>
 #include <iomanip>
+#include <sstream>
 
 namespace bench
 {
 namespace log
 {
+
 class unit
 {
     static std::string ftos(double value, int precision)
@@ -60,5 +61,6 @@ public:
         return format(value / 1000, 1000, "s");
     }
 };
-}
-}
+
+} // namespace log
+} // namespace bench

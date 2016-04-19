@@ -18,7 +18,7 @@ public:
     {
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         std::lock_guard<std::mutex> lock(_mutex);
         (void)lock; // unused

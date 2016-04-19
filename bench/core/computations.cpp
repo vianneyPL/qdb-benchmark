@@ -1,11 +1,10 @@
 #include <bench/core/computations.hpp>
-
 #include <algorithm>
 #include <numeric>
 
 static double sum_values(const bench::sample & sample)
 {
-    return (double)std::accumulate(sample.values.begin(), sample.values.end(), std::int64_t());
+    return static_cast<double>(std::accumulate(sample.values.begin(), sample.values.end(), std::int64_t()));
 }
 
 double bench::compute_average_frequency(const bench::test_instance & test)
@@ -26,7 +25,7 @@ double bench::compute_average_throughput(const bench::test_instance & test)
     return compute_average_frequency(test) * test.config.content_size;
 }
 
-long long bench::compute_iteration_count(const bench::test_instance & test)
+std::int64_t bench::compute_iteration_count(const bench::test_instance & test)
 {
-    return (long long)sum_values(test.result.at("test.iterations").samples.back());
+    return static_cast<std::int64_t>(sum_values(test.result.at("test.iterations").samples.back()));
 }

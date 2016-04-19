@@ -1,17 +1,16 @@
 #pragma once
 
+#include <bench/core/computations.hpp>
 #include <bench/log/logger.hpp>
 #include <bench/log/unit.hpp>
-#include <bench/core/computations.hpp>
-
 #include <cppformat/format.h>
-
 #include <chrono>
 
 namespace bench
 {
 namespace log
 {
+
 class console_logger : public logger
 {
 public:
@@ -28,7 +27,7 @@ public:
     void schedule(const std::vector<test_instance> & tests) override
     {
         fmt::print("The following test will be performed:");
-        for (unsigned i = 0; i < tests.size(); i++)
+        for (auto i = 0u; i < tests.size(); i++)
         {
             auto & test = tests[i];
             fmt::print("\n  {}. {}", i + 1, test.tclass.name);
@@ -137,8 +136,10 @@ private:
 
     std::string duration_to_string(duration duration)
     {
-        return unit::milliseconds((double)std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
+        return unit::milliseconds(
+            static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(duration).count()));
     }
 };
-}
-}
+
+} // namespace log
+} // namespace bench

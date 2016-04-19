@@ -17,17 +17,14 @@ public:
     {
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _qdb.blob_put(alias(iteration), content(iteration));
     }
 
     void cleanup() override
     {
-        cleanup_each([=](unsigned long iteration)
-                     {
-                         _qdb.remove(alias(iteration));
-                     });
+        cleanup_each([=](std::uint32_t iteration) { _qdb.remove(alias(iteration)); });
         qdb_test_template::cleanup();
     }
 

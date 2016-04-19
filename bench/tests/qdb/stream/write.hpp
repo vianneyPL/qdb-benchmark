@@ -23,7 +23,7 @@ public:
         _stream = _qdb.stream_open(alias(0), qdb_stream_mode_append);
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _stream.write(content(iteration));
     }

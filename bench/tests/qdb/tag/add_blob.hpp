@@ -21,13 +21,10 @@ public:
     void setup() override
     {
         qdb_test_template::setup();
-        setup_each([=](unsigned long iteration)
-                   {
-                       _qdb.blob_put(alias(iteration), "hello world!");
-                   });
+        setup_each([=](std::uint32_t iteration) { _qdb.blob_put(alias(iteration), "hello world!"); });
     }
 
-    void run_iteration(unsigned long iteration)
+    void run_iteration(std::uint32_t iteration)
     {
         _qdb.add_tag(alias(iteration), _tag);
     }
@@ -35,10 +32,7 @@ public:
     void cleanup() override
     {
         _qdb.remove(_tag);
-        cleanup_each([=](unsigned long iteration)
-                     {
-                         _qdb.remove(alias(iteration));
-                     });
+        cleanup_each([=](std::uint32_t iteration) { _qdb.remove(alias(iteration)); });
         qdb_test_template::cleanup();
     }
 
