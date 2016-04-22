@@ -30,11 +30,12 @@ public:
         {
             init_test_results();
             step2_test();
-        }
 
-        if (!test.config.no_cleanup)
-        {
-            step3_cleanup();
+            // clean up only if setup succeeded
+            if (!test.config.no_cleanup)
+            {
+                step3_cleanup();
+            }
         }
 
         destroy_probes();

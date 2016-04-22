@@ -2,12 +2,15 @@
 #include <algorithm>
 #include <numeric>
 
+namespace bench
+{
+
 static double sum_values(const bench::sample & sample)
 {
     return static_cast<double>(std::accumulate(sample.values.begin(), sample.values.end(), std::int64_t()));
 }
 
-double bench::compute_average_frequency(const bench::test_instance & test)
+double compute_average_frequency(const test_instance & test)
 {
     const sample & last_sample = test.result.at("test.iterations").samples.back();
 
@@ -20,12 +23,14 @@ double bench::compute_average_frequency(const bench::test_instance & test)
     return 1000.0 * iterations / elapsed_millis;
 }
 
-double bench::compute_average_throughput(const bench::test_instance & test)
+double compute_average_throughput(const test_instance & test)
 {
     return compute_average_frequency(test) * test.config.content_size;
 }
 
-std::int64_t bench::compute_iteration_count(const bench::test_instance & test)
+std::int64_t compute_iteration_count(const test_instance & test)
 {
     return static_cast<std::int64_t>(sum_values(test.result.at("test.iterations").samples.back()));
 }
+
+} // namespace bench

@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace tag
 {
+
 class add_blob : public qdb_test_template<add_blob>
 {
 public:
@@ -54,6 +55,7 @@ public:
 private:
     std::string _tag;
 };
+
 } // namespace tag
 } // namespace qdb
 } // namespace tests

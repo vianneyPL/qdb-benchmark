@@ -9,7 +9,7 @@ namespace tests
 {
 
 template <typename Derived> // CRTP
-class test_template : public bench::test_loop
+class test_template : public test_loop
 {
 public:
     class test_class : public bench::test_class
@@ -22,18 +22,18 @@ public:
             size_dependent = Derived::size_dependent();
         }
 
-        std::unique_ptr<bench::test_loop> create_loop(bench::test_config config) const override
+        std::unique_ptr<test_loop> create_loop(test_config config) const override
         {
             return utils::make_unique<Derived>(config);
         }
 
-        probe_collection create_probes(bench::test_config config) const override
+        probe_collection create_probes(test_config config) const override
         {
             return Derived::create_probes(config);
         }
     };
 
-    static probe_collection create_probes(bench::test_config config)
+    static probe_collection create_probes(test_config config)
     {
         return {};
     }
@@ -83,7 +83,7 @@ private:
     {
         while (clock::now() < timeout)
         {
-            ((Derived *)this)->run_iteration(iterations());
+            static_cast<Derived *>(this)->run_iteration(iterations());
             test_loop::add_iteration();
         }
     }
@@ -92,7 +92,7 @@ private:
     {
         while (iterations() < count)
         {
-            ((Derived *)this)->run_iteration(iterations());
+            static_cast<Derived *>(this)->run_iteration(iterations());
             test_loop::add_iteration();
         }
     }
