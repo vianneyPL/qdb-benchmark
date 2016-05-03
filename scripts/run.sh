@@ -4,12 +4,13 @@ set -eu
 
 ROOT=$(dirname $0)/..
 
-$ROOT/thirdparty/quasardb/bin/qdbd --log-flush-interval=1 &
+$ROOT/thirdparty/quasardb/bin/qdbd --log-flush-interval=1 --root=$ROOT/db &
 sleep 3
 PID=$!
 
 function kill_qdbd {
-	kill $PID && wait $PID || true 
+	kill $PID && wait $PID || true
+    rm -rf $ROOT/db
 }
 trap kill_qdbd EXIT
 
