@@ -57,10 +57,19 @@ bench.chart.overview = function() {
                 row.append("td").append("label").text(tests[0].name);
 
                 d3.keys(scalars).forEach(function(key){
-                    var value = d3.max(tests, function(d) {
-                        return key in d.scalars ? d.scalars[key].value : NaN;
+                    var mathingTests = tests.filter(function(d) {
+                        return key in d.scalars;
                     });
-                    var text = isNaN(value) ? "N/A" : bench.units[tests[0].scalars[key].unit](value);
+                    var value = d3.max(mathingTests, function(d) {
+                        return d.scalars[key].value;
+                    });
+                    var text;
+                    if (!isNaN(value)) {
+                        var unit = mathingTests[0].scalars[key].unit;
+                        text = bench.units[unit](value);
+                    } else {
+                        text = "N/A";
+                    }
                     row.append("td").text(text);
                 });
             });
