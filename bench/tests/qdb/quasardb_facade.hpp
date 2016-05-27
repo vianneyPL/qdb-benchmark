@@ -75,7 +75,7 @@ public:
 
     void connect(const std::string & cluster_uri);
     void close();
-    void trim_all();
+    void trim_all(int timeout);
 
     std::string node_status(const std::string & node_uri) const;
     std::string node_topology(const std::string & node_uri) const;

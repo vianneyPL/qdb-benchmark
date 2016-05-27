@@ -89,9 +89,9 @@ void quasardb_facade::close()
     INVOKE(qdb_close, _handle);
 }
 
-void quasardb_facade::trim_all()
+void quasardb_facade::trim_all(int timeout)
 {
-    INVOKE(qdb_trim_all, _handle);
+    INVOKE(qdb_trim_all, _handle, timeout);
 }
 
 void quasardb_facade::free_buffer(const char * buffer)
