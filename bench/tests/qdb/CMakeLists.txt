@@ -9,6 +9,7 @@ add_library(bench-tests-quasardb
     blob/get_noalloc.hpp
     blob/put.hpp
     blob/remove.hpp
+    blob/remove_tag.hpp
     blob/update.hpp
     deque/pop_back.hpp
     deque/pop_front.hpp

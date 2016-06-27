@@ -5,6 +5,7 @@
 #include <bench/tests/qdb/blob/get_noalloc.hpp>
 #include <bench/tests/qdb/blob/put.hpp>
 #include <bench/tests/qdb/blob/remove.hpp>
+#include <bench/tests/qdb/blob/remove_tag.hpp>
 #include <bench/tests/qdb/blob/update.hpp>
 #include <bench/tests/qdb/deque/pop_back.hpp>
 #include <bench/tests/qdb/deque/pop_front.hpp>
@@ -27,6 +28,7 @@ namespace tests
 {
 namespace qdb
 {
+
 template <typename OutputIt>
 void get_tests(OutputIt it)
 {
@@ -35,6 +37,7 @@ void get_tests(OutputIt it)
     *it++ = new qdb::blob::get_noalloc::test_class();
     *it++ = new qdb::blob::put::test_class();
     *it++ = new qdb::blob::remove::test_class();
+    *it++ = new qdb::blob::remove_tag::test_class();
     *it++ = new qdb::blob::update::test_class();
     *it++ = new qdb::deque::pop_back::test_class();
     *it++ = new qdb::deque::pop_front::test_class();
@@ -51,6 +54,7 @@ void get_tests(OutputIt it)
     *it++ = new qdb::stream::write::test_class();
     *it++ = new qdb::tag::add_blob::test_class();
 }
-}
-}
-}
+
+} // namespace qdb
+} // namespace tests
+} // namespace bench

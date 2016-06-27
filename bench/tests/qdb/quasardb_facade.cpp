@@ -221,6 +221,11 @@ void quasardb_facade::add_tag(const std::string & alias, const std::string & tag
     INVOKE(qdb_add_tag, _handle, alias.c_str(), tag.c_str());
 }
 
+void quasardb_facade::remove_tag(const std::string & alias, const std::string & tag)
+{
+    INVOKE(qdb_remove_tag, _handle, alias.c_str(), tag.c_str());
+}
+
 qdb_stream_t quasardb_facade::stream_open(const std::string & alias, qdb_stream_mode_t mode)
 {
     qdb_stream_t stream;
