@@ -20,7 +20,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 endif()
 
 ExternalProject_Add(netsnmp-sources
-    URL https://sourceforge.net/projects/net-snmp/files/net-snmp/5.7.3/net-snmp-5.7.3.tar.gz
+    URL ${CMAKE_CURRENT_SOURCE_DIR}/net-snmp-5.7.3.tar.gz
     URL_MD5 d4a3459e1577d0efa8d96ca70a885e53
     SOURCE_DIR ${NETSNMP_DIRECTORY}
     CONFIGURE_COMMAND ./configure
