@@ -146,6 +146,8 @@ void test_runner::step3_cleanup()
 
         _synchronizer.rethrow();
 
+        _test->tclass.cleanup(_test->config);
+
         _logger.cleanup_finished(*_test);
     }
     catch (utils::detailed_error & e)

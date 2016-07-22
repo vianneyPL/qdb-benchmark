@@ -1,6 +1,10 @@
 # CMake out of source build folder
 /build*/
 
+# ignore qdb dir
+
+/qdb/
+
 # Useful during development
 /html_report/*.jsonp
 

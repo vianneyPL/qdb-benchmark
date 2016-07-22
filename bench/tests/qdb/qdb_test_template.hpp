@@ -30,7 +30,6 @@ public:
 
     void cleanup() override
     {
-        // _qdb.trim_all(); <- times out
         _qdb.close();
     }
 
@@ -39,6 +38,14 @@ public:
         probe_collection probes;
         probes.emplace_back(new node_status(cfg.cluster_uri));
         return probes;
+    }
+
+    static void cleanup_class(test_config cfg)
+    {
+        quasardb_facade qf;
+        qf.connect(cfg.cluster_uri);
+        qf.trim_all(600); // 10 minutes time out
+        qf.close();
     }
 
 protected:

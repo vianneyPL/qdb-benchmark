@@ -18,6 +18,7 @@ public:
 
     virtual std::unique_ptr<test_loop> create_loop(test_config) const = 0;
     virtual probe_collection create_probes(test_config) const = 0;
+    virtual void cleanup(test_config) const = 0;
 };
 
 typedef std::vector<const test_class *> test_class_collection;

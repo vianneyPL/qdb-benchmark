@@ -31,11 +31,20 @@ public:
         {
             return Derived::create_probes(config);
         }
+
+        void cleanup(test_config config) const override
+        {
+            Derived::cleanup_class(config);
+        }
     };
 
-    static probe_collection create_probes(test_config config)
+    static probe_collection create_probes(test_config)
     {
         return {};
+    }
+
+    static void cleanup_class(test_config)
+    {
     }
 
     test_template(test_config config) : _config(config), _prepared_iterations(0)
