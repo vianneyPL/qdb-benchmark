@@ -7,6 +7,7 @@ add_library(bench-tests-quasardb
     blob/add_tag.hpp
     blob/get.hpp
     blob/get_noalloc.hpp
+    blob/has_tag.hpp
     blob/put.hpp
     blob/remove.hpp
     blob/remove_tag.hpp

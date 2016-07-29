@@ -103,6 +103,7 @@ public:
     bool hset_insert(const std::string & alias, const std::string & content);
 
     void add_tag(const std::string & alias, const std::string & tag);
+    void has_tag(const std::string & alias, const std::string & tag);
     void remove_tag(const std::string & alias, const std::string & tag);
 
     qdb_stream_t stream_open(const std::string & alias, qdb_stream_mode_t mode);

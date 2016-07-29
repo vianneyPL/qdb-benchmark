@@ -3,6 +3,7 @@
 #include <bench/tests/qdb/blob/add_tag.hpp>
 #include <bench/tests/qdb/blob/get.hpp>
 #include <bench/tests/qdb/blob/get_noalloc.hpp>
+#include <bench/tests/qdb/blob/has_tag.hpp>
 #include <bench/tests/qdb/blob/put.hpp>
 #include <bench/tests/qdb/blob/remove.hpp>
 #include <bench/tests/qdb/blob/remove_tag.hpp>
@@ -35,6 +36,7 @@ void get_tests(OutputIt it)
     *it++ = new qdb::blob::add_tag::test_class();
     *it++ = new qdb::blob::get::test_class();
     *it++ = new qdb::blob::get_noalloc::test_class();
+    *it++ = new qdb::blob::has_tag::test_class();
     *it++ = new qdb::blob::put::test_class();
     *it++ = new qdb::blob::remove::test_class();
     *it++ = new qdb::blob::remove_tag::test_class();
