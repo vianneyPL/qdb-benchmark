@@ -15,22 +15,22 @@ class db_probe : public probe
 public:
     db_probe(std::string cluster_uri) : _cluster_uri(cluster_uri)
     {
-        // clang-format off
-        define_measurement("mongodo.db.storage_size", "MongoDB: Database Storage Size", unit::none, 1);
-        define_measurement("mongodo.db.objects",      "MongoDB: Database Objects",      unit::none, 1);
-        // clang-format on
     }
 
     void setup() override
     {
+        // clang-format off
+        define_measurement("mongodb.db.storage_size", "MongoDB: Database Storage Size", unit::bytes, 1);
+        define_measurement("mongodb.db.objects",      "MongoDB: Database objects",      unit::none, 1);
+        // clang-format on
     }
 
     void take_sample() override
     {
         auto status = mongodb_facade::db_status(_cluster_uri);
 
-        set_measured_value("mongodb.db.storage_size", 0, status["storageSize"].Int());
-        set_measured_value("mongodb.db.objects", 0, status["objects"].Int());
+        set_measured_value("mongodb.db.storage_size", 0, static_cast<std::int64_t>(status["storageSize"].Double()));
+        set_measured_value("mongodb.db.objects", 0, static_cast<std::int64_t>(status["objects"].Int()));
     }
 
     void cleanup() override

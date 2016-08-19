@@ -38,13 +38,29 @@ public:
 protected:
     void define_measurement(std::string id, std::string name, bench::unit unit, std::size_t columns)
     {
-        _measurements[id] = {name, unit};
-        _measurements[id].value.resize(columns);
+        auto insert_res = _measurements.emplace(std::make_pair<std::string, measurement>(std::move(id), {name, unit}));
+        if (!insert_res.second)
+        {
+            throw std::runtime_error("tried to define the same probe twice");
+        }
+
+        insert_res.first->second.value.resize(columns);
     }
 
-    void set_measured_value(std::string id, std::size_t column, std::int64_t value)
+    void set_measured_value(const std::string & id, std::size_t column, std::int64_t value)
     {
-        _measurements[id].value[column] = value;
+        auto it = _measurements.find(id);
+        if (it == _measurements.end())
+        {
+            throw std::runtime_error("tried to write to an unknown probe");
+        }
+
+        if (it->second.value.size() < column)
+        {
+            throw std::runtime_error("probe column out of bounds");
+        }
+
+        it->second.value[column] = value;
     }
 
 private:
