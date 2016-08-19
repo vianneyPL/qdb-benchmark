@@ -29,38 +29,42 @@ mongodb_facade::~mongodb_facade()
 {
 }
 
-void
-mongodb_facade::connect(const std::string & cluster_uri) {
+void mongodb_facade::connect(const std::string & cluster_uri)
+{
     _conn.connect(cluster_uri);
 }
 
-/* static */ mongo::BSONObj mongodb_facade::server_status(const std::string & node_uri) {
+/* static */ mongo::BSONObj mongodb_facade::server_status(const std::string & node_uri)
+{
     mongo::DBClientConnection conn;
     conn.connect(node_uri);
 
     mongo::BSONObj serverStatus;
 
-    if (!conn.runCommand("bench", BSON("serverStatus" << 1), serverStatus)) {
+    if (!conn.runCommand("bench", BSON("serverStatus" << 1), serverStatus))
+    {
         throw std::runtime_error("node_status: serverStatus");
     }
 
     return BSON("server" << serverStatus << "db" << mongodb_facade::db_status(node_uri));
 }
 
-/* static */ mongo::BSONObj mongodb_facade::db_status(const std::string & node_uri) {
+/* static */ mongo::BSONObj mongodb_facade::db_status(const std::string & node_uri)
+{
     mongo::DBClientConnection conn;
     conn.connect(node_uri);
 
     mongo::BSONObj dbStats;
-    if (!conn.runCommand("bench", BSON("dbStats" << 1), dbStats)) {
+    if (!conn.runCommand("bench", BSON("dbStats" << 1), dbStats))
+    {
         throw std::runtime_error("node_status: dbStats");
     }
 
     return dbStats;
 }
 
-
-/* static */ std::vector<std::string> mongodb_facade::resolve_topology(const std::string & node_uri) {
+/* static */ std::vector<std::string> mongodb_facade::resolve_topology(const std::string & node_uri)
+{
     mongo::DBClientConnection conn;
     conn.connect(node_uri);
 
@@ -80,10 +84,12 @@ mongodb_facade::connect(const std::string & cluster_uri) {
 
     std::vector<std::string> result;
 
-    if (conn.runCommand("admin", BSON("listShards" << 1), response)) {
+    if (conn.runCommand("admin", BSON("listShards" << 1), response))
+    {
         // We are in sharded cluster.
 
-        for (mongo::BSONElement const & member : response["shards"].Array()) {
+        for (mongo::BSONElement const & member : response["shards"].Array())
+        {
             // Member can be either a replica set, which looks like
             // `rs0/1.2.3.4:1234,4.3.2.1:4321`, or it is a regular
             // host, which looks like `1.2.3.4:1234`.
@@ -92,28 +98,35 @@ mongodb_facade::connect(const std::string & cluster_uri) {
             std::vector<std::string> tokens;
             boost::split(tokens, host, boost::is_any_of("/"));
 
-            if (tokens.size() == 1) {
+            if (tokens.size() == 1)
+            {
                 // A regular host
                 result.push_back(tokens.at(0));
-            } else if (tokens.size() == 2) {
+            }
+            else if (tokens.size() == 2)
+            {
                 std::vector<std::string> hosts;
 
                 boost::split(hosts, tokens.at(1), boost::is_any_of(","));
 
-                std::copy(hosts.begin(), hosts.end(),
-                          std::back_insert_iterator<std::vector<std::string>>(result));
-            } else {
+                std::copy(hosts.begin(), hosts.end(), std::back_insert_iterator<std::vector<std::string>>(result));
+            }
+            else
+            {
                 throw std::runtime_error("Invalid host: " + host);
             }
         }
-
-    } else if (conn.runCommand("admin", BSON("replSetGetStatus" << 1), response)) {
+    }
+    else if (conn.runCommand("admin", BSON("replSetGetStatus" << 1), response))
+    {
         // A replica set has been configured.
-        for (mongo::BSONElement const & member : response["members"].Array()) {
+        for (mongo::BSONElement const & member : response["members"].Array())
+        {
             result.push_back(member["name"].String());
         }
-
-    } else {
+    }
+    else
+    {
         // Single node configuration.
         result.push_back(node_uri);
     }
@@ -123,18 +136,19 @@ mongodb_facade::connect(const std::string & cluster_uri) {
 
 void mongodb_facade::remove(const std::string & alias)
 {
-    CHECK_ERROR(remove, _conn, NAMESPACE, MONGO_QUERY("_id" << alias), true, NULL);
+    CHECK_ERROR(remove, _conn, NAMESPACE, MONGO_QUERY("_id" << alias), 0, &mongo::WriteConcern::journaled);
 }
 
 void mongodb_facade::blob_put(const std::string & alias, const std::string & content)
 {
-    CHECK_ERROR(insert, _conn, NAMESPACE, BSON("_id" << alias << "content" << content));
+    CHECK_ERROR(insert, _conn, NAMESPACE, BSON("_id" << alias << "content" << content), 0,
+                &mongo::WriteConcern::journaled);
 }
 
 void mongodb_facade::blob_update(const std::string & alias, const std::string & content)
 {
-    CHECK_ERROR(findAndModify, _conn, NAMESPACE, BSON("_id" << alias), BSON("content" << content),
-                false, true);
+    CHECK_ERROR(findAndModify, _conn, NAMESPACE, BSON("_id" << alias), BSON("content" << content), false, true,
+                mongo::BSONObj(), mongo::BSONObj(), &mongo::WriteConcern::journaled);
 }
 
 std::string mongodb_facade::blob_get(const std::string & alias)
@@ -146,14 +160,15 @@ std::string mongodb_facade::blob_get(const std::string & alias)
 
 void mongodb_facade::int_put(const std::string & alias, std::int64_t value)
 {
-    CHECK_ERROR(insert, _conn, NAMESPACE,
-                BSON("_id" << alias << "num" << static_cast<long long>(value)));
+    CHECK_ERROR(insert, _conn, NAMESPACE, BSON("_id" << alias << "num" << static_cast<long long>(value)), 0,
+                &mongo::WriteConcern::journaled);
 }
 
 std::int64_t mongodb_facade::int_add(const std::string & alias, std::int64_t value)
 {
     CHECK_ERROR_STORE(findAndModify, _conn, obj, NAMESPACE, BSON("_id" << alias),
-                      BSON("$inc" << BSON("num" << static_cast<long long>(value))), false, true);
+                      BSON("$inc" << BSON("num" << static_cast<long long>(value))), false, true, mongo::BSONObj(),
+                      mongo::BSONObj(), &mongo::WriteConcern::journaled);
 
     return obj.getField("num").Long();
 }
