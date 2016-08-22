@@ -1,9 +1,9 @@
 #pragma once
 
+#include <bench/tests/common/test_template.hpp>
+#include <bench/tests/mongodb/db_probe.hpp>
 #include <bench/tests/mongodb/mongodb_facade.hpp>
 #include <bench/tests/mongodb/server_probe.hpp>
-#include <bench/tests/mongodb/db_probe.hpp>
-#include <bench/tests/common/test_template.hpp>
 #include <utils/unique_alias_provider.hpp>
 #include <utils/unique_content_provider.hpp>
 

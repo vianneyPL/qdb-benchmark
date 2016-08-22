@@ -39,9 +39,11 @@ protected:
     void define_measurement(std::string id, std::string name, bench::unit unit, std::size_t columns)
     {
         auto insert_res = _measurements.emplace(std::make_pair<std::string, measurement>(std::move(id), {name, unit}));
-        if (!insert_res.second)
+        if (insert_res.second)
         {
-            throw std::runtime_error("tried to define the same probe twice");
+            insert_res.first->second.name = std::move(name);
+            insert_res.first->second.unit = unit;
+            insert_res.first->second.value.clear();
         }
 
         insert_res.first->second.value.resize(columns);
