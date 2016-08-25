@@ -24,7 +24,7 @@ public:
         qdb_test_template::setup();
 
         _qdb.blob_put(_target_alias, "hello world!");
-        setup_each([&](std::uint32_t iteration) { _qdb.add_tag(_target_alias, alias(iteration)); });
+        setup_each([&](std::uint32_t iteration) { _qdb.attach_tag(_target_alias, alias(iteration)); });
     }
 
     void run_iteration(std::uint32_t iteration)

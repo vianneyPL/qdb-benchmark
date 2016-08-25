@@ -27,7 +27,7 @@ public:
 
     void run_iteration(std::uint32_t iteration)
     {
-        _qdb.add_tag(alias(iteration), _tag);
+        _qdb.attach_tag(alias(iteration), _tag);
     }
 
     void cleanup() override
@@ -44,7 +44,7 @@ public:
 
     static std::string description()
     {
-        return "Each thread repeats qdb_add_tag() on many blobs";
+        return "Each thread repeats qdb_attach_tag() on many blobs";
     }
 
     static bool size_dependent()

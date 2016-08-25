@@ -218,9 +218,9 @@ bool quasardb_facade::hset_insert(const std::string & alias, const std::string &
            != qdb_e_element_already_exists;
 }
 
-void quasardb_facade::add_tag(const std::string & alias, const std::string & tag)
+void quasardb_facade::attach_tag(const std::string & alias, const std::string & tag)
 {
-    INVOKE(qdb_add_tag, _handle, alias.c_str(), tag.c_str());
+    INVOKE(qdb_attach_tag, _handle, alias.c_str(), tag.c_str());
 }
 
 void quasardb_facade::has_tag(const std::string & alias, const std::string & tag)

@@ -4,7 +4,7 @@ if(NOT TARGET qdb_api)
 endif()
 
 add_library(bench-tests-quasardb
-    blob/add_tag.hpp
+    blob/attach_tag.hpp
     blob/get.hpp
     blob/get_noalloc.hpp
     blob/has_tag.hpp

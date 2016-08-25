@@ -6,8 +6,8 @@ However it's been designed to be independent of quasardb and can be used to benc
 
 `qdb-benchmark` contains a pool of predefined tests. It prepares a set of tests in various configuration and runs them one after the other.
 
-A "test" is a code that performs a basic operation running in a loop. 
-When a test requires some kind of preparation before running, it's done in its "setup" phase. 
+A "test" is a code that performs a basic operation running in a loop.
+When a test requires some kind of preparation before running, it's done in its "setup" phase.
 Similarly, when a test requires some home keeping, it's done in its "cleanup" phase.
 
 Tests leaves the database in the same state as before: unique keys are used that should not conflict with existing data. Added entries are removed at the end of each test.
@@ -90,7 +90,7 @@ To know the list of supported tests, just run `qdb-benchmark --help`.
 
 The current list of supported tests is:
 
-1. qdb_blob_add_tag
+1. qdb_blob_attach_tag
 2. qdb_blob_get
 3. qdb_blob_get_noalloc
 4. qdb_blob_put

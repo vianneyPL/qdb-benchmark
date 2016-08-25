@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bench/tests/qdb/blob/add_tag.hpp>
+#include <bench/tests/qdb/blob/attach_tag.hpp>
 #include <bench/tests/qdb/blob/get.hpp>
 #include <bench/tests/qdb/blob/get_noalloc.hpp>
 #include <bench/tests/qdb/blob/has_tag.hpp>
@@ -33,7 +33,7 @@ namespace qdb
 template <typename OutputIt>
 void get_tests(OutputIt it)
 {
-    *it++ = new qdb::blob::add_tag::test_class();
+    *it++ = new qdb::blob::attach_tag::test_class();
     *it++ = new qdb::blob::get::test_class();
     *it++ = new qdb::blob::get_noalloc::test_class();
     *it++ = new qdb::blob::has_tag::test_class();

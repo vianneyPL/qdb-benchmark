@@ -102,7 +102,7 @@ public:
     bool hset_erase(const std::string & alias, const std::string & content);
     bool hset_insert(const std::string & alias, const std::string & content);
 
-    void add_tag(const std::string & alias, const std::string & tag);
+    void attach_tag(const std::string & alias, const std::string & tag);
     void has_tag(const std::string & alias, const std::string & tag);
     void remove_tag(const std::string & alias, const std::string & tag);
 
