@@ -4,13 +4,13 @@ if(NOT TARGET qdb_api)
 endif()
 
 add_library(bench-tests-quasardb
-    blob/add_tag.hpp
+    blob/attach_tag.hpp
     blob/get.hpp
     blob/get_noalloc.hpp
     blob/has_tag.hpp
     blob/put.hpp
     blob/remove.hpp
-    blob/remove_tag.hpp
+    blob/detach_tag.hpp
     blob/update.hpp
     deque/pop_back.hpp
     deque/pop_front.hpp
@@ -25,7 +25,7 @@ add_library(bench-tests-quasardb
     integer/remove.hpp
     integer/update.hpp
     stream/write.hpp
-    tag/add_blob.hpp
+    tag/attach_blob.hpp
 
     node_status.hpp
     qdb_test_template.hpp
