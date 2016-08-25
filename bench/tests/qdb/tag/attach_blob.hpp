@@ -11,10 +11,10 @@ namespace qdb
 namespace tag
 {
 
-class add_blob : public qdb_test_template<add_blob>
+class attach_blob : public qdb_test_template<attach_blob>
 {
 public:
-    add_blob(bench::test_config config) : qdb_test_template(config)
+    attach_blob(bench::test_config config) : qdb_test_template(config)
     {
         _tag = alias(0) + "-tag";
     }
@@ -39,7 +39,7 @@ public:
 
     static std::string name()
     {
-        return "qdb_tag_add_blob";
+        return "qdb_tag_attach_blob";
     }
 
     static std::string description()

@@ -21,7 +21,7 @@
 #include <bench/tests/qdb/integer/remove.hpp>
 #include <bench/tests/qdb/integer/update.hpp>
 #include <bench/tests/qdb/stream/write.hpp>
-#include <bench/tests/qdb/tag/add_blob.hpp>
+#include <bench/tests/qdb/tag/attach_blob.hpp>
 
 namespace bench
 {
@@ -54,7 +54,7 @@ void get_tests(OutputIt it)
     *it++ = new qdb::integer::remove::test_class();
     *it++ = new qdb::integer::update::test_class();
     *it++ = new qdb::stream::write::test_class();
-    *it++ = new qdb::tag::add_blob::test_class();
+    *it++ = new qdb::tag::attach_blob::test_class();
 }
 
 } // namespace qdb
