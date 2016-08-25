@@ -10,7 +10,7 @@ add_library(bench-tests-quasardb
     blob/has_tag.hpp
     blob/put.hpp
     blob/remove.hpp
-    blob/remove_tag.hpp
+    blob/detach_tag.hpp
     blob/update.hpp
     deque/pop_back.hpp
     deque/pop_front.hpp

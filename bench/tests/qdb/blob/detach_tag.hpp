@@ -11,10 +11,10 @@ namespace qdb
 namespace blob
 {
 
-class remove_tag : public qdb_test_template<remove_tag>
+class detach_tag : public qdb_test_template<detach_tag>
 {
 public:
-    remove_tag(bench::test_config config) : qdb_test_template(config)
+    detach_tag(bench::test_config config) : qdb_test_template(config)
     {
         _target_alias = alias(0) + "-target";
     }
@@ -29,7 +29,7 @@ public:
 
     void run_iteration(std::uint32_t iteration)
     {
-        _qdb.remove_tag(_target_alias, alias(iteration));
+        _qdb.detach_tag(_target_alias, alias(iteration));
     }
 
     void cleanup() override
@@ -43,12 +43,12 @@ public:
 
     static std::string name()
     {
-        return "qdb_blob_remove_tag";
+        return "qdb_blob_detach_tag";
     }
 
     static std::string description()
     {
-        return "Each thread repeats qdb_remove_tag() on one blob";
+        return "Each thread repeats qdb_detach_tag() on one blob";
     }
 
     static bool size_dependent()
