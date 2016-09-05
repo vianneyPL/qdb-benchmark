@@ -8,6 +8,7 @@
 #include <qdb/blob.h>
 #include <qdb/deque.h>
 #include <qdb/hset.h>
+#include <qdb/node.h>
 #include <qdb/integer.h>
 #include <qdb/stream.h>
 #include <qdb/tag.h>
