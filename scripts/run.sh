@@ -4,7 +4,7 @@ set -eu
 
 ROOT=$(dirname $0)/..
 
-$ROOT/thirdparty/quasardb/bin/qdbd --log-flush-interval=1 --root=$ROOT/db &
+$ROOT/thirdparty/quasardb/bin/qdbd --log-flush-interval=1 --store-history=false --root=$ROOT/db &
 sleep 3
 PID=$!
 
