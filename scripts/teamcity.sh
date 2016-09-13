@@ -1,27 +1,39 @@
-#!/bin/sh
+#!/bin/bash -eu
+#
+# Invocation ./teamcity.sh qdbd_args --- qdb-benchmark_args
 
 set -eu
 
-echo -n "qdbd args: "
-read QDBD_ARGS
+declare -a QDBD_ARGS
+declare -a BENCH_ARGS
 
-echo -n "qdb-benchmark args: "
-read BENCH_ARGS
+while [[ $# > 0 ]] ; do
+  [ "$1" == "---" ] && break
+  QDBD_ARGS+=("$1")
+  shift
+done
+
+shift # it should be '---'
+
+while [[ $# > 0 ]] ; do
+  BENCH_ARGS+=("$1")
+  shift
+done
 
 ROOT=$(dirname $0)/..
 
-$ROOT/thirdparty/quasardb/bin/qdbd --root=$ROOT/db $QDBD_ARGS &
+exec $ROOT/thirdparty/quasardb/bin/qdbd --root=$ROOT/db "${QDBD_ARGS[@]}" &
 sleep 3
 PID=$!
 
 function kill_qdbd {
-	kill $PID && wait $PID || true
+    kill $PID && wait $PID || true
     rm -rf $ROOT/db
 }
 trap kill_qdbd EXIT
 
 if [[ "$OSTYPE" == "msys" ]]; then
-	$ROOT/build/Release/qdb-benchmark $BENCH_ARGS
+    exec $ROOT/build/Release/qdb-benchmark "${BENCH_ARGS[@]}"
 else
-	$ROOT/build/qdb-benchmark $BENCH_ARGS
+    exec $ROOT/build/qdb-benchmark "${BENCH_ARGS[@]}"
 fi
