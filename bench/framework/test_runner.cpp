@@ -79,7 +79,7 @@ bool test_runner::step1_setup()
 
         _synchronizer.rethrow();
 
-        _logger.setup_finished(*_test);
+        _logger.setup_succeeded(*_test);
         return true;
     }
     catch (utils::detailed_error & e)
@@ -96,14 +96,14 @@ bool test_runner::step1_setup()
     }
 }
 
-void test_runner::step2_test()
+void test_runner::step2_loop()
 {
     duration sampling_period = compute_sampling_period(_test->config.duration);
 
     try
     {
         _test->start_time = clock::now();
-        _logger.test_started(*_test);
+        _logger.loop_started(*_test);
 
         _synchronizer.send_order(&test_thread::test);
         sample_probes();
@@ -117,17 +117,17 @@ void test_runner::step2_test()
 
         _synchronizer.rethrow();
 
-        _logger.test_finished(*_test);
+        _logger.loop_succeeded(*_test);
     }
     catch (utils::detailed_error & e)
     {
         _test->errors.push_back({e.message(), e.invocation()});
-        _logger.test_failed(*_test);
+        _logger.loop_failed(*_test);
     }
     catch (std::exception & e)
     {
         _test->errors.push_back({e.what(), "Error happened during test execution"});
-        _logger.test_failed(*_test);
+        _logger.loop_failed(*_test);
     }
 }
 
@@ -146,7 +146,7 @@ void test_runner::step3_cleanup()
 
         _synchronizer.rethrow();
 
-        _logger.cleanup_finished(*_test);
+        _logger.cleanup_succeeded(*_test);
     }
     catch (utils::detailed_error & e)
     {

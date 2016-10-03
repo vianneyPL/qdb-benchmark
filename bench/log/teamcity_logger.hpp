@@ -26,10 +26,27 @@ public:
     {
     }
 
-    // Test setup
-    void setup_started(const test_instance & test) override
+    // Whole test
+
+    void test_started(const test_instance & test) override
     {
         utils::teamcity::test_started(make_test_name(test));
+    }
+
+    void test_finished(const test_instance & test) override
+    {
+        if (test.errors.size() > 0)
+        {
+            utils::teamcity::test_failed(make_test_name(test), test.errors.front().message,
+                                         test.errors.front().details);
+        }
+        utils::teamcity::test_finished(make_test_name(test));
+    }
+
+    // Test setup
+
+    void setup_started(const test_instance & test) override
+    {
         utils::teamcity::message("Setup started");
     }
 
@@ -39,30 +56,30 @@ public:
         utils::teamcity::message(test.errors.back().message, test.errors.back().details);
     }
 
-    void setup_finished(const test_instance & test) override
+    void setup_succeeded(const test_instance & test) override
     {
         utils::teamcity::message("Setup succeeded");
     }
 
-    // Test
+    // Test loop
 
-    void test_started(const test_instance & test) override
+    void loop_started(const test_instance & test) override
     {
         utils::teamcity::message("Test started");
     }
 
-    void test_progress(const test_instance & test) override
+    void loop_progress(const test_instance & test) override
     {
         utils::teamcity::progressMessage(std::to_string(compute_iteration_count(test)) + " iterations");
     }
 
-    void test_failed(const test_instance & test) override
+    void loop_failed(const test_instance & test) override
     {
         utils::teamcity::message("Test failed");
         utils::teamcity::message(test.errors.back().message, test.errors.back().details);
     }
 
-    void test_finished(const test_instance & test) override
+    void loop_succeeded(const test_instance & test) override
     {
         utils::teamcity::message("Test succeeded");
 
@@ -86,20 +103,11 @@ public:
     {
         utils::teamcity::message("Cleanup failed");
         utils::teamcity::message(test.errors.back().message, test.errors.back().details);
-        utils::teamcity::test_failed(make_test_name(test), test.errors.front().message, test.errors.front().details);
-        utils::teamcity::test_finished(make_test_name(test));
     }
 
-    void cleanup_finished(const test_instance & test) override
+    void cleanup_succeeded(const test_instance & test) override
     {
         utils::teamcity::message("Cleanup succeeded");
-
-        if (test.errors.size() > 0)
-        {
-            utils::teamcity::test_failed(make_test_name(test), test.errors.front().message,
-                                         test.errors.front().details);
-        }
-        utils::teamcity::test_finished(make_test_name(test));
     }
 
 private:

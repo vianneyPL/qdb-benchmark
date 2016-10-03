@@ -23,13 +23,15 @@ public:
     {
         _test = &test;
 
+        _logger.test_started(test);
+
         create_threads();
         create_probes();
 
         if (step1_setup())
         {
             init_test_results();
-            step2_test();
+            step2_loop();
 
             // clean up only if setup succeeded
             if (!test.config.no_cleanup)
@@ -37,6 +39,8 @@ public:
                 step3_cleanup();
             }
         }
+
+        _logger.test_finished(test);
 
         destroy_probes();
         destroy_threads();
@@ -49,7 +53,7 @@ private:
     void init_test_results();
 
     bool step1_setup();
-    void step2_test();
+    void step2_loop();
     void step3_cleanup();
 
     void create_probes();
@@ -61,7 +65,7 @@ private:
 
     void log_progress()
     {
-        _logger.test_progress(*_test);
+        _logger.loop_progress(*_test);
     }
 
     log::logger & _logger;

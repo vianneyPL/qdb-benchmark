@@ -40,9 +40,9 @@ public:
         _test_num = 0;
     }
 
-    // Test setup
+    // Whole test
 
-    void setup_started(const test_instance & test) override
+    void test_started(const test_instance & test) override
     {
         _test_num++;
 
@@ -58,7 +58,16 @@ public:
         {
             fmt::print(", with a payload of {}", unit::byte(static_cast<double>(test.config.content_size)));
         }
+    }
 
+    void test_finished(const test_instance &) override
+    {
+    }
+
+    // Test setup
+
+    void setup_started(const test_instance & test) override
+    {
         fmt::print("\n{}Setting up test... \n", _header);
     }
 
@@ -69,19 +78,19 @@ public:
         fmt::print("{}Details = {}\n", _header, test.errors.back().details);
     }
 
-    void setup_finished(const test_instance & test) override
+    void setup_succeeded(const test_instance & test) override
     {
         fmt::print("{}Setting up test... OK ({})\n", _header, duration_to_string(test.setup_duration));
     }
 
-    // Test
+    // Test loop
 
-    void test_started(const test_instance & test) override
+    void loop_started(const test_instance & test) override
     {
         fmt::print("{}Executing test... ", _header);
     }
 
-    void test_progress(const test_instance & test) override
+    void loop_progress(const test_instance & test) override
     {
         auto elapsed = clock::now() - test.start_time;
         auto iterations = compute_iteration_count(test);
@@ -89,7 +98,7 @@ public:
                    duration_to_string(elapsed));
     }
 
-    void test_failed(const test_instance & test) override
+    void loop_failed(const test_instance & test) override
     {
         fmt::print("\n{}Executing test... FAILED\n", _header);
         fmt::print("{}Error = {}\n", _header, test.errors.back().message);
@@ -97,7 +106,7 @@ public:
         fmt::print("{}Total iterations = {}\n", _header, unit::none(compute_iteration_count(test)));
     }
 
-    void test_finished(const test_instance & test) override
+    void loop_succeeded(const test_instance & test) override
     {
         fmt::print("\n{}Executing test... OK ({})\n", _header, duration_to_string(test.test_duration));
 
@@ -124,7 +133,7 @@ public:
         fmt::print("{}Details = {}\n", _header, test.errors.back().details);
     }
 
-    void cleanup_finished(const test_instance & test) override
+    void cleanup_succeeded(const test_instance & test) override
     {
         fmt::print("{}Cleaning up... OK ({})\n", _header, duration_to_string(test.cleanup_duration));
     }
