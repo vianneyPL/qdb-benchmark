@@ -1,7 +1,7 @@
 #include <bench/app/program.hpp>
 #include <bench/log/console_logger.hpp>
-#include <bench/tests/std/std_tests.hpp>
 #include <bench/tests/dummy/dummy_tests.hpp>
+#include <bench/tests/std/std_tests.hpp>
 
 #if BENCHMARK_CASSANDRA
 #include <bench/tests/cassandra/cassandra_tests.hpp>
@@ -19,7 +19,8 @@
 
 static bench::log::logger & get_logger()
 {
-    if (std::getenv("TEAMCITY_VERSION"))
+    const char * teamcity_version = std::getenv("TEAMCITY_VERSION");
+    if (teamcity_version && teamcity_version[0])
         return bench::log::get_teamcity_logger();
     else
         return bench::log::get_console_logger();
