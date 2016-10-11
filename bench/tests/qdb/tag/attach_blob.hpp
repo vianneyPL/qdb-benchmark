@@ -32,8 +32,8 @@ public:
 
     void cleanup() override
     {
+        _qdb.remove(_tag);
         cleanup_each([=](std::uint32_t iteration) { _qdb.remove(alias(iteration)); });
-        _qdb.remove(_tag); // <- we delete the tag once it's empty, because it's much faster
         qdb_test_template::cleanup();
     }
 
