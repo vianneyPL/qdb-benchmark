@@ -6,8 +6,6 @@ namespace utils
 {
 namespace teamcity
 {
-// CAUTION: TeamCity 9.1.5 incorrectly reports tests as succeeded when it includes blocks
-// See: https://youtrack.jetbrains.com/issue/TW-21377
 void block_opened(const std::string & name);
 void block_closed(const std::string & name);
 

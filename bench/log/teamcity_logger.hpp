@@ -47,25 +47,25 @@ public:
 
     void setup_started(const test_instance & test) override
     {
-        utils::teamcity::message("Setup started");
+        utils::teamcity::block_opened("setup");
     }
 
     void setup_failed(const test_instance & test) override
     {
-        utils::teamcity::message("Setup failed");
         utils::teamcity::message(test.errors.back().message, test.errors.back().details);
+        utils::teamcity::block_closed("setup");
     }
 
     void setup_succeeded(const test_instance & test) override
     {
-        utils::teamcity::message("Setup succeeded");
+        utils::teamcity::block_closed("setup");
     }
 
     // Test loop
 
     void loop_started(const test_instance & test) override
     {
-        utils::teamcity::message("Test started");
+        utils::teamcity::block_opened("loop");
     }
 
     void loop_progress(const test_instance & test) override
@@ -75,14 +75,12 @@ public:
 
     void loop_failed(const test_instance & test) override
     {
-        utils::teamcity::message("Test failed");
         utils::teamcity::message(test.errors.back().message, test.errors.back().details);
+        utils::teamcity::block_closed("loop");
     }
 
     void loop_succeeded(const test_instance & test) override
     {
-        utils::teamcity::message("Test succeeded");
-
         std::string test_name = make_test_name(test);
 
         if (test.config.content_size)
@@ -90,24 +88,26 @@ public:
             utils::teamcity::build_statistic(test_name + ".throughput.average", compute_average_throughput(test));
         }
         utils::teamcity::build_statistic(test_name + ".frequency.average", compute_average_frequency(test));
+
+        utils::teamcity::block_closed("loop");
     }
 
     // Test cleanup
 
     void cleanup_started(const test_instance & test) override
     {
-        utils::teamcity::message("Cleanup started");
+        utils::teamcity::block_opened("cleanup");
     }
 
     void cleanup_failed(const test_instance & test) override
     {
-        utils::teamcity::message("Cleanup failed");
         utils::teamcity::message(test.errors.back().message, test.errors.back().details);
+        utils::teamcity::block_closed("cleanup");
     }
 
     void cleanup_succeeded(const test_instance & test) override
     {
-        utils::teamcity::message("Cleanup succeeded");
+        utils::teamcity::block_closed("cleanup");
     }
 
 private:
