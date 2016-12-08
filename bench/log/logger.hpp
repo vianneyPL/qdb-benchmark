@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bench/core/test_instance.hpp>
-
 #include <chrono>
 
 namespace bench

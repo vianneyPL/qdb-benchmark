@@ -78,8 +78,8 @@ void bench::app::command_line::parse(int argc, const char ** argv)
 
     std::cout << "quasardb cluster benchmarking tool" << std::endl;
 
-    bool version = parser.get_flag("-v", "--version", "Display program version and exists");
-    bool help = parser.get_flag("-h", "--help", "Display program help and exists");
+    bool version = parser.get_flag("-v", "--version", "Display program version and exit");
+    bool help = parser.get_flag("-h", "--help", "Display program help and exit");
     _settings.cluster_uri = parser.get_string("-c", "--cluster", "Set cluster URI", "qdb://127.0.0.1:2836");
     _settings.pause =
         std::chrono::seconds(parser.get_integer("-p", "--pause", "Set the delay between each test, in seconds", "1"));

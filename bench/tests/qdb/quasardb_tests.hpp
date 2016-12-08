@@ -1,12 +1,12 @@
 #pragma once
 
 #include <bench/tests/qdb/blob/attach_tag.hpp>
+#include <bench/tests/qdb/blob/detach_tag.hpp>
 #include <bench/tests/qdb/blob/get.hpp>
 #include <bench/tests/qdb/blob/get_noalloc.hpp>
 #include <bench/tests/qdb/blob/has_tag.hpp>
 #include <bench/tests/qdb/blob/put.hpp>
 #include <bench/tests/qdb/blob/remove.hpp>
-#include <bench/tests/qdb/blob/detach_tag.hpp>
 #include <bench/tests/qdb/blob/update.hpp>
 #include <bench/tests/qdb/deque/pop_back.hpp>
 #include <bench/tests/qdb/deque/pop_front.hpp>
@@ -22,6 +22,8 @@
 #include <bench/tests/qdb/integer/update.hpp>
 #include <bench/tests/qdb/stream/write.hpp>
 #include <bench/tests/qdb/tag/attach_blob.hpp>
+#include <bench/tests/qdb/tag/get_tagged.hpp>
+#include <bench/tests/qdb/tag/get_tags.hpp>
 
 namespace bench
 {
@@ -55,6 +57,8 @@ void get_tests(OutputIt it)
     *it++ = new qdb::integer::update::test_class();
     *it++ = new qdb::stream::write::test_class();
     *it++ = new qdb::tag::attach_blob::test_class();
+    *it++ = new qdb::tag::get_tagged::test_class();
+    *it++ = new qdb::tag::get_tags::test_class();
 }
 
 } // namespace qdb

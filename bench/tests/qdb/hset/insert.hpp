@@ -35,7 +35,7 @@ public:
 
     static std::string description()
     {
-        return "Call qdb_hset_insert() on one entry";
+        return "Each thread repeats qdb_hset_insert() on one entry";
     }
 
     static bool size_dependent()

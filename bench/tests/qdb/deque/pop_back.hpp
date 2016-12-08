@@ -36,7 +36,7 @@ public:
 
     static std::string description()
     {
-        return "Each thread repeats qdb_deque_pop_back() on a queue.";
+        return "Each thread repeats qdb_deque_pop_back() on a queue";
     }
 
     static bool size_dependent()

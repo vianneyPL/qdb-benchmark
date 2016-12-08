@@ -234,6 +234,20 @@ void quasardb_facade::detach_tag(const std::string & alias, const std::string & 
     INVOKE(qdb_detach_tag, _handle, alias.c_str(), tag.c_str());
 }
 
+void quasardb_facade::get_tagged(const std::string & tag)
+{
+    const char ** entries;
+    size_t entry_count;
+    INVOKE(qdb_get_tagged, _handle, tag.c_str(), &entries, &entry_count);
+}
+
+void quasardb_facade::get_tags(const std::string & alias)
+{
+    const char ** tags;
+    size_t tag_count;
+    INVOKE(qdb_get_tags, _handle, alias.c_str(), &tags, &tag_count);
+}
+
 qdb_stream_t quasardb_facade::stream_open(const std::string & alias, qdb_stream_mode_t mode)
 {
     qdb_stream_t stream;

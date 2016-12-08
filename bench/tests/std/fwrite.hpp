@@ -47,7 +47,7 @@ public:
 
     static std::string description()
     {
-        return "Call fwrite() on one file.";
+        return "Call fwrite() on one file";
     }
 
     static bool size_dependent()

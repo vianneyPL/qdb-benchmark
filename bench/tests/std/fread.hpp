@@ -61,7 +61,7 @@ public:
 
     static std::string description()
     {
-        return "Call fread() on one file.";
+        return "Call fread() on one file";
     }
 
     static bool size_dependent()

@@ -30,7 +30,7 @@ public:
 
     static std::string description()
     {
-        return "Increment a shared std::atomic<std::uint32_t> by each thread.";
+        return "Increment a shared std::atomic<std::uint32_t> by each thread";
     }
 
     static bool size_dependent()

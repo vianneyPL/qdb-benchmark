@@ -9,7 +9,7 @@ void utils::watermark::replace_end(std::string & s, unsigned long id)
     size_t index = s.size();
     for (auto digit = 0u; digit < watermark::length && index > 0; ++digit)
     {
-        s[--index] = __base64[id & 63];
+        s[--index] = __base64[id % base64_length];
         id /= base64_length;
     }
 }
@@ -24,7 +24,7 @@ void utils::watermark::replace_front(std::string & s, unsigned long id)
 
     for (int digit = watermark::length; digit >= 0; --digit)
     {
-        s[digit] = __base64[id & 63];
+        s[digit] = __base64[id % base64_length];
         id /= base64_length;
     }
 }

@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace blob
 {
+
 class remove : public qdb_test_template<remove>
 {
 public:
@@ -44,6 +45,7 @@ public:
         return true;
     }
 };
+
 } // namespace blob
 } // namespace qdb
 } // namespace tests

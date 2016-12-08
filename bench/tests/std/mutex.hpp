@@ -32,7 +32,7 @@ public:
 
     static std::string description()
     {
-        return "Lock/unlock a shared std::mutex by each thread.";
+        return "Lock/unlock a shared std::mutex by each thread";
     }
 
     static bool size_dependent()

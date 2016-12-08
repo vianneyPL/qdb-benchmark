@@ -26,6 +26,8 @@ add_library(bench-tests-quasardb
     integer/update.hpp
     stream/write.hpp
     tag/attach_blob.hpp
+    tag/get_tagged.hpp
+    tag/get_tags.hpp
 
     node_status.hpp
     qdb_test_template.hpp
