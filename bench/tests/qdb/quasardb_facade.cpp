@@ -1,23 +1,20 @@
 #include <bench/tests/qdb/quasardb_facade.hpp>
 #include <utils/detailed_error.hpp>
-#ifdef WIN32
+#include <utils/invocation_string.hpp>
+#ifdef _WIN32
 #include <utils/win32.hpp>
 #endif
-#include <utils/invocation_string.hpp>
-
 #include <qdb/blob.h>
 #include <qdb/deque.h>
 #include <qdb/hset.h>
-#include <qdb/node.h>
 #include <qdb/integer.h>
+#include <qdb/node.h>
 #include <qdb/stream.h>
 #include <qdb/tag.h>
-
 #include <cppformat/format.h>
-
-#ifndef WIN32
-#include <cstring>
+#ifndef _WIN32
 #include <cerrno>
+#include <cstring>
 #endif
 
 using namespace bench::tests::qdb;
@@ -56,7 +53,7 @@ static qdb_error_t named_invoke(const char * name, Function function, Args &&...
 
         if ((err == qdb_e_system_local) || (err == qdb_e_system_remote))
         {
-#ifdef WIN32
+#ifdef _WIN32
             std::uint32_t lastError = utils::win32::get_last_error();
             message = utils::win32::get_error_string(lastError);
             details += fmt::format(" and GetLastError() returned {}", lastError);
