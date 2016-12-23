@@ -50,12 +50,17 @@ void bench::app::program::run_scheduled_tests()
     runner.set_snmp_peers(_settings.snmp_peers);
 #endif
 
+    size_t success_count = 0;
     for (auto & test : _schedule)
     {
         runner.run(test);
         _report.add_test(test);
+        if (test.errors.empty()) ++success_count;
 
         _logger.pause(_settings.pause);
         std::this_thread::sleep_for(_settings.pause);
     }
+
+    const auto test_count = _schedule.size();
+    _logger.summary(success_count, test_count);
 }

@@ -19,7 +19,7 @@ public:
         fmt::print("ERROR: {}\n", message);
     }
 
-    void pause(std::chrono::duration<int> duration) override
+    void pause(std::chrono::seconds duration) override
     {
         fmt::print("\nWait {}\n\n", duration_to_string(duration));
     }
@@ -38,6 +38,12 @@ public:
 
         _test_count = tests.size();
         _test_num = 0;
+    }
+
+    void summary(size_t success_count, size_t total_test_count) override
+    {
+        fmt::print("Succeeded {} out of {} {}.\n\n", success_count, total_test_count,
+                   (total_test_count != 1) ? "tests" : "test");
     }
 
     // Whole test
@@ -143,7 +149,7 @@ private:
     size_t _test_num;
     std::string _header;
 
-    std::string duration_to_string(duration duration)
+    std::string duration_to_string(bench::duration duration)
     {
         return unit::milliseconds(
             static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(duration).count()));

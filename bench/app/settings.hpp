@@ -16,8 +16,8 @@ struct settings
     std::vector<int> thread_counts;
     std::vector<std::size_t> content_sizes;
     test_class_collection tests;
-    std::chrono::duration<int> pause;
-    std::chrono::duration<int> duration;
+    std::chrono::seconds pause;
+    std::chrono::seconds duration;
 
     bool no_cleanup;
 

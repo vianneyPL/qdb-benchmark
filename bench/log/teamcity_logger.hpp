@@ -16,13 +16,17 @@ public:
         utils::teamcity::build_problem(message);
     }
 
-    void pause(std::chrono::duration<int> duration) override
+    void pause(std::chrono::seconds duration) override
     {
         auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
         utils::teamcity::message("Wait " + std::to_string(seconds) + (seconds > 1 ? " seconds" : " second"));
     }
 
     void schedule(const std::vector<test_instance> &) override
+    {
+    }
+
+    void summary(size_t /*success_count*/, size_t /*total_test_count*/) override
     {
     }
 

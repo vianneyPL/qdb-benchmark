@@ -12,7 +12,7 @@ struct test_config
     std::size_t content_size;
     bool no_cleanup;
     int thread_count;
-    std::chrono::duration<int> duration;
+    std::chrono::seconds duration;
 };
 
 } // namespace bench

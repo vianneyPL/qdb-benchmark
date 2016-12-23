@@ -12,8 +12,9 @@ class logger
 {
 public:
     virtual void fatal_error(const std::string & message) = 0;
-    virtual void pause(std::chrono::duration<int>) = 0;
+    virtual void pause(std::chrono::seconds) = 0;
     virtual void schedule(const std::vector<test_instance> &) = 0;
+    virtual void summary(size_t success_count, size_t total_test_count) = 0;
 
     virtual void test_started(const test_instance &) = 0;
     virtual void test_finished(const test_instance &) = 0;
