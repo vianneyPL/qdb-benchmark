@@ -104,11 +104,11 @@ void bench::app::command_line::parse(int argc, const char ** argv)
 {
     utils::command_line parser(argc, argv);
 
-    std::cout << "quasardb cluster benchmarking tool" << std::endl;
+    std::cout << "quasardb cluster benchmarking tool\n" << std::endl;
 
     bool version = parser.get_flag("-v", "--version", "Display program version and exit");
     bool help = parser.get_flag("-h", "--help", "Display program help and exit");
-    bool dry_run = parser.get_flag("-n", "--dry-run", "display tests to be executed and exit");
+    bool dry_run = parser.get_flag("-n", "--dry-run", "Display tests to be executed and exit");
     _settings.cluster_uri = parser.get_string("-c", "--cluster", "Set cluster URI", "qdb://127.0.0.1:2836");
     _settings.pause =
         std::chrono::seconds(parser.get_integer("-p", "--pause", "Set the delay between each test, in seconds", "1"));
@@ -120,20 +120,20 @@ void bench::app::command_line::parse(int argc, const char ** argv)
 #if BENCHMARK_SNMP
     _settings.snmp_peers = parser.get_strings("", "--snmp", "Set SNMP peer names", "");
 #endif
-    _settings.thread_counts = parser.get_integers("", "--threads", "set number of threads", "1,2,4");
+    _settings.thread_counts = parser.get_integers("", "--threads", "Set number of threads", "1,2,4");
     parser.get_updatable_values<const test_class *>(
-        "", "--tests", "Select the tests to run (default=all)", "", _settings.tests,
+        "", "--tests", "Select the tests to run", "*", _settings.tests,
         [this](const std::string & name, decltype(_settings.tests) & tests) {
             get_tests_by_name(_test_pool, name, tests);
         });
     parser.check_unknown();
 
-    if (_settings.tests.empty()) _settings.tests = _test_pool; // all test by default
+    if (_settings.tests.empty()) _settings.tests = _test_pool; // enable all tests by default
 
     if (help)
     {
         std::cout << "Available command line options:" << std::endl;
-        std::cout << parser.help();
+        std::cout << parser.help() << std::endl;
 
         std::cout << "Available tests:" << std::endl;
         for (const auto & test_class : _test_pool)

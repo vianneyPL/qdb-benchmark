@@ -145,11 +145,18 @@ private:
                                           const std::string & description,
                                           const std::string & default_value)
     {
-        _help << "  " << std::left << std::setw(3) << short_syntax << std::setw(16) << long_syntax
-              << description;
+        _help << "  " << std::left << std::setw(3) << short_syntax << std::setw(12) << long_syntax << ' ';
 
-        if (default_value.size() > 0) _help << " (default: " << default_value << ")";
+        if (default_value.empty())
+        {
+            _help << std::setw(25) << ' ';
+        }
+        else
+        {
+            _help << std::setw(25) << (" (" + default_value + ") ");
+        }
 
+        _help << description;
         _help << std::endl;
 
         return std::find_if(_args.begin(), _args.end(), [&](const std::string & arg)
