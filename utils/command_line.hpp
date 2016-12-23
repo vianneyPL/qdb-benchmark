@@ -95,6 +95,22 @@ public:
     }
 
     template <typename Value, typename Selector>
+    void get_updatable_values(const std::string & short_syntax,
+                              const std::string & long_syntax,
+                              const std::string & description,
+                              const std::string & default_value,
+                              std::vector<Value> & values,
+                              Selector selector)
+    {
+        std::string _args = get_string(short_syntax, long_syntax, description, default_value);
+
+        for_each_token(_args, [&](const std::string & x) {
+            // Selector may select many values.
+            selector(x, values);
+        });
+    }
+
+    template <typename Value, typename Selector>
     std::vector<Value> get_values(const std::string & short_syntax,
                                   const std::string & long_syntax,
                                   const std::string & description,

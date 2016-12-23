@@ -26,50 +26,78 @@ static std::vector<size_t> parse_size(const std::string & s)
     }
 }
 
-static bench::test_class_collection get_tests_by_name(const bench::test_class_collection & tests,
-                                                      const std::string & name)
+static void get_tests_by_name(const bench::test_class_collection & tests,
+                              const std::string & name,
+                              bench::test_class_collection & chosen_tests)
 {
     // All tests chosen.
-    if (name == "*") return tests;
+    if (name == "*") return;
 
-    bench::test_class_collection chosen_tests;
-    if (!name.empty())
+    if (name.empty()) throw std::runtime_error("Invalid test name: " + name);
+
+    const bool should_remove = (name.front() == '-');
+    if (should_remove && (name.size() == 1)) throw std::runtime_error("Invalid test name: " + name);
+
+    auto begin = name.begin();
+    if (should_remove) ++begin;
+    auto rbegin = name.rbegin();
+
+    const bool prefix = (*begin == '*');
+    const bool suffix = (*rbegin == '*');
+    const bool prefix_suffix = prefix && suffix;
+
+    if (prefix) ++begin;
+    auto end = name.end();
+    if (suffix) --end;
+
+    const auto name_part = std::string(begin, end);
+    size_t chosen_count = 0;
+
+    for (auto test : tests)
     {
-        for (auto test : tests)
+        bool chosen = false;
+        if (test->name == name)
         {
-            bool chosen = false;
-            if (test->name == name)
+            chosen = true;
+        }
+        else if (prefix_suffix)
+        {
+            assert(name.size() >= 2);
+            if (test->name.find(name_part) != std::string::npos) chosen = true;
+        }
+        else if (prefix)
+        {
+            if (test->name.size() >= name_part.size())
             {
-                chosen = true;
-            }
-            else if ((name.front() == '*') && (name.back() == '*'))
-            {
-                assert(name.size() >= 2);
-                auto name_part = name.substr(1, name.size() - 2);
-                if (test->name.find(name_part) != std::string::npos) chosen = true;
-            }
-            else if (name.front() == '*')
-            {
-                auto name_part = name.substr(1);
-                if (test->name.size() >= name_part.size())
-                {
-                    auto test_name_part = test->name.substr(test->name.size() - name_part.size());
-                    if (name_part == test_name_part) chosen = true;
-                }
-            }
-            else if (name.back() == '*')
-            {
-                auto name_part = name.substr(0, name.size() - 1);
-                auto test_name_part = test->name.substr(0, name.size() - 1);
+                auto test_name_part = test->name.substr(test->name.size() - name_part.size());
                 if (name_part == test_name_part) chosen = true;
             }
+        }
+        else if (suffix)
+        {
+            auto test_name_part = test->name.substr(0, name_part.size());
+            if (name_part == test_name_part) chosen = true;
+        }
 
-            if (chosen) chosen_tests.push_back(test);
+        if (chosen)
+        {
+            ++chosen_count;
+            if (should_remove)
+            {
+                for (auto it = std::find(chosen_tests.begin(), chosen_tests.end(), test); it != chosen_tests.end();
+                     it = std::find(it, chosen_tests.end(), test))
+                {
+                    it = chosen_tests.erase(it);
+                }
+            }
+            else
+            {
+                chosen_tests.push_back(test);
+            }
         }
     }
 
-    if (chosen_tests.empty()) throw std::runtime_error("Invalid test name: " + name);
-    return chosen_tests;
+    if (chosen_count == 0u) throw std::runtime_error("invalid test name: " + name);
 }
 
 void bench::app::command_line::parse(int argc, const char ** argv)
@@ -80,6 +108,7 @@ void bench::app::command_line::parse(int argc, const char ** argv)
 
     bool version = parser.get_flag("-v", "--version", "Display program version and exit");
     bool help = parser.get_flag("-h", "--help", "Display program help and exit");
+    bool dry_run = parser.get_flag("-n", "--dry-run", "display tests to be executed and exit");
     _settings.cluster_uri = parser.get_string("-c", "--cluster", "Set cluster URI", "qdb://127.0.0.1:2836");
     _settings.pause =
         std::chrono::seconds(parser.get_integer("-p", "--pause", "Set the delay between each test, in seconds", "1"));
@@ -91,10 +120,12 @@ void bench::app::command_line::parse(int argc, const char ** argv)
 #if BENCHMARK_SNMP
     _settings.snmp_peers = parser.get_strings("", "--snmp", "Set SNMP peer names", "");
 #endif
-    _settings.thread_counts = parser.get_integers("", "--threads", "Set number of threads", "1,2,4");
-    _settings.tests = parser.get_values<const test_class *>(
-        "", "--tests", "Select the tests to run (default=all)", "",
-        [this](const std::string & name) { return get_tests_by_name(_test_pool, name); });
+    _settings.thread_counts = parser.get_integers("", "--threads", "set number of threads", "1,2,4");
+    parser.get_updatable_values<const test_class *>(
+        "", "--tests", "Select the tests to run (default=all)", "", _settings.tests,
+        [this](const std::string & name, decltype(_settings.tests) & tests) {
+            get_tests_by_name(_test_pool, name, tests);
+        });
     parser.check_unknown();
 
     if (_settings.tests.empty()) _settings.tests = _test_pool; // all test by default
@@ -105,7 +136,7 @@ void bench::app::command_line::parse(int argc, const char ** argv)
         std::cout << parser.help();
 
         std::cout << "Available tests:" << std::endl;
-        for (auto & test_class : _test_pool)
+        for (const auto & test_class : _test_pool)
         {
             std::cout << "  " << std::left << std::setw(32) << test_class->name << " " << test_class->description
                       << std::endl;
@@ -116,6 +147,18 @@ void bench::app::command_line::parse(int argc, const char ** argv)
 
     if (version)
     {
+        std::exit(0);
+    }
+
+    if (dry_run)
+    {
+        std::cout << "Chosen tests:" << std::endl;
+        for (const auto & test_class : _settings.tests)
+        {
+            std::cout << "  " << std::left << std::setw(32) << test_class->name << " " << test_class->description
+                      << std::endl;
+        }
+
         std::exit(0);
     }
 }
