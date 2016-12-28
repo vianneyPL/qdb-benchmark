@@ -53,12 +53,13 @@ static qdb_error_t named_invoke(const char * name, Function function, Args &&...
 
         if ((err == qdb_e_system_local) || (err == qdb_e_system_remote))
         {
+            message += ": ";
 #ifdef _WIN32
             std::uint32_t lastError = utils::win32::get_last_error();
-            message = utils::win32::get_error_string(lastError);
+            message += utils::win32::get_error_string(lastError);
             details += fmt::format(" and GetLastError() returned {}", lastError);
 #else
-            message = std::strerror(errno);
+            message += std::strerror(errno);
             details += fmt::format(" and errno equals {}", errno);
 #endif
         }
