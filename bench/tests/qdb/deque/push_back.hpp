@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace deque
 {
+
 class push_back : public qdb_test_template<push_back>
 {
 public:
@@ -43,6 +44,7 @@ public:
         return true;
     }
 };
+
 } // namespace deque
 } // namespace qdb
 } // namespace tests

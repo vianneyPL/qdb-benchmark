@@ -11,10 +11,10 @@ namespace qdb
 namespace deque
 {
 
-class pop_front : public qdb_test_template<pop_front>
+class get_at : public qdb_test_template<get_at>
 {
 public:
-    explicit pop_front(bench::test_config config) : qdb_test_template(config)
+    explicit get_at(bench::test_config config) : qdb_test_template(config)
     {
     }
 
@@ -22,22 +22,22 @@ public:
     {
         qdb_test_template::setup();
 
-        setup_each([&](std::uint32_t iteration) { _qdb.deque_push_front(alias(0), content(iteration)); });
+        setup_each([&](std::uint32_t iteration) { _qdb.deque_push_back(alias(0), content(iteration)); });
     }
 
     void run_iteration(std::uint32_t iteration)
     {
-        _qdb.deque_pop_front(alias(0));
+        _qdb.deque_get_at(alias(0), iteration);
     }
 
     static std::string name()
     {
-        return "qdb_deque_pop_front";
+        return "qdb_deque_get_at";
     }
 
     static std::string description()
     {
-        return "Each thread repeats qdb_deque_pop_front() on a queue";
+        return "Each thread repeats qdb_deque_get_at() on a queue";
     }
 
     static bool size_dependent()

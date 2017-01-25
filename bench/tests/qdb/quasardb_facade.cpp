@@ -150,6 +150,14 @@ void quasardb_facade::remove(const std::string & alias)
     INVOKE(qdb_remove, _handle, alias.c_str());
 }
 
+qdb_buffer quasardb_facade::deque_get_at(const std::string & alias, qdb_int_t index)
+{
+    const void * result;
+    std::size_t result_size;
+    INVOKE(qdb_deque_get_at, _handle, alias.c_str(), index, &result, &result_size);
+    return qdb_buffer(_handle, result, result_size);
+}
+
 qdb_buffer quasardb_facade::deque_pop_back(const std::string & alias)
 {
     const void * result;

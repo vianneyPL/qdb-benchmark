@@ -10,6 +10,7 @@ namespace qdb
 {
 namespace deque
 {
+
 class pop_back : public qdb_test_template<pop_back>
 {
 public:
@@ -44,6 +45,7 @@ public:
         return true;
     }
 };
+
 } // namespace deque
 } // namespace qdb
 } // namespace tests

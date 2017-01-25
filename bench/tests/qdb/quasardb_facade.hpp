@@ -88,6 +88,7 @@ public:
     qdb_buffer blob_get(const std::string & alias);
     void blob_get_noalloc(const std::string & alias, std::string & content);
 
+    qdb_buffer deque_get_at(const std::string & alias, qdb_int_t index);
     qdb_buffer deque_pop_back(const std::string & alias);
     qdb_buffer deque_pop_front(const std::string & alias);
     void deque_push_back(const std::string & alias, const std::string & content);

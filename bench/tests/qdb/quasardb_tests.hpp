@@ -8,6 +8,7 @@
 #include <bench/tests/qdb/blob/put.hpp>
 #include <bench/tests/qdb/blob/remove.hpp>
 #include <bench/tests/qdb/blob/update.hpp>
+#include <bench/tests/qdb/deque/get_at.hpp>
 #include <bench/tests/qdb/deque/pop_back.hpp>
 #include <bench/tests/qdb/deque/pop_front.hpp>
 #include <bench/tests/qdb/deque/push_back.hpp>
@@ -43,6 +44,7 @@ void get_tests(OutputIt it)
     *it++ = new qdb::blob::remove::test_class();
     *it++ = new qdb::blob::detach_tag::test_class();
     *it++ = new qdb::blob::update::test_class();
+    *it++ = new qdb::deque::get_at::test_class();
     *it++ = new qdb::deque::pop_back::test_class();
     *it++ = new qdb::deque::pop_front::test_class();
     *it++ = new qdb::deque::push_back::test_class();
