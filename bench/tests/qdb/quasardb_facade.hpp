@@ -34,7 +34,7 @@ public:
 
     ~qdb_buffer()
     {
-        if (_content) qdb_free_buffer(_handle, _content);
+        if (_content) qdb_release(_handle, _content);
     }
 
     const void * data() const

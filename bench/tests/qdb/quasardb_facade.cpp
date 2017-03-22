@@ -96,7 +96,7 @@ void quasardb_facade::trim_all(int timeout)
 
 void quasardb_facade::free_buffer(const char * buffer)
 {
-    qdb_free_buffer(_handle, buffer);
+    qdb_release(_handle, buffer);
 }
 
 std::string quasardb_facade::node_status(const std::string & node_uri) const
@@ -105,7 +105,7 @@ std::string quasardb_facade::node_status(const std::string & node_uri) const
     size_t content_size;
     INVOKE(qdb_node_status, _handle, node_uri.c_str(), &content, &content_size);
     std::string json(content, content_size);
-    qdb_free_buffer(_handle, content);
+    qdb_release(_handle, content);
     return json;
 }
 
@@ -115,7 +115,7 @@ std::string quasardb_facade::node_topology(const std::string & node_uri) const
     size_t content_size;
     INVOKE(qdb_node_topology, _handle, node_uri.c_str(), &content, &content_size);
     std::string json(content, content_size);
-    qdb_free_buffer(_handle, content);
+    qdb_release(_handle, content);
     return json;
 }
 
