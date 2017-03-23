@@ -29,6 +29,9 @@ add_library(bench-tests-quasardb
     tag/attach_blob.hpp
     tag/get_tagged.hpp
     tag/get_tags.hpp
+    ts/col_blob_insert.hpp
+    ts/col_double_insert.hpp
+    ts/col_double_aggregate.hpp
 
     node_status.hpp
     qdb_test_template.hpp

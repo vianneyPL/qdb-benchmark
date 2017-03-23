@@ -11,6 +11,7 @@
 #include <qdb/node.h>
 #include <qdb/stream.h>
 #include <qdb/tag.h>
+#include <qdb/ts.h>
 #include <cppformat/format.h>
 #ifndef _WIN32
 #include <cerrno>
@@ -252,6 +253,41 @@ void quasardb_facade::get_tags(const std::string & alias)
     const char ** tags;
     size_t tag_count;
     INVOKE(qdb_get_tags, _handle, alias.c_str(), &tags, &tag_count);
+}
+
+void quasardb_facade::ts_col_blob_insert(const std::string & alias, const qdb_timespec_t & ts, const std::string & content)
+{
+    qdb_ts_blob_point bp;
+
+    bp.timestamp = ts;
+    bp.content = content.data();
+    bp.content_length = content.size();
+
+    INVOKE(qdb_ts_blob_insert, _handle, alias.c_str(), &bp, 1);
+}
+
+void quasardb_facade::ts_col_double_insert(const std::string & alias, const qdb_timespec_t & ts, double content)
+{
+    qdb_ts_double_point dp;
+
+    dp.timestamp = ts;
+    dp.value = content;
+
+    ts_col_double_inserts(alias, &dp, 1);
+}
+
+void quasardb_facade::ts_col_double_inserts(const std::string & alias, const qdb_ts_double_point * points, size_t count)
+{
+    INVOKE(qdb_ts_double_insert, _handle, alias.c_str(), points, count);
+}
+
+void quasardb_facade::ts_col_double_average(const std::string & alias, const qdb_ts_range_t & range)
+{
+    qdb_ts_aggregation_t agg;
+
+    agg.range = range;
+
+    INVOKE(qdb_ts_aggregate, _handle, alias.c_str(), qdb_agg_average, &agg, 1);
 }
 
 qdb_stream_t quasardb_facade::stream_open(const std::string & alias, qdb_stream_mode_t mode)
