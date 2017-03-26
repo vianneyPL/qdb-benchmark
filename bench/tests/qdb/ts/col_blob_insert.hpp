@@ -17,6 +17,12 @@ public:
     {
     }
 
+    void setup() override
+    {
+        qdb_test_template::setup();
+        _qdb.ts_create(alias(0), {"blob_col"}, {qdb_ts_column_blob});
+    }
+
     void run_iteration(std::uint32_t iteration)
     {
         qdb_timespec_t ts;
@@ -24,7 +30,7 @@ public:
         ts.tv_sec = iteration;
         ts.tv_nsec = 0;
 
-        _qdb.ts_col_blob_insert(alias(0), ts, content(iteration));
+        _qdb.ts_col_blob_insert(alias(0), "blob_col", ts, content(iteration));
     }
 
     void cleanup() override

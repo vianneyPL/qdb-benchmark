@@ -17,6 +17,12 @@ public:
     {
     }
 
+    void setup() override
+    {
+        qdb_test_template::setup();
+        _qdb.ts_create(alias(0), {"double_col"}, {qdb_ts_column_double});
+    }
+
     void run_iteration(std::uint32_t iteration)
     {
         qdb_timespec_t ts;
@@ -24,7 +30,7 @@ public:
         ts.tv_sec = iteration;
         ts.tv_nsec = 0;
 
-        _qdb.ts_col_double_insert(alias(0), ts, static_cast<double>(iteration));
+        _qdb.ts_col_double_insert(alias(0), "double_col", ts, static_cast<double>(iteration));
     }
 
     void cleanup() override

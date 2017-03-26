@@ -23,6 +23,8 @@ public:
     {
         qdb_test_template::setup();
 
+        _qdb.ts_create(alias(0), {"double_col"}, {qdb_ts_column_double});
+
         std::vector<qdb_ts_double_point> points(_ts_size);
 
         qdb_time_t cursor = 1490206139; 
@@ -35,12 +37,12 @@ public:
         _inserted_range.begin = points.front().timestamp;
         _inserted_range.end = points.back().timestamp;
 
-        _qdb.ts_col_double_inserts(alias(0), points.data(), points.size());
+        _qdb.ts_col_double_inserts(alias(0), "double_col", points.data(), points.size());
     }
 
     void run_iteration(std::uint32_t iteration)
     {
-        _qdb.ts_col_double_average(alias(0), _inserted_range);
+        _qdb.ts_col_double_average(alias(0), "double_col", _inserted_range);
     }
 
     void cleanup() override
