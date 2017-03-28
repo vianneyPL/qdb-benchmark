@@ -20,7 +20,7 @@ public:
     void setup() override
     {
         qdb_test_template::setup();
-        _qdb.ts_create(alias(0), {"double_col"}, {qdb_ts_column_double});
+        _qdb.ts_create(alias(0), {qdb_ts_column_info_t{"double_col", qdb_ts_column_double}});
     }
 
     void run_iteration(std::uint32_t iteration)

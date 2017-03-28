@@ -23,7 +23,7 @@ public:
     {
         qdb_test_template::setup();
 
-        _qdb.ts_create(alias(0), {"double_col"}, {qdb_ts_column_double});
+        _qdb.ts_create(alias(0), {qdb_ts_column_info_t{"double_col", qdb_ts_column_double}});
 
         std::vector<qdb_ts_double_point> points(_ts_size);
 
