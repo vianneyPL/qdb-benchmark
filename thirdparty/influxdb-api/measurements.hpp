@@ -16,6 +16,8 @@ public:
 
     measurements(const measurements &) = default;
     measurements(measurements &&) = default;
+    measurements &operator=(const measurements &) = default;
+    measurements &operator=(measurements &&) = default;
 
     inline measurements & operator<<(const measurement & t);
     inline measurements & operator<<(measurement && t);

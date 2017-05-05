@@ -46,6 +46,7 @@ public:
     void drop(const measurement::measurement & measurement);
 
     void select(const measurement::measurement & measurement);
+    void select(const std::string & what, const std::string & from);
     void select(const std::string & what, const std::string & from, const std::string & where);
 
 private:

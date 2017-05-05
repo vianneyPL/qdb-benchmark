@@ -39,6 +39,9 @@ public:
     measurement(const measurement & rhs) = default;
     measurement(measurement && rhs) = default;
 
+    measurement & operator=(const measurement &) = default;
+    measurement & operator=(measurement &&) = default;
+
     measurement & operator<<(const tag & t);
     measurement & operator<<(tag && t);
 
@@ -56,11 +59,8 @@ public:
 
 private:
     WritingState m_state;
-    std::string m_name;
     std::string m_line;
-
-    inline void quoted(const std::string & to_quote);
-    inline void quoted(std::string && to_quote);
+    const std::string m_name;
 };
 
 template <typename FieldType>

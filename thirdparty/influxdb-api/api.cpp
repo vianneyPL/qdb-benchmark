@@ -3,7 +3,7 @@
 #include "command/drop.hpp"
 #include "command/insert.hpp"
 #include "command/query.hpp"
-#include <cppformat/ostream.h>
+#include <cppformat/format.h>
 #include <iomanip>
 
 // using namespace = influxdb::api;
@@ -67,9 +67,8 @@ void idb::api::api::drop()
 void idb::api::api::drop(const measurement::measurement & measurement)
 {
     auto drop = command::query(m_base_uri);
-    fmt::MemoryWriter statement;
-    statement << "DROP MEASUREMENT " << std::quoted(measurement.name());
-    drop.prepare(m_dbname, statement.str());
+    std::string statement = fmt::format("DROP MEASUREMENT \"{}\"", measurement.name());
+    drop.prepare(m_dbname, statement);
     try
     {
         execute(drop);
@@ -83,9 +82,23 @@ void idb::api::api::drop(const measurement::measurement & measurement)
 void idb::api::api::select(const measurement::measurement & measurement)
 {
     auto select = command::query(m_base_uri);
-    fmt::MemoryWriter statement;
-    statement << "SELECT * FROM " << std::quoted(measurement.name());
-    select.prepare(m_dbname, statement.str());
+    std::string statement = fmt::format("SELECT * FROM \"{}\"", measurement.name());
+    select.prepare(m_dbname, statement);
+    try
+    {
+        execute(select);
+    }
+    catch (...)
+    {
+        std::rethrow_exception(std::current_exception());
+    }
+}
+
+void idb::api::api::select(const std::string & what, const std::string & from)
+{
+    auto select = command::query(m_base_uri);
+    std::string statement = fmt::format("SELECT {} FROM {}", what, from);
+    select.prepare(m_dbname, statement);
     try
     {
         execute(select);
@@ -99,9 +112,8 @@ void idb::api::api::select(const measurement::measurement & measurement)
 void idb::api::api::select(const std::string & what, const std::string & from, const std::string & where)
 {
     auto select = command::query(m_base_uri);
-    fmt::MemoryWriter statement;
-    statement << "SELECT " << what << " FROM " << from << " WHERE " << where;
-    select.prepare(m_dbname, statement.str());
+    std::string statement = fmt::format("SELECT {} FROM {} WHERE {}", what, from, where);
+    select.prepare(m_dbname, statement);
     try
     {
         execute(select);

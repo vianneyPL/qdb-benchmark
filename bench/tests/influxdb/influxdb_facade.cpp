@@ -1,5 +1,5 @@
 #include <bench/tests/influxdb/influxdb_facade.hpp>
-#include <cppformat/ostream.h>
+#include <cppformat/format.h>
 #include <exception>
 #include <iostream>
 
@@ -39,8 +39,6 @@ void influxdb_facade::remove(const std::string & alias)
     }
     catch (...)
     {
-        std::cerr << __FUNCTION__ << " failed.\n";
-        std::cerr << "Tried (alias:" << alias << ")\n";
         std::rethrow_exception(std::current_exception());
     }
 }
@@ -57,8 +55,6 @@ void influxdb_facade::ts_col_blob_insert(const std::string & alias,
     }
     catch (...)
     {
-        std::cerr << __FUNCTION__ << " failed.\n";
-        std::cerr << "Tried (alias:" << alias << ") (col_name:" << col_name << ") (content:" << content << ")\n";
         std::rethrow_exception(std::current_exception());
     }
 }
@@ -75,9 +71,6 @@ void influxdb_facade::ts_col_double_insert(const std::string & alias,
     }
     catch (...)
     {
-        std::cerr << __FUNCTION__ << " failed.\n";
-        std::cerr << "Tried (alias:" << alias << ") (col_name:" << col_name << ") (content:" << point.first << "-"
-                  << point.second << ")\n";
         std::rethrow_exception(std::current_exception());
     }
 }
@@ -100,9 +93,6 @@ void influxdb_facade::ts_col_double_inserts(const std::string & alias,
     }
     catch (...)
     {
-        std::cerr << __FUNCTION__ << " failed.\n";
-        std::cerr << "Tried (alias:" << alias << ") (col_name:" << col_name << ") (content:" << current_point.first
-                  << "-" << current_point.second << ")\n";
         std::rethrow_exception(std::current_exception());
     }
 }
@@ -113,17 +103,13 @@ void influxdb_facade::ts_col_double_average(const std::string & alias,
 {
     try
     {
-        fmt::MemoryWriter what;
-        what << "MEAN(\"" << alias << "\")";
-        fmt::MemoryWriter from;
-        from << "\"" << col_name << "\"";
-        fmt::MemoryWriter where;
-        where << "time >= '" << range.first << "' AND time < '" << range.second << "'";
-        m_api.select(what.str(), from.str(), where.str());
+        std::string what = fmt::format("MEAN(\"{}\")", alias);
+        std::string from = fmt::format("\"{}\"", col_name);
+        std::string where = fmt::format("time >= '{}' AND time < '{}'", range.first, range.second);
+        m_api.select(what, from, where);
     }
     catch (...)
     {
-        std::cerr << __FUNCTION__ << " failed.\n";
         std::rethrow_exception(std::current_exception());
     }
 }

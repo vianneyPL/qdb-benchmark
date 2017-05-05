@@ -2,6 +2,7 @@
 project(influxdb-api)
 
 set(CMAKE_CXX_STANDARD 14)
+SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O3")
 
 find_package(cppnetlib)
 include_directories(${CMAKE_SOURCE_DIR})
