@@ -9,6 +9,9 @@
 #if BENCHMARK_MONGODB
 #include <bench/tests/mongodb/mongodb_tests.hpp>
 #endif
+#if BENCHMARK_INFLUXDB
+#include <bench/tests/influxdb/influxdb_tests.hpp>
+#endif
 #if BENCHMARK_QUASARDB
 #include <bench/tests/qdb/quasardb_tests.hpp>
 #endif
@@ -38,6 +41,9 @@ static bench::test_class_collection get_tests()
 #endif
 #if BENCHMARK_MONGODB
     bench::tests::mongodb::get_tests(std::back_inserter(result));
+#endif
+#if BENCHMARK_INFLUXDB
+    bench::tests::influxdb::get_tests(std::back_inserter(result));
 #endif
 #if BENCHMARK_QUASARDB
     bench::tests::qdb::get_tests(std::back_inserter(result));

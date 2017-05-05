@@ -288,12 +288,12 @@ void quasardb_facade::ts_col_double_inserts(const std::string & alias, const std
 
 void quasardb_facade::ts_col_double_average(const std::string & alias, const std::string & col_name,  const qdb_ts_range_t & range)
 {
-    qdb_ts_double_aggregation_t agg;
+    qdb_ts_aggregation_t agg;
 
     agg.type = qdb_agg_arithmetic_mean;
     agg.range = range;
 
-    INVOKE(qdb_ts_double_aggregate, _handle, alias.c_str(), col_name.c_str(), &agg, 1);
+    INVOKE(qdb_ts_aggregate, _handle, alias.c_str(), col_name.c_str(), &agg, 1);
 }
 
 qdb_stream_t quasardb_facade::stream_open(const std::string & alias, qdb_stream_mode_t mode)
