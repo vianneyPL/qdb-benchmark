@@ -35,7 +35,7 @@ private:
     // Returns the first node of a cluster uri
     static std::string first_node(std::string const & cluster_uri)
     {
-        // TODO: this assumes the cluster uri is just a single node.
+        // TODO(vianney): this assumes the cluster uri is just a single node.
         // which it is on the free version
         return cluster_uri;
     }
