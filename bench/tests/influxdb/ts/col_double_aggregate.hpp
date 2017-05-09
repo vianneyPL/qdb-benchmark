@@ -42,7 +42,7 @@ public:
 
     void cleanup() override
     {
-        _influxdb.remove(alias(0));
+        _influxdb.cleanup();
     }
 
     static std::string name()

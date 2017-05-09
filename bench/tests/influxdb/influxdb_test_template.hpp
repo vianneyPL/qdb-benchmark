@@ -26,7 +26,12 @@ public:
 
     void setup() override
     {
-        _influxdb.connect("http://localhost:8086");
+        _influxdb.connect("http://localhost:8086", alias(0));
+    }
+
+    void cleanup() override
+    {
+        _influxdb.cleanup();
     }
 
     static probe_collection create_probes(test_config cfg)

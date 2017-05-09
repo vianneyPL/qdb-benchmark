@@ -29,9 +29,10 @@ public:
     influxdb_facade();
     ~influxdb_facade();
 
-    void connect(const std::string & cluster_uri);
+    void connect(const std::string & cluster_uri, const std::string & dbname);
 
     void remove(const std::string & alias);
+    void cleanup();
 
     void ts_col_blob_insert(const std::string & alias, const std::string & col_name, const std::string & content);
     void ts_col_double_insert(const std::string & alias, const std::string & col_name, const timepoint & point);

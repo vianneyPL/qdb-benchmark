@@ -20,7 +20,7 @@ public:
     }
     inline void prepareStatement(const std::string & dbname)
     {
-        m_url << boost::network::uri::query("q", boost::network::uri::encoded("CREATE DATABASE " + dbname));
+        m_url << boost::network::uri::query("q", boost::network::uri::encoded("CREATE DATABASE \"" + dbname + "\""));
         m_request = boost::network::http::client::request(m_url);
     }
 };

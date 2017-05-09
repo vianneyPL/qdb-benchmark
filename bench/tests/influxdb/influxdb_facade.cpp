@@ -19,9 +19,9 @@ influxdb_facade::~influxdb_facade()
 {
 }
 
-void influxdb_facade::connect(const std::string & cluster_uri)
+void influxdb_facade::connect(const std::string & cluster_uri, const std::string & dbname)
 {
-    m_api = api(cluster_uri, "benchmark");
+    m_api = api(cluster_uri, fmt::format("benchmark-{}", dbname));
     try
     {
         m_api.createDatabase();
@@ -41,6 +41,18 @@ void influxdb_facade::remove(const std::string & alias)
     catch (...)
     {
         std::rethrow_exception(std::current_exception());
+    }
+}
+
+void influxdb_facade::cleanup()
+{
+    try
+    {
+        m_api.dropDatabase();
+    }
+    catch (...)
+    {
+        // Exception thrown can safely be ignored
     }
 }
 

@@ -30,8 +30,7 @@ public:
 
     void cleanup() override
     {
-        _influxdb.remove(alias(0));
-        influxdb_test_template::cleanup();
+        _influxdb.cleanup();
     }
 
     static std::string name()

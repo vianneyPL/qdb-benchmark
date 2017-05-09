@@ -24,7 +24,7 @@ public:
 
     void cleanup() override
     {
-        // cleanup_each([=](std::uint32_t iteration) { _influxdb.remove(alias(iteration)); });
+        _influxdb.cleanup();
     }
 
     static std::string name()
