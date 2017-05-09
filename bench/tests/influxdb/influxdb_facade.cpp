@@ -4,31 +4,32 @@
 #include <iostream>
 
 using api = idb::api::api;
-using tag = idb::api::measurement::tag;
 using str_field = idb::api::measurement::field<std::string>;
 using double_field = idb::api::measurement::field<double>;
-using int_field = idb::api::measurement::field<int>;
 using measurement = idb::api::measurement::measurement;
 using measurements = idb::api::measurement::measurements;
-
-#define NAMESPACE "bench.objects"
 
 using namespace bench::tests::influxdb;
 
 influxdb_facade::influxdb_facade()
 {
-    //  m_api = api("http://localhost:8086", "benchmark");
 }
 
 influxdb_facade::~influxdb_facade()
 {
-    m_api.drop();
 }
 
 void influxdb_facade::connect(const std::string & cluster_uri)
 {
-    m_api.create();
-    // _async_api.create();
+    m_api = api(cluster_uri, "benchmark");
+    try
+    {
+        m_api.createDatabase();
+    }
+    catch (...)
+    {
+        std::rethrow_exception(std::current_exception());
+    }
 }
 
 void influxdb_facade::remove(const std::string & alias)
@@ -61,12 +62,12 @@ void influxdb_facade::ts_col_blob_insert(const std::string & alias,
 
 void influxdb_facade::ts_col_double_insert(const std::string & alias,
                                            const std::string & col_name,
-                                           const std::pair<double, idb_time_t> & point)
+                                           const timepoint & point)
 {
     try
     {
         measurement mes(alias);
-        mes << double_field(col_name, point.first) << point.second;
+        mes << double_field(col_name, point.value) << point.timestamp;
         m_api.create(mes);
     }
     catch (...)
@@ -77,16 +78,15 @@ void influxdb_facade::ts_col_double_insert(const std::string & alias,
 
 void influxdb_facade::ts_col_double_inserts(const std::string & alias,
                                             const std::string & col_name,
-                                            const std::vector<std::pair<double, idb_time_t>> & points)
+                                            const std::vector<timepoint> & points)
 {
-    std::pair<double, idb_time_t> current_point;
     try
     {
         measurements measures;
         for (const auto & point : points)
         {
             measurement mes(alias);
-            mes << double_field(col_name, point.first) << point.second;
+            mes << double_field(col_name, point.value) << point.timestamp;
             measures << mes;
         }
         m_api.create(measures);
@@ -99,13 +99,13 @@ void influxdb_facade::ts_col_double_inserts(const std::string & alias,
 
 void influxdb_facade::ts_col_double_average(const std::string & alias,
                                             const std::string & col_name,
-                                            const std::pair<idb_time_t, idb_time_t> & range)
+                                            const timerange & range)
 {
     try
     {
         std::string what = fmt::format("MEAN(\"{}\")", alias);
         std::string from = fmt::format("\"{}\"", col_name);
-        std::string where = fmt::format("time >= '{}' AND time < '{}'", range.first, range.second);
+        std::string where = fmt::format("time >= '{}' AND time < '{}'", range.start, range.end);
         m_api.select(what, from, where);
     }
     catch (...)

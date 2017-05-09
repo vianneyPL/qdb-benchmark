@@ -26,7 +26,7 @@ public:
 
     void setup() override
     {
-        _influxdb.connect(std::string("http://localhost:8086"));
+        _influxdb.connect("http://localhost:8086");
     }
 
     static probe_collection create_probes(test_config cfg)

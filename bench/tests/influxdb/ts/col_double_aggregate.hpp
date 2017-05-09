@@ -22,14 +22,15 @@ public:
     {
         influxdb_test_template::setup();
 
-        std::vector<std::pair<double, idb_time_t>> points(_ts_size);
+        std::vector<timepoint> points(_ts_size);
 
         idb_time_t cursor = 1490206139;
 
-        std::generate(points.begin(), points.end(),
-                      [&cursor]() { return std::make_pair(static_cast<double>(cursor), cursor++); });
+        std::generate(points.begin(), points.end(), [&cursor]() {
+            return timepoint{static_cast<double>(cursor), cursor++};
+        });
 
-        _inserted_range = std::make_pair(points.front().second, points.back().second);
+        _inserted_range = timerange{points.front().timestamp, points.back().timestamp};
 
         _influxdb.ts_col_double_inserts(alias(0), "double_col", points);
     }
@@ -61,7 +62,7 @@ public:
 
 private:
     const size_t _ts_size;
-    std::pair<idb_time_t, idb_time_t> _inserted_range;
+    timerange _inserted_range;
 };
 } // namespace ts
 } // namespace influxdb

@@ -24,8 +24,8 @@ public:
 
     void run_iteration(std::uint32_t iteration)
     {
-        _influxdb.ts_col_double_insert(
-            alias(0), "double_col", std::make_pair(static_cast<double>(iteration), static_cast<idb_time_t>(iteration)));
+        _influxdb.ts_col_double_insert(alias(0), "double_col",
+                                       timepoint{static_cast<double>(iteration), static_cast<idb_time_t>(iteration)});
     }
 
     void cleanup() override

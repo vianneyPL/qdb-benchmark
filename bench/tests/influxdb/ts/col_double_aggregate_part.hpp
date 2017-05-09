@@ -26,16 +26,16 @@ public:
         static std::mt19937 gen(rd());
         static std::uniform_real_distribution<double> dist(-1000000, 1000000);
 
-        std::vector<std::pair<double, idb_time_t>> points(_ts_size);
+        std::vector<timepoint> points(_ts_size);
 
         idb_time_t cursor = 1490206139;
 
         std::generate(points.begin(), points.end(), [&cursor]() {
             ++cursor;
-            return std::make_pair(dist(gen), cursor + 2);
+            return timepoint{dist(gen), cursor + 2};
         });
 
-        _inserted_range = std::make_pair(points.front().second, points.back().second);
+        _inserted_range = timerange{points.front().timestamp, points.back().timestamp};
 
         _influxdb.ts_col_double_inserts(alias(0), "double_col", points);
     }
@@ -44,11 +44,11 @@ public:
     {
         static std::random_device rd;
         static std::mt19937 gen(rd());
-        static auto part = (_inserted_range.second - _inserted_range.first) / 100;
-        static std::uniform_int_distribution<idb_time_t> dist(_inserted_range.first, _inserted_range.second - part);
+        static auto part = (_inserted_range.end - _inserted_range.start) / 100;
+        static std::uniform_int_distribution<idb_time_t> dist(_inserted_range.start, _inserted_range.end - part);
 
         idb_time_t start = dist(gen);
-        auto range = std::make_pair(start, start + part);
+        auto range = timerange{start, start + part};
         _influxdb.ts_col_double_average(alias(0), "double_col", range);
     }
 
@@ -74,7 +74,7 @@ public:
 
 private:
     const size_t _ts_size;
-    std::pair<idb_time_t, idb_time_t> _inserted_range;
+    timerange _inserted_range;
 };
 } // namespace ts
 } // namespace influxdb
