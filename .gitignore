@@ -10,3 +10,6 @@
 
 # SublimeText
 sftp-config*.json
+
+# visual studio code
+.vscode*
