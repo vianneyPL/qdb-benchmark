@@ -6,9 +6,7 @@
 #include <cppformat/format.h>
 #include <iomanip>
 
-// using namespace = influxdb::api;
-
-void idb::api::api::create()
+void idb::api::api::createDatabase()
 {
     auto create = command::create(m_base_uri);
     create.prepare(m_dbname);
@@ -50,7 +48,7 @@ void idb::api::api::create(const measurement::measurements & mes)
     }
 }
 
-void idb::api::api::drop()
+void idb::api::api::dropDatabase()
 {
     auto drop = command::drop(m_base_uri);
     drop.prepare(m_dbname);

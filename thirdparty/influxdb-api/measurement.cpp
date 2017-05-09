@@ -1,5 +1,4 @@
 #include "measurement.hpp"
-#include <cppformat/ostream.h>
 
 namespace idb
 {
@@ -41,10 +40,6 @@ measurement & measurement::operator<<(tag && t)
     m_state = WritingState::tags;
     return *this;
 }
-
-// measurement&    measurement::operator<<(const field &f)
-// measurement&    measurement::operator<<(field &&f)
-
 measurement & measurement::operator<<(const idb_time_t & t)
 {
     if (m_state == WritingState::timestamp)
@@ -75,28 +70,6 @@ measurement & measurement::operator<<(idb_time_t && t)
     m_state = WritingState::timestamp;
     return *this;
 }
-
-// const std::string measurement::line() const
-// {
-//     if (m_fields.empty())
-//     { std::runtime_error(std::string("measurement should have at least one field set.")); }
-
-//     fmt::MemoryWriter line;
-//     line << std::quoted(m_name);
-//     for (const auto &t : m_tags)
-//     { line << "," << std::quoted(t.key()) << "=" << std::quoted(t.value()); }
-//     auto count = 0;
-//     for (const auto &f : m_fields)
-//     {
-//         if (count > 0)
-//         { line << ","; }
-//         else
-//         { line << " "; }
-//         line << std::quoted(f.key()) << "=" << f.value();
-//         ++count;
-//     }
-//     return line.str();
-// }
 }
 }
 }

@@ -5,6 +5,7 @@
 #include <boost/network/uri/uri_io.hpp>
 #include <exception>
 #include <iostream>
+#include <memory>
 #include <type_traits>
 
 namespace idb
@@ -14,14 +15,17 @@ namespace api
 class api
 {
     using http_client = boost::network::http::client;
-    // using http_status = boost::network::http::client::status;
+
 public:
-    api(const std::string & base_uri = "http://localhost:8086", const std::string & dbname = "benchmark")
-        : m_base_uri(base_uri), m_dbname(dbname)
+    api() = default;
+    api(const std::string & base_uri, const std::string & dbname) : m_base_uri(base_uri), m_dbname(dbname)
     {
     }
     api(const api & a) = default;
-    api(api && a) = delete;
+    api(api && a) = default;
+
+    api & operator=(const api & a) = default;
+    api & operator=(api && a) = default;
 
     template <typename QueryType>
     typename std::enable_if<std::is_base_of<command::command<QueryType>, QueryType>::value, void>::type
@@ -38,11 +42,11 @@ public:
         }
     }
 
-    void create();
+    void createDatabase();
     void create(const measurement::measurement & measurement);
     void create(const measurement::measurements & measurements);
 
-    void drop();
+    void dropDatabase();
     void drop(const measurement::measurement & measurement);
 
     void select(const measurement::measurement & measurement);
@@ -50,16 +54,16 @@ public:
     void select(const std::string & what, const std::string & from, const std::string & where);
 
 private:
-    const std::string m_base_uri;
-    const std::string m_dbname;
-    http_client m_client;
+    std::string m_base_uri;
+    std::string m_dbname;
+    std::shared_ptr<http_client> m_client = std::make_shared<http_client>();
 
     template <typename QueryType>
     void execute_impl(QueryType query, command::execution_tag::get)
     {
         try
         {
-            response_handler(m_client.get(query.request()));
+            response_handler(m_client->get(query.request()));
         }
         catch (...)
         {
@@ -72,7 +76,7 @@ private:
     {
         try
         {
-            response_handler(m_client.post(query.request()));
+            response_handler(m_client->post(query.request()));
         }
         catch (...)
         {
