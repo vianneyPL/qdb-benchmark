@@ -19,6 +19,6 @@ void get_tests(OutputIt it)
     *it++ = new ts::col_double_aggregate::test_class();
     *it++ = new ts::col_double_average_part::test_class();
 }
-}
-}
-}
+} // namespace influxdb
+} // namespace tests
+} // namespace bench
