@@ -8,11 +8,11 @@ set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost COMPONENTS regex system thread)
 find_package(Threads)
 
-# Disable default option for cpp-netlib
-option( CPP-NETLIB_BUILD_SHARED_LIBS "Build cpp-netlib as shared libraries." OFF )
-option( CPP-NETLIB_BUILD_TESTS "Build the cpp-netlib project tests." OFF)
-option( CPP-NETLIB_BUILD_EXAMPLES "Build the cpp-netlib project examples." OFF)
-option( CPP-NETLIB_ENABLE_HTTPS "Build cpp-netlib with support for https if OpenSSL is found." OFF)
+# Disable default options for cpp-netlib
+option(CPP-NETLIB_BUILD_SHARED_LIBS "Build cpp-netlib as shared libraries." OFF )
+option(CPP-NETLIB_BUILD_TESTS "Build the cpp-netlib project tests." OFF)
+option(CPP-NETLIB_BUILD_EXAMPLES "Build the cpp-netlib project examples." OFF)
+option(CPP-NETLIB_ENABLE_HTTPS "Build cpp-netlib with support for https if OpenSSL is found." OFF)
 
 add_subdirectory(thirdparty/ArduinoJson/src)
 add_subdirectory(thirdparty/cassandra)
