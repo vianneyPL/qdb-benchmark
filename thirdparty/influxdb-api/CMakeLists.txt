@@ -31,7 +31,7 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 set(INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CPPNETLIB_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/thirdparty/cpp-netlib/deps/asio/asio/include
 )
