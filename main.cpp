@@ -24,9 +24,10 @@ static bench::log::logger & get_logger()
 {
     const char * teamcity_version = std::getenv("TEAMCITY_VERSION");
     if (teamcity_version && teamcity_version[0])
+    {
         return bench::log::get_teamcity_logger();
-    else
-        return bench::log::get_console_logger();
+    }
+    return bench::log::get_console_logger();
 }
 
 static bench::test_class_collection get_tests()

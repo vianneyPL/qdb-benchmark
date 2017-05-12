@@ -34,13 +34,13 @@ public:
         {
             static std::random_device rd;
             static std::mt19937 gen(rd());
-            static std::uniform_int_distribution<qdb_time_t> distTime(0, 14902061390);
-            static std::uniform_real_distribution<double> distDouble(0, 10);
+            static std::uniform_int_distribution<qdb_time_t> dist_time(0, 14902061390);
+            static std::uniform_real_distribution<double> dist_double(0, 10);
 
             std::vector<qdb_ts_double_point> points(_ts_size);
-            auto timestamp = distTime(gen);
+            auto timestamp = dist_time(gen);
             std::generate(points.begin(), points.end(), [&timestamp]() {
-                return qdb_ts_double_point{qdb_timespec_t{++timestamp, 0}, distDouble(gen)};
+                return qdb_ts_double_point{qdb_timespec_t{++timestamp, 0}, dist_double(gen)};
             });
             _qdb.ts_col_double_inserts(alias(0), "double_col", points.data(), points.size());
         }
