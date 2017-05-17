@@ -25,22 +25,24 @@ public:
 
     void run_iteration(std::uint32_t iteration)
     {
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        static std::uniform_int_distribution<qdb_time_t> dist_time(0, 1490206139);
+        static std::uniform_real_distribution<double> dist_double(0, 10);
+
         if (_ts_size == 1)
         {
-            _qdb.ts_col_double_insert(alias(0), "double_col", qdb_timespec_t{iteration, 0},
-                                      static_cast<double>(iteration));
+            thread_local qdb_time_t timestamp = 0;
+            timestamp += 60;
+            _qdb.ts_col_double_insert(alias(0), "double_col", qdb_timespec_t{timestamp, 0}, dist_double(gen));
         }
         else
         {
-            static std::random_device rd;
-            static std::mt19937 gen(rd());
-            static std::uniform_int_distribution<qdb_time_t> dist_time(0, 14902061390);
-            static std::uniform_real_distribution<double> dist_double(0, 10);
-
             std::vector<qdb_ts_double_point> points(_ts_size);
             auto timestamp = dist_time(gen);
             std::generate(points.begin(), points.end(), [&timestamp]() {
-                return qdb_ts_double_point{qdb_timespec_t{++timestamp, 0}, dist_double(gen)};
+                timestamp += 60;
+                return qdb_ts_double_point{qdb_timespec_t{timestamp, 0}, dist_double(gen)};
             });
             _qdb.ts_col_double_inserts(alias(0), "double_col", points.data(), points.size());
         }

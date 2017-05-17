@@ -25,22 +25,23 @@ public:
 
     void run_iteration(std::uint32_t iteration)
     {
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        static std::uniform_int_distribution<idb_time_t> dist_time(0, 1490206139);
+        static std::uniform_real_distribution<double> dist_double(0, 10);
         if (_ts_size == 1)
         {
-            _influxdb.ts_col_double_insert(
-                alias(0), "double_col", timepoint{static_cast<double>(iteration), static_cast<idb_time_t>(iteration)});
+            thread_local idb_time_t timestamp = dist_time(gen);
+            timestamp += 60;
+            _influxdb.ts_col_double_insert(alias(0), "double_col", timepoint{dist_double(gen), (timestamp * 1000000)});
         }
         else
         {
-            static std::random_device rd;
-            static std::mt19937 gen(rd());
-            static std::uniform_int_distribution<idb_time_t> dist_time(0, 14902061390);
-            static std::uniform_real_distribution<double> dist_double(0, 10);
-
             std::vector<timepoint> points(_ts_size);
             auto timestamp = dist_time(gen);
             std::generate(points.begin(), points.end(), [&timestamp]() {
-                return timepoint{dist_double(gen), ++timestamp};
+                timestamp += 60;
+                return timepoint{dist_double(gen), (timestamp * 1000000)};
             });
             _influxdb.ts_col_double_inserts(alias(0), "double_col", points);
         }
