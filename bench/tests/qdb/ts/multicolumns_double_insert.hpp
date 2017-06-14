@@ -98,7 +98,8 @@ private:
                 qdb_connect(h, "qdb://127.0.0.1:2836");
                 return h;
             }();
-            qdb_ts_double_point double_point{qdb_timespec_t{timestamp, 0}, generate_value()};
+            static qdb_time_t second_timestamp = timestamp;
+            qdb_ts_double_point double_point{qdb_timespec_t{second_timestamp, timestamp}, generate_value()};
             qdb_ts_double_insert(handle, alias.c_str(), col_name.c_str(), &double_point, 1);
         };
         while (1)
@@ -110,11 +111,10 @@ private:
             if (_shutdown) return;
 
             caller(timestamp);
-            timestamp += 60;
+            timestamp += 33;
             _finish_barrier.arrive_and_wait();
             if (_fire_threads == true)
             {
-                std::unique_lock<std::mutex> local_lock{_lock};
                 _fire_threads = false;
             }
             ++_columns_done;
