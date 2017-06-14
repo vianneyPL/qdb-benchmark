@@ -44,6 +44,7 @@ public:
             _thread_count = static_cast<unsigned int>(_completion_fn());
             assert(_thread_count != 0);
             --_num_to_leave;
+            _idle.notify_all();
             return true;
         }
         --_num_to_leave;
@@ -51,8 +52,6 @@ public:
     }
 
 private:
-    unsigned int m_generation;
-
     int _thread_count;
     int _new_thread_count;
 

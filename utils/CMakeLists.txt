@@ -1,6 +1,7 @@
 set(FILES
     command_line.hpp
     detailed_error.hpp
+    flex_barrier.hpp
     memory.hpp
     random.cpp
     random.hpp
