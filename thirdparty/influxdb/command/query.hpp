@@ -16,13 +16,13 @@ public:
     }
     inline void setPath()
     {
-        m_url << boost::network::uri::path("/query");
+        m_url += "/query";
+        m_request->SetOption(m_url);
     }
     inline void prepareStatement(const std::string & dbname, const std::string & statement)
     {
-        m_url << boost::network::uri::query("db", dbname);
-        m_url << boost::network::uri::query("q", boost::network::uri::encoded(statement));
-        m_request = boost::network::http::client::request(m_url);
+        auto parameters = cpr::Parameters{{"db", dbname}, {"q", statement}};
+        m_request->SetOption(parameters);
     }
 };
 }

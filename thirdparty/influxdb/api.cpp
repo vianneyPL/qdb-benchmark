@@ -20,7 +20,7 @@ void idb::api::api::createDatabase()
     }
 }
 
-void idb::api::api::create(const measurement::measurement & mes)
+void idb::api::api::insert(const measurement::measurement & mes)
 {
     auto create = command::insert(m_base_uri);
     create.prepare(m_dbname, mes);
@@ -34,7 +34,7 @@ void idb::api::api::create(const measurement::measurement & mes)
     }
 }
 
-void idb::api::api::create(const measurement::measurements & mes)
+void idb::api::api::insert(const measurement::measurements & mes)
 {
     auto create = command::insert(m_base_uri);
     create.prepare(m_dbname, mes);

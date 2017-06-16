@@ -8,20 +8,14 @@ set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost COMPONENTS regex system thread)
 find_package(Threads)
 
-# Disable default options for cpp-netlib
-option(CPP-NETLIB_BUILD_SHARED_LIBS "Build cpp-netlib as shared libraries." OFF )
-option(CPP-NETLIB_BUILD_TESTS "Build the cpp-netlib project tests." OFF)
-option(CPP-NETLIB_BUILD_EXAMPLES "Build the cpp-netlib project examples." OFF)
-option(CPP-NETLIB_ENABLE_HTTPS "Build cpp-netlib with support for https if OpenSSL is found." OFF)
-
 add_subdirectory(thirdparty/ArduinoJson/src)
 add_subdirectory(thirdparty/cassandra)
 add_subdirectory(thirdparty/cppformat)
 add_subdirectory(thirdparty/mongodb)
 add_subdirectory(thirdparty/netsnmp)
 add_subdirectory(thirdparty/quasardb)
-add_subdirectory(thirdparty/cpp-netlib)
-add_subdirectory(thirdparty/influxdb-api)
+add_subdirectory(thirdparty/cpr)
+add_subdirectory(thirdparty/influxdb)
 
 if(NOT MSVC)
     add_compile_options(-Wall -pedantic)

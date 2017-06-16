@@ -1,5 +1,6 @@
 
-include_directories(${influx-cpp-rest-lib_INCLUDE_DIRS})
+
+include_directories(${influxdb-api_INCLUDE_DIRS})
 
 add_library(bench-tests-influxdb
     ts/col_blob_insert.hpp

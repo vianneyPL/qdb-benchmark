@@ -1,8 +1,7 @@
 #pragma once
 
 #include "command.hpp"
-#include <boost/network/protocol/http/client.hpp>
-#include <boost/network/uri/uri_io.hpp>
+#include <cpr/cpr.h>
 #include <exception>
 #include <iostream>
 #include <memory>
@@ -14,8 +13,6 @@ namespace api
 {
 class api
 {
-    using http_client = boost::network::http::client;
-
 public:
     api() = default;
     api(const std::string & base_uri, const std::string & dbname) : m_base_uri(base_uri), m_dbname(dbname)
@@ -43,8 +40,8 @@ public:
     }
 
     void createDatabase();
-    void create(const measurement::measurement & measurement);
-    void create(const measurement::measurements & measurements);
+    void insert(const measurement::measurement & measurement);
+    void insert(const measurement::measurements & measurements);
 
     void dropDatabase();
     void drop(const measurement::measurement & measurement);
@@ -56,14 +53,13 @@ public:
 private:
     std::string m_base_uri;
     std::string m_dbname;
-    std::shared_ptr<http_client> m_client = std::make_shared<http_client>();
 
     template <typename QueryType>
     void execute_impl(QueryType query, command::execution_tag::get)
     {
         try
         {
-            response_handler(m_client->get(query.request()));
+            response_handler(query.request()->Get());
         }
         catch (...)
         {
@@ -76,7 +72,7 @@ private:
     {
         try
         {
-            response_handler(m_client->post(query.request()));
+            response_handler(query.request()->Post());
         }
         catch (...)
         {
@@ -84,17 +80,18 @@ private:
         }
     }
 
-    template <typename ResponseType>
-    void response_handler(ResponseType response)
+    void response_handler(cpr::Response response)
     {
-        auto status = boost::network::http::status(response);
+        auto status = response.status_code;
         if (status != 200 && status != 204)
         {
-            auto status_message = boost::network::http::status_message(response);
-            std::string message = status_message;
-            message += " body: ";
-            message += response.body();
-            throw std::runtime_error(message);
+            std::cout << "url: " << response.url << "\n";
+            std::cout << "headers:\n";
+            for (const auto & header : response.header)
+            {
+                std::cout << "\t" << header.first << ": " << header.second << "\n";
+            }
+            throw std::runtime_error(response.text);
         }
     }
 };

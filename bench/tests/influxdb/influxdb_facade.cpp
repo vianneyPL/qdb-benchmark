@@ -64,7 +64,7 @@ void influxdb_facade::ts_col_blob_insert(const std::string & alias,
     {
         measurement mes(alias);
         mes << str_field(col_name, content);
-        m_api.create(mes);
+        m_api.insert(mes);
     }
     catch (...)
     {
@@ -80,7 +80,7 @@ void influxdb_facade::ts_col_double_insert(const std::string & alias,
     {
         measurement mes(alias);
         mes << double_field(col_name, point.value) << point.timestamp;
-        m_api.create(mes);
+        m_api.insert(mes);
     }
     catch (...)
     {
@@ -101,7 +101,7 @@ void influxdb_facade::ts_col_double_inserts(const std::string & alias,
             mes << double_field(col_name, point.value) << point.timestamp;
             measures << mes;
         }
-        m_api.create(measures);
+        m_api.insert(measures);
     }
     catch (...)
     {

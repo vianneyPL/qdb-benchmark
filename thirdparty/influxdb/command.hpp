@@ -2,8 +2,8 @@
 
 #include "measurement.hpp"
 #include "measurements.hpp"
-#include <boost/network/protocol/http/client.hpp>
-#include <boost/network/uri.hpp>
+#include <cpr/cpr.h>
+#include <memory>
 #include <utility>
 
 namespace idb
@@ -28,15 +28,14 @@ struct execution_tag
 template <typename Derived>
 class command
 {
-    using url_type = boost::network::uri::uri;
-    using http_request = boost::network::http::client::request;
+    using Payload = std::pair<std::string, std::string>;
 
 public:
     using tag = execution_tag::get;
 
-    command(const std::string & base_uri)
+    command(const std::string & base_uri) : m_request(std::make_shared<cpr::Session>())
     {
-        m_url << boost::network::uri::host(base_uri);
+        m_url += base_uri;
         static_cast<Derived *>(this)->setPath();
     }
 
@@ -46,18 +45,14 @@ public:
         static_cast<Derived *>(this)->prepareStatement(args...);
     }
 
-    const url_type & url() const
-    {
-        return m_url;
-    }
-    const http_request & request() const
+    std::shared_ptr<cpr::Session> request() const
     {
         return m_request;
     }
 
 protected:
-    url_type m_url;
-    http_request m_request;
+    std::shared_ptr<cpr::Session> m_request;
+    cpr::Url m_url;
 };
 }
 }
