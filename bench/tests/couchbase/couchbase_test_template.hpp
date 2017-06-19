@@ -26,7 +26,7 @@ public:
 
     void setup() override
     {
-        _couchbase.connect("couchbase://localhost");
+        _couchbase.connect("couchbase://localhost/benchmark");
     }
 
     static probe_collection create_probes(test_config cfg)
